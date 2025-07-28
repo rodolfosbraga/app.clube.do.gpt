@@ -106,3 +106,19 @@ body { font-family: sans-serif; background:#f2f2f2; }
 .card-actions .fav-card-btn {
   background:none; border:none; font-size:1.2rem; cursor:pointer;
 }
+
+/* BOTÃO “ABRIR GPT” ARREDONDADO */
+.card-actions .btn-open {
+  padding:.4rem .8rem;
+  border:1px solid #16213e;
+  border-radius:4px;
+  background:#fff;
+  color:#16213e;
+  text-decoration:none;
+  font-weight:bold;
+  margin-right:.5rem;
+}
+.card-actions .btn-open:hover {
+  background:#16213e;
+  color:#fff;
+}
