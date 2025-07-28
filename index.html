@@ -2,18 +2,15 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
   <title>Clube do GPT – Protótipo</title>
-  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-
   <div class="wrapper">
     <!-- SIDEBAR RETRÁTIL -->
     <aside class="sidebar" id="sidebar">
-      <button class="collapse-btn" id="collapseBtn" title="Retrair menu">
-        ‹
-      </button>
+      <button id="collapseBtn" class="collapse-btn" title="Retrair menu">‹</button>
       <ul class="menu">
         <li data-section="manual"><span class="icon">📖</span><span class="label">Manual</span></li>
         <li data-section="gpts"><span class="icon">📂</span><span class="label">GPTs</span></li>
@@ -33,21 +30,22 @@
         <div class="tagline">Sua coleção premium de assistentes de IA — feita para quem quer mais.</div>
       </header>
 
-      <!-- BUSCA + ABAS -->
+      <!-- BUSCA + TABS -->
       <div class="search-tabs">
         <div class="search-bar">
-          <input type="text" id="searchInput" placeholder="Campo de pesquisa" />
-          <button id="favoritesBtn" title="Ver Favoritos">⭐</button>
+          <div class="input-wrapper">
+            <input type="text" id="searchInput" placeholder="Pesquisar GPTs…" />
+            <button id="searchBtn" class="search-icon" title="Buscar">🔍</button>
+          </div>
+          <button id="favoritesBtn" title="Meus Favoritos">⭐</button>
         </div>
         <nav class="tabs" id="categoryTabs">
-          <!-- JS injeta aqui as abas de categoria -->
+          <!-- JS injeta as 17 categorias + Favoritos -->
         </nav>
       </div>
 
       <!-- CONTEÚDO DINÂMICO -->
-      <main id="content">
-        <!-- JS renderiza aqui os cards -->
-      </main>
+      <main id="content"></main>
     </div>
   </div>
 
