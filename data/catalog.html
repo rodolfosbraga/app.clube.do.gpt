@@ -1,0 +1,5019 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+  <meta charset="utf-8"/>
+  <title>Catálogo do clube dos GPTs</title>
+
+  <style>
+    /* Fonte e layout geral */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* Títulos */
+    h1, h2 {
+      text-align: center;
+      width: 100%;
+      margin: 1rem 0;
+      line-height: 1.2;
+    }
+
+    /* Blocos de texto (intro, instruções, fim, busca) */
+    .intro,
+    .instruction,
+    .end,
+    .Calltosearch {
+      text-align: center;
+      max-width: 800px;
+      margin: 1rem auto;
+      padding: 0 1rem;
+      font-size: 1.1em;
+      color: #333;
+      line-height: 1.5;
+    }
+
+    /* Campo de busca */
+    #search {
+      width: 100%;
+      max-width: 600px;
+      padding: 10px;
+      margin-bottom: 20px;
+      font-size: 16px;
+      box-sizing: border-box;
+    }
+
+    /* Grid responsivo de categorias */
+    .container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      width: 100%;
+      max-width: 1200px;
+      margin-bottom: 40px;
+    }
+
+    /* Bloco de categoria com background + overlay */
+    .category-block {
+      position: relative;
+      padding: 2rem;
+      border-radius: 1rem;
+      background-size: cover;
+      background-position: center;
+      overflow: hidden;
+      min-height: 200px;
+    }
+    .category-block .overlay {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: rgba(255, 255, 255, 0.7);
+      z-index: 1;
+    }
+    .category-block > * {
+      position: relative;
+      z-index: 2;
+    }
+
+    /* Título, banner e descrição da categoria */
+    .category-title {
+      font-size: 1.75rem;
+      margin-bottom: 0.5rem;
+      color: #222;
+      text-align: center;
+    }
+    .category-banner {
+      display: block;
+      width: 100%;
+      max-height: 200px;
+      object-fit: cover;
+      border-radius: 0.5rem;
+      margin: 0 auto 1rem;
+    }
+    .category-desc {
+      font-size: 1rem;
+      margin-bottom: 1.5rem;
+      color: #444;
+      text-align: center;
+    }
+
+    /* Detalhes/summary */
+    details {
+      background: #fff;
+      padding: 1rem;
+      border-radius: 0.5rem;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      margin: 1rem auto;
+      max-width: 600px;
+    }
+    summary {
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 1.125rem;
+    }
+    .content {
+      margin: 10px auto;
+      max-width: 560px;
+      font-size: 0.95em;
+      text-align: left;
+    }
+    .content p + p {
+      margin-top: 0.75rem;
+    }
+
+    /* Formulário */
+    form {
+      width: 100%;
+      max-width: 600px;
+      margin: 40px auto;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      background: #fafafa;
+      text-align: center;
+    }
+    form h2 {
+      margin-bottom: 20px;
+    }
+    .form-group {
+      margin-bottom: 15px;
+      text-align: left;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+    }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 8px;
+      box-sizing: border-box;
+    }
+
+    /* Botões */
+    button {
+      width: 100%;
+      max-width: 200px;
+      margin: 20px auto 0;
+      padding: 10px;
+      background: #0066cc;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      font-size: 1em;
+      cursor: pointer;
+      display: block;
+    }
+    button:hover {
+      background: #005bb5;
+    }
+
+    /* Rodapé */
+    footer {
+      width: 100%;
+      max-width: 600px;
+      text-align: center;
+      margin-top: 40px;
+      font-size: 0.9em;
+      color: #666;
+      border-top: 1px solid #ccc;
+      padding-top: 10px;
+    }
+    footer a {
+      color: #0066cc;
+      text-decoration: none;
+    }
+  </style>
+</head>
+ <body>
+   <h1>Clube do GPT</h1>
+  <h2>Sua coleção premium de assistentes de IA — feita para quem quer mais.</h2>
+
+  <div class="intro">
+    Bem-vindo(a) ao Clube do GPT, um espaço exclusivo onde a inteligência artificial
+    trabalha a seu favor de forma personalizada, eficiente e surpreendentemente prática.
+    Aqui você encontra todos os GPTs que desenvolvi — uma coleção completa e organizada
+    por categoria para facilitar seu dia a dia, impulsionar projetos e liberar o seu tempo.
+  </div>
+
+  <div class="instruction">
+    Para começar a usar, basta ter uma conta ativa na plataforma do ChatGPT. Com um clique
+    nos links abaixo, você acessa diretamente cada assistente e já pode começar a interagir — 
+    sem downloads, sem complicações.
+  </div>
+
+  <div class="end">
+    O Clube do GPT é mais do que uma vitrine — é sua central de soluções inteligentes. E
+    essa é só a versão premium. Em breve, novas coleções estarão disponíveis com curadorias
+    específicas e acessíveis para diferentes perfis e objetivos. Colabore, deixe a sua sugestão!
+  </div>
+
+  <div class="Calltosearch">
+    Use o campo de pesquisa para encontrar rapidamente o GPT ideal para o que você precisa —
+    seja para criatividade, negócios, produtividade, estudos, culinária e muito mais.
+  </div>
+  
+  <input id="search" onkeyup="filterList()" placeholder="Pesquise um GPT..." type="text"/>
+  
+  <div class="container">
+   <div class="category-block" style="background-image: url('path/to/background.jpg');">
+    <div class="overlay">
+    </div>
+    <h2 class="category-title">
+     🧠 Autoestima e Mentalidade
+    </h2>
+    <img alt="Banner da categoria" class="category-banner" src="path/to/banner.jpg"/>
+    <p class="category-desc">
+     GPTs que fortalecem sua autoconfiança, otimizam seu mindset e te ajudam a manter o foco e equilíbrio emocional.
+    </p>
+    <details>
+     <summary>
+      🤖 Desenvolvedor de Mindset de Crescimento
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-68094eeaf5f08191b9919b57889e3b6e-desenvolvedor-de-mindset-de-crescimento" target="_blank">
+        https://chatgpt.com/g/g-68094eeaf5f08191b9919b57889e3b6e-desenvolvedor-de-mindset-de-crescimento
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Ajude a construir mentalidade de crescimento e superação.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Usa reforço positivo e exemplos de evolução.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a desenvolver um mindset de crescimento para lidar melhor com desafios profissionais.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Criador de Rotina de Autocuidado
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-68094f3bf65c8191b73e3d93164a4e62-criador-de-rotina-de-autocuidado" target="_blank">
+        https://chatgpt.com/g/g-68094f3bf65c8191b73e3d93164a4e62-criador-de-rotina-de-autocuidado
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Monte uma rotina diária de autocuidado emocional e físico.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Sugere atividades: mental, física, emocional.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a criar uma rotina diária de autocuidado para equilíbrio emocional e físico.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Criador de Plano de Superação de Medos
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-680ad0a915848191bb3fa8f2326aebc1-criador-de-plano-de-superacao-de-medos" target="_blank">
+        https://chatgpt.com/g/g-680ad0a915848191bb3fa8f2326aebc1-criador-de-plano-de-superacao-de-medos
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Ajude a montar um plano para enfrentar e superar medos.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Usa exposição progressiva e reforço positivo.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a criar um plano prático para superar o medo de falar em público.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Estimulador de Autoconfiança
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-680ad26b16348191ae295111afcb798d-estimulador-de-autoconfianca" target="_blank">
+        https://chatgpt.com/g/g-680ad26b16348191ae295111afcb798d-estimulador-de-autoconfianca
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Dê exercícios diários para aumentar a autoconfiança.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Sugere microvitórias diárias e reforço de qualidades.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a criar exercícios diários para aumentar minha autoconfiança no ambiente de trabalho.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Criador de Mantras Pessoais
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-680adcd40f348191b61a8da7c1402b88-criador-de-mantras-pessoais" target="_blank">
+        https://chatgpt.com/g/g-680adcd40f348191b61a8da7c1402b88-criador-de-mantras-pessoais
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Monte mantras motivacionais personalizados.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Sugere repetição diária de 3x.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a criar um mantra pessoal para aumentar minha motivação nas manhãs.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Criador de Diálogos Internos Positivos
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-680d0895e5e08191a06aa7ef3536bb9c-criador-de-dialogos-internos-positivos" target="_blank">
+        https://chatgpt.com/g/g-680d0895e5e08191a06aa7ef3536bb9c-criador-de-dialogos-internos-positivos
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Ajude a transformar pensamentos negativos em positivos.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Sugere reestruturação cognitiva.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a transformar pensamentos negativos em positivos com exemplos práticos.
+      </p>
+     </div>
+    </details>
+   </div>
+   <div class="category-block" style="background-image: url('path/to/background.jpg');">
+    <div class="overlay">
+    </div>
+    <h2 class="category-title">
+     🧑‍💼 Carreira e Empregabilidade
+    </h2>
+    <img alt="Banner da categoria" class="category-banner" src="path/to/banner.jpg"/>
+    <p class="category-desc">
+    Apoio estratégico para você crescer profissionalmente: de currículos a entrevistas, de propósito a plano de carreira.
+    </p>
+    <details>
+     <summary>
+      🤖 Criador de Currículo Express
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-6807af7ecd088191b62d8cb777d055b4-criador-de-curriculo-express" target="_blank">
+        https://chatgpt.com/g/g-6807af7ecd088191b62d8cb777d055b4-criador-de-curriculo-express
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Ajude a montar um currículo profissional em minutos.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Sugere estrutura: Resumo, Experiência, Formação e Habilidades.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a montar um currículo express destacando minhas experiências em vendas.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Preparador para Entrevistas de Emprego
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-6807b149aa3c819198fc8d7f2523e7b7-preparador-para-entrevistas-de-emprego" target="_blank">
+        https://chatgpt.com/g/g-6807b149aa3c819198fc8d7f2523e7b7-preparador-para-entrevistas-de-emprego
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Simule perguntas e treine respostas para entrevistas.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Usa método STAR (Situação, Tarefa, Ação, Resultado).
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a treinar para uma entrevista de emprego para vaga de gerente comercial.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Analisador de Perfil Profissional
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-680acc24ac988191a25877681c061039-analisador-de-perfil-profissional" target="_blank">
+        https://chatgpt.com/g/g-680acc24ac988191a25877681c061039-analisador-de-perfil-profissional
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Faça uma análise rápida dos pontos fortes e áreas de melhoria.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Sugere mapa de habilidades + dicas de evolução.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a analisar meu perfil profissional para destacar meus pontos fortes e melhorar meu currículo.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Especialista de Comunicação Assertiva
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-680acc931e9c81919d598e4f0020048b-especialista-em-comunicacao-assertiva" target="_blank">
+        https://chatgpt.com/g/g-680acc931e9c81919d598e4f0020048b-especialista-em-comunicacao-assertiva
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Ajude a melhorar a comunicação clara e objetiva no trabalho.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Sugere técnicas de fala direta e empática.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a melhorar minha comunicação para lidar com conflitos no trabalho.
+      </p>
+     </div>
+    </details>
+   </div>
+   <div class="category-block" style="background-image: url('path/to/background.jpg');">
+    <div class="overlay">
+    </div>
+    <h2 class="category-title">
+     💬 Comunicação
+    </h2>
+    <img alt="Banner da categoria" class="category-banner" src="path/to/banner.jpg"/>
+    <p class="category-desc">
+    Melhore sua expressão verbal e escrita com assistentes que dominam desde a clareza até a persuasão.
+    </p>
+    <details>
+     <summary>
+      🤖 Criador de Pitches Pessoais
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-6805067e30e88191af8e19f76b6c3431-criador-de-pitches-pessoais" target="_blank">
+        https://chatgpt.com/g/g-6805067e30e88191af8e19f76b6c3431-criador-de-pitches-pessoais
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Monte uma apresentação pessoal rápida e impactante.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Usa modelo: Quem é você + O que faz + Diferencial.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a criar um pitch pessoal para me apresentar em uma reunião de networking.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Melhorador de E-mails Profissionais
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-680507034e588191bd5c496015da8f64-melhorador-de-e-mails-profissionais" target="_blank">
+        https://chatgpt.com/g/g-680507034e588191bd5c496015da8f64-melhorador-de-e-mails-profissionais
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Ajude a reescrever e-mails de forma mais clara e profissional.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Sugere estrutura ideal de abertura, corpo e fechamento.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a melhorar este e-mail para torná-lo mais claro e profissional: [cole o e-mail aqui].
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Treinador de Apresentações Públicas
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-68050778c6548191ac6d98a5d8c958e0-treinador-de-apresentacoes-publicas" target="_blank">
+        https://chatgpt.com/g/g-68050778c6548191ac6d98a5d8c958e0-treinador-de-apresentacoes-publicas
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Ajude a estruturar falas para apresentações ou palestras.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Sugere divisão: Introdução, Desenvolvimento e Conclusão.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a estruturar uma apresentação de 10 minutos sobre inovação para uma palestra.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Aperfeiçoador de Storytelling
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-68095093bb9c8191b44c4c18a5c6957b-aperfeicoador-de-storytelling" target="_blank">
+        https://chatgpt.com/g/g-68095093bb9c8191b44c4c18a5c6957b-aperfeicoador-de-storytelling
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Melhore sua capacidade de contar histórias envolventes.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Usa estrutura: início, conflito, clímax e resolução.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a aprimorar a história da minha marca pessoal para uma palestra motivacional.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Gerador de Respostas Rápidas para WhatsApp
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-68095138f680819189ac5a1c5702e228-criador-de-respostas-rapidas" target="_blank">
+        https://chatgpt.com/g/g-68095138f680819189ac5a1c5702e228-criador-de-respostas-rapidas
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Crie respostas rápidas e educadas para atendimento no WhatsApp.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Sugere modelos prontos e adaptação de tom.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a criar respostas rápidas e educadas para clientes que pedem desconto no WhatsApp.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Revisor de Textos para LinkedIn
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-680ad2fd67148191a934b4d7fef5e3f3-revisor-de-textos-para-posts-em-redes-sociais" target="_blank">
+        https://chatgpt.com/g/g-680ad2fd67148191a934b4d7fef5e3f3-revisor-de-textos-para-posts-em-redes-sociais
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Reescreva posts para LinkedIn de forma mais profissional.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Sugere tom formal, focado em networking e autoridade.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a revisar e melhorar este texto para um post no LinkedIn: [cole o texto aqui].
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Otimizador de Conversas por Chat
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-680ad57205648191997d1c2c1e5c89b2-otimizador-de-conversas-por-chat" target="_blank">
+        https://chatgpt.com/g/g-680ad57205648191997d1c2c1e5c89b2-otimizador-de-conversas-por-chat
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Melhore conversas online para serem mais claras e efetivas.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Sugere ajustes de tom e clareza.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a otimizar uma conversa de atendimento ao cliente para WhatsApp Business.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Criador de Scripts para Vídeos Curtos
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-680add270d748191a3b2fbdf1ba5ce77-criador-de-scripts-para-videos-curtos" target="_blank">
+        https://chatgpt.com/g/g-680add270d748191a3b2fbdf1ba5ce77-criador-de-scripts-para-videos-curtos
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Monte roteiros rápidos para vídeos de até 1 minuto.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Sugere estrutura: Hook + Conteúdo + Call to Action.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a criar um script rápido para um vídeo de 1 minuto sobre dicas de organização pessoal.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Criador de E-mails de Follow-up
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-680d090b874c8191b20ec5ce8b023534-criador-de-e-mails-de-follow-up" target="_blank">
+        https://chatgpt.com/g/g-680d090b874c8191b20ec5ce8b023534-criador-de-e-mails-de-follow-up
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Monte e-mails educados de acompanhamento para negócios.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Sugere e-mails curtos, com agradecimento e novo call to action.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a criar um e-mail de follow-up educado para enviar 3 dias após uma reunião comercial.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Especialista em Tom de Mensagens
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-680d27c6d56c8191b1c70fe7fb83f330-especialista-em-tom-de-mensagens" target="_blank">
+        https://chatgpt.com/g/g-680d27c6d56c8191b1c70fe7fb83f330-especialista-em-tom-de-mensagens
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Ajude a adaptar o tom da sua mensagem (mais formal, empático, direto, etc.) para diferentes contextos.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Sugere variações de tom: profissional, informal, empático, direto, inspirador.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a tornar essa mensagem mais formal e respeitosa para um cliente: 'Oi, tudo certo? Consegui aquele desconto que a gente conversou!'
+      </p>
+     </div>
+    </details>
+   </div>
+   <div class="category-block" style="background-image: url('path/to/background.jpg');">
+    <div class="overlay">
+    </div>
+    <h2 class="category-title">
+     💡 Criatividade
+    </h2>
+    <img alt="Banner da categoria" class="category-banner" src="path/to/banner.jpg"/>
+    <p class="category-desc">
+     Estimule ideias originais, desbloqueie sua mente e explore soluções fora da caixa com auxílio da IA.
+    </p>
+    <details>
+     <summary>
+      🤖 Gerador de Ideias para Posts
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-6801aab34bb081918f805d8b7ea8fa6d-gerador-de-ideias-para-posts" target="_blank">
+        https://chatgpt.com/g/g-6801aab34bb081918f805d8b7ea8fa6d-gerador-de-ideias-para-posts
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Crie ideias de posts criativos para redes sociais em segundos.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Sugere formatos diferentes: carrossel, reels, stories, etc.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a criar ideias de posts para Instagram focados em negócios de beleza.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Criador de Títulos Chamativos
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-6801adf451d88191b3c142881a212874-criador-de-titulos-chamativos" target="_blank">
+        https://chatgpt.com/g/g-6801adf451d88191b3c142881a212874-criador-de-titulos-chamativos
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Gere títulos criativos para posts, artigos ou campanhas.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Utiliza gatilhos mentais de curiosidade e urgência.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Crie 5 sugestões de títulos chamativos para um e-book sobre finanças pessoais.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Brainstorm de Novos Produtos
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-6801b43a30508191ae9ea5935a5f3137-brainstorm-de-novos-produtos" target="_blank">
+        https://chatgpt.com/g/g-6801b43a30508191ae9ea5935a5f3137-brainstorm-de-novos-produtos
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Gere ideias de novos produtos ou serviços inovadores.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Usa perguntas de provocação criativa para expandir ideias.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a fazer um brainstorming de novos produtos para uma loja de artigos esportivos.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Estimulador de Escrita Criativa
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-6803bc7b098481919ba9764087bc6cf4-estimulador-de-escrita-criativa" target="_blank">
+        https://chatgpt.com/g/g-6803bc7b098481919ba9764087bc6cf4-estimulador-de-escrita-criativa
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Desbloqueie sua criatividade na escrita com prompts inspiradores.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Gera prompts diferentes: narrativo, reflexivo e descritivo.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me dê 3 ideias para desbloquear minha escrita criativa sobre histórias de superação.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Designer de Campanhas Criativas
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-6803c0495e988191a9e04aa9530797dd-designer-de-campanhas-criativas" target="_blank">
+        https://chatgpt.com/g/g-6803c0495e988191a9e04aa9530797dd-designer-de-campanhas-criativas
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Crie ideias de campanhas de marketing para sua marca ou produto.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Sugere campanhas temáticas e diferenciadas.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a criar uma campanha criativa para promover um evento online.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Gerador de Histórias Rápidas
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-6804fd3340e081918210e1983e64366f-gerador-de-historias-rapidas" target="_blank">
+        https://chatgpt.com/g/g-6804fd3340e081918210e1983e64366f-gerador-de-historias-rapidas
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Crie histórias curtas para posts, vídeos ou entretenimento.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Sugere histórias em formatos: moral da história, inspiracional ou humorístico.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a criar uma história curta e inspiradora sobre superação para um post no Instagram.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Estimulador de Ideias para Reels
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-6804ffa1d06c8191a98a402abed4fc0a-estimulador-de-ideias-para-reels" target="_blank">
+        https://chatgpt.com/g/g-6804ffa1d06c8191a98a402abed4fc0a-estimulador-de-ideias-para-reels
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Gera ideias criativas para vídeos curtos no Instagram/TikTok.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Sugere formatos: tendências, tutoriais, bastidores.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me sugira 5 ideias criativas para Reels de um perfil de arquitetura no Instagram.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Sugeridor de Temas para Lives
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-6805027fb2a88191b1f0a72ca2dd0b9b-sugeridor-de-temas-para-lives" target="_blank">
+        https://chatgpt.com/g/g-6805027fb2a88191b1f0a72ca2dd0b9b-sugeridor-de-temas-para-lives
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Crie ideias de temas interessantes para transmissões ao vivo.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Sugere temas para lives de venda, educação ou entretenimento.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me sugira 5 temas de lives para um perfil de marketing digital.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Designer de Ideias para Infográficos
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-680504f964b08191a1d10bc84c73d47c-designer-de-ideias-para-infograficos" target="_blank">
+        https://chatgpt.com/g/g-680504f964b08191a1d10bc84c73d47c-designer-de-ideias-para-infograficos
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Crie ideias para montar infográficos informativos e atraentes.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Sugere estrutura: título, dados principais, conclusão.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a criar ideias para um infográfico sobre o impacto do marketing digital.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Especialista de Ideias para Nome de Produtos
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-680ad65f376c8191afc96d32ed5f0b7d-especialista-de-ideias-para-nome-de-produtos" target="_blank">
+        https://chatgpt.com/g/g-680ad65f376c8191afc96d32ed5f0b7d-especialista-de-ideias-para-nome-de-produtos
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Crie nomes cativantes para novos produtos.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Sugere nomes curtos, fáceis de lembrar e vender.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a gerar ideias de nomes para um novo aplicativo de produtividade.
+      </p>
+     </div>
+    </details>
+   </div>
+   <div class="category-block" style="background-image: url('path/to/background.jpg');">
+    <div class="overlay">
+    </div>
+    <h2 class="category-title">
+     🎨 Criatividade Visual
+    </h2>
+    <img alt="Banner da categoria" class="category-banner" src="path/to/banner.jpg"/>
+    <p class="category-desc">
+    Transforme ideias em conceitos visuais com apoio em design, direção de arte, referências criativas e muito mais.
+    </p>
+    <details>
+     <summary>
+      🤖 Gerador de Briefing de Design
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-680d1aae13988191bd8d3d97aa741bbd-gerador-de-briefing-de-design" target="_blank">
+        https://chatgpt.com/g/g-680d1aae13988191bd8d3d97aa741bbd-gerador-de-briefing-de-design
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Monte briefings claros para projetos de design gráfico.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Sugere perguntas sobre público-alvo, cores, estilo visual.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a criar um briefing de design para desenvolver a nova identidade visual da minha marca.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Criador de Ideias para Posts Visuais
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-680d1b4efea48191b0c7c78c064606b8-criador-de-ideias-para-posts-visuais" target="_blank">
+        https://chatgpt.com/g/g-680d1b4efea48191b0c7c78c064606b8-criador-de-ideias-para-posts-visuais
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Sugira ideias de posts altamente visuais para redes sociais.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Sugere carrosséis, mosaicos, teasers visuais.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a criar ideias de posts visuais para promover um curso de fotografia no Instagram.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Designer de Paleta de Cores
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-680d1bb73114819194ade99b451c10c3-designer-de-paleta-de-cores" target="_blank">
+        https://chatgpt.com/g/g-680d1bb73114819194ade99b451c10c3-designer-de-paleta-de-cores
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Crie combinações de cores harmoniosas para projetos visuais.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Sugere paletas RGB ou HEX harmoniosas.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a criar uma paleta de cores harmoniosa para uma marca de produtos naturais.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Criador de Temas para Ensaios Fotográficos
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-680d1c9805108191b2e9d2367d99d0bf-criador-de-temas-para-ensaios-fotograficos" target="_blank">
+        https://chatgpt.com/g/g-680d1c9805108191b2e9d2367d99d0bf-criador-de-temas-para-ensaios-fotograficos
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Crie temas e ideias para sessões de fotos criativas.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Sugere moodboard, locações e figurinos.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me sugira temas criativos para um ensaio fotográfico ao ar livre.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Criador de Moodboards Conceituais
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-680d1d13d0e88191a75f16ea6318a797-criador-de-moodboards-conceituais" target="_blank">
+        https://chatgpt.com/g/g-680d1d13d0e88191a75f16ea6318a797-criador-de-moodboards-conceituais
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Monte moodboards rápidos para projetos criativos.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Sugere combinação de imagens, cores e palavras-chave.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a montar um moodboard conceitual para o lançamento de uma linha de cosméticos.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Gerador de Títulos para Posters e Banners
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-680d1d999cb48191a918b76c33882a37-gerador-de-titulos-para-posters-e-banners" target="_blank">
+        https://chatgpt.com/g/g-680d1d999cb48191a918b76c33882a37-gerador-de-titulos-para-posters-e-banners
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Crie títulos impactantes para peças gráficas.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Sugere título + subtítulo + call to action.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a criar 5 títulos chamativos para posters de uma campanha de sustentabilidade.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Otimizador de Bio Visual para Instagram
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-680d1f0362d08191ba3acd315c5b77fd-otimizador-de-bio-visual" target="_blank">
+        https://chatgpt.com/g/g-680d1f0362d08191ba3acd315c5b77fd-otimizador-de-bio-visual
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Monte perfis visuais atrativos para Instagram.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Sugere destaques, cores e grid harmônico.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a otimizar minha bio do Instagram para atrair clientes de consultoria de imagem.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Especialista e Conselheiro de Arte Digital
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-680d1fc4b5a481919ca2ab7e1e0b8c6c-especialista-e-conselheiro-de-arte-digital" target="_blank">
+        https://chatgpt.com/g/g-680d1fc4b5a481919ca2ab7e1e0b8c6c-especialista-e-conselheiro-de-arte-digital
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Crie sugestões de estilos para arte digital e NFT.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Sugere tendências de arte: low poly, glitch, vaporwave, etc.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a escolher um estilo de arte digital para uma coleção de NFTs.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Curador de Inspiração Visual
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-680d206d49f0819181c26067c49615df-curador-de-inspiracao-visual" target="_blank">
+        https://chatgpt.com/g/g-680d206d49f0819181c26067c49615df-curador-de-inspiracao-visual
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Busque referências visuais para projetos criativos.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Sugere temas, artistas e estilos para estudo.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a encontrar referências visuais para criar uma marca de roupas urbanas.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Criador de Assinaturas Visuais
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-680d210604e48191a5b1261d6af4054c-criador-de-assinaturas-visuais" target="_blank">
+        https://chatgpt.com/g/g-680d210604e48191a5b1261d6af4054c-criador-de-assinaturas-visuais
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Monte elementos visuais de assinatura para marcas ou pessoas.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Sugere fontes, cores e ícones pessoais.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a criar uma assinatura visual forte para minha marca pessoal de coaching.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Editor de Descrição para Posts Visuais
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-680d21a43190819188292f27329f7e16-editor-de-descricao-para-posts-visuais" target="_blank">
+        https://chatgpt.com/g/g-680d21a43190819188292f27329f7e16-editor-de-descricao-para-posts-visuais
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Crie descrições curtas e impactantes para posts de imagem.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Sugere descrições adaptadas para emoção e engajamento.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a criar uma descrição curta e impactante para um post visual de lançamento de produto.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Inspirador de Embalagens Criativas
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-680d2249b8fc8191b256b4d4e9ca891e-inspirador-de-embalagens-criativas" target="_blank">
+        https://chatgpt.com/g/g-680d2249b8fc8191b256b4d4e9ca891e-inspirador-de-embalagens-criativas
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Sugira ideias para design de embalagens inovadoras.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Sugere formatos, materiais e estilos de embalagem.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a criar ideias inovadoras para embalagens sustentáveis de cosméticos.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Consultor de Identidade Visual
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-680d22e5b3788191b3a625e048082f29-consultor-de-identidade-visual" target="_blank">
+        https://chatgpt.com/g/g-680d22e5b3788191b3a625e048082f29-consultor-de-identidade-visual
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Monte orientações para criar ou reformular uma identidade visual.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Sugere logotipo, cores, fontes e aplicações.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a criar uma identidade visual para uma cafeteria moderna e minimalista.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Criador de Cenas para Ilustrações
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-680d2387756c8191907cb18eb01172a5-criador-de-cenas-para-ilustracoes" target="_blank">
+        https://chatgpt.com/g/g-680d2387756c8191907cb18eb01172a5-criador-de-cenas-para-ilustracoes
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Sugira cenas e composições para ilustradores.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Sugere cenários, poses, iluminação.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a criar uma cena de ilustração inspirada em um festival de música ao pôr do sol.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Gerador de Conteúdos Visuais Criativos
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-680d2410067c8191b2f00ce35d4401fc-gerador-de-conteudos-visuais-criativos" target="_blank">
+        https://chatgpt.com/g/g-680d2410067c8191b2f00ce35d4401fc-gerador-de-conteudos-visuais-criativos
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Monte ideias de pins criativos para Pinterest.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Sugere tipos de pins: inspiração, tutoriais, citações.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a gerar ideias de conteúdos visuais para um perfil de decoração no Pinterest.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Criador de Mini-Storyboard para Vídeos
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-680d24ba4d78819182d4f5b24af9c411-criador-de-mini-storyboard-para-videos" target="_blank">
+        https://chatgpt.com/g/g-680d24ba4d78819182d4f5b24af9c411-criador-de-mini-storyboard-para-videos
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Crie storyboards simples para vídeos curtos.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Sugere cena a cena com objetivo de mensagem.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a criar um mini-storyboard para um vídeo de lançamento de aplicativo de bem-estar.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Criador de Estilos para Sites
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-680d254f7d008191a5d6a3bd19753661-criador-de-estilos-para-sites" target="_blank">
+        https://chatgpt.com/g/g-680d254f7d008191a5d6a3bd19753661-criador-de-estilos-para-sites
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Sugira estilos visuais para websites modernos.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Sugere tendências: minimalista, bold, dark mode, etc.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a sugerir estilos visuais para um site de tecnologia inovadora.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Criador de Layouts de Apresentações
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-680d25ec6ec08191ace3ab477c328fb3-criador-de-layouts-de-apresentacoes" target="_blank">
+        https://chatgpt.com/g/g-680d25ec6ec08191ace3ab477c328fb3-criador-de-layouts-de-apresentacoes
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Sugira layouts criativos para slides e apresentações.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Sugere estrutura de slides, combinações de cores e fontes.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a montar layouts criativos para uma apresentação sobre tendências de moda.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Coach de Inspiração para Artesanato
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-680d269eeecc8191938fd0cb3766d956-coach-de-inspiracao-para-artesanato" target="_blank">
+        https://chatgpt.com/g/g-680d269eeecc8191938fd0cb3766d956-coach-de-inspiracao-para-artesanato
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Busque ideias visuais para projetos artesanais.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Sugere técnicas, temas e estilos de artesanato.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a encontrar inspirações para criar artesanato com tema de natureza.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Criador de Capas para E-books e PDFs
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-680d27710b048191bbdadfb8eb9552ed-criador-de-capas-para-e-books-e-pdfs" target="_blank">
+        https://chatgpt.com/g/g-680d27710b048191bbdadfb8eb9552ed-criador-de-capas-para-e-books-e-pdfs
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Sugira ideias para capas visuais atrativas.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Sugere conceito visual + título de capa.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a criar uma capa impactante para um e-book sobre desenvolvimento pessoal.
+      </p>
+     </div>
+    </details>
+   </div>
+   <div class="category-block" style="background-image: url('path/to/background.jpg');">
+    <div class="overlay">
+    </div>
+    <h2 class="category-title">
+     🌱 Desenvolvimento Pessoal
+    </h2>
+    <img alt="Banner da categoria" class="category-banner" src="path/to/banner.jpg"/>
+    <p class="category-desc">
+     Ferramentas para autoconhecimento, hábitos saudáveis, metas e evolução contínua — no seu ritmo, com inteligência.
+    </p>
+    <details>
+     <summary>
+      🤖 Mentor de Hábitos Saudáveis
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-6801b643145481919d927a7da5805077-mentor-de-habitos-saudaveis" target="_blank">
+        https://chatgpt.com/g/g-6801b643145481919d927a7da5805077-mentor-de-habitos-saudaveis
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Ajude a criar uma rotina de hábitos saudáveis de forma simples.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Sugere rotinas adaptadas à realidade do usuário.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Monte uma rotina de hábitos saudáveis para melhorar minha energia diária.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Diário de Gratidão
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-6801b75f6fb88191b26e11e7629f4e8d-diario-de-gratidao" target="_blank">
+        https://chatgpt.com/g/g-6801b75f6fb88191b26e11e7629f4e8d-diario-de-gratidao
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Estimule a prática diária de gratidão para melhorar o bem-estar.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Sugere temas diários para reflexão (relacionamentos, saúde, carreira).
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a escrever 3 coisas pelas quais sou grato hoje.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Avaliador de Reflexão Semanal
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-6803bdb4df0c81919e8c7d842140b46f-avaliador-de-reflexao-semanal" target="_blank">
+        https://chatgpt.com/g/g-6803bdb4df0c81919e8c7d842140b46f-avaliador-de-reflexao-semanal
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Auxilia na análise dos aprendizados e conquistas da semana.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Sugere perguntas de autoconhecimento para melhorar resultados.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a refletir sobre os maiores aprendizados que tive esta semana.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Criador de Afirmativas Positivas
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-6803c44a28908191b825801a465be83b-criador-de-afirmativas-positivas" target="_blank">
+        https://chatgpt.com/g/g-6803c44a28908191b825801a465be83b-criador-de-afirmativas-positivas
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Crie afirmações personalizadas para desenvolver autoestima e foco.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Sugere uso diário para reforço mental.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a criar afirmações positivas para aumentar minha autoestima no trabalho.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Definidor de Metas SMART
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-6804fe61a6588191a83c7ba3aaaa61f0-definidor-de-metas-smart" target="_blank">
+        https://chatgpt.com/g/g-6804fe61a6588191a83c7ba3aaaa61f0-definidor-de-metas-smart
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Ajude a criar metas específicas, mensuráveis, atingíveis, relevantes e temporais.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Formata automaticamente no padrão SMART.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a definir uma meta SMART para perder 5kg em 3 meses.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Conselheiro de Decisão Difícil
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-68050073392081918036dd5b5e641d0f-conselheiro-de-decisao-dificil" target="_blank">
+        https://chatgpt.com/g/g-68050073392081918036dd5b5e641d0f-conselheiro-de-decisao-dificil
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Ajude a refletir sobre decisões importantes.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Usa modelo de prós/contras e valores pessoais.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Estou em dúvida entre duas propostas de trabalho. Me ajude a refletir sobre a melhor escolha.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Gerador de Rotinas de Mindfulness
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-680503fb5db88191be02260d896a6079-gerador-de-rotinas-de-mindfulness" target="_blank">
+        https://chatgpt.com/g/g-680503fb5db88191be02260d896a6079-gerador-de-rotinas-de-mindfulness
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Monte uma prática diária de atenção plena.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Sugere práticas de 5, 10 ou 20 minutos.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a criar uma rotina de mindfulness de 10 minutos para fazer antes de dormir.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Desenvolvedor de Plano de Vida
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-6805061bb5a88191bc074f7c5b91a9d4-desenvolvedor-de-plano-de-vida" target="_blank">
+        https://chatgpt.com/g/g-6805061bb5a88191bc074f7c5b91a9d4-desenvolvedor-de-plano-de-vida
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Ajude a criar um plano estratégico para a vida pessoal e profissional.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Sugere metas por área: pessoal, profissional, financeira e espiritual.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a montar um plano de vida pessoal e profissional para os próximos 5 anos.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Criador de Plano de Ação para Mudança de Hábito
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-680adaa24e088191b735796f449bc9ea-criador-de-plano-de-acao-para-mudanca-de-habito" target="_blank">
+        https://chatgpt.com/g/g-680adaa24e088191b735796f449bc9ea-criador-de-plano-de-acao-para-mudanca-de-habito
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Ajude a mudar ou criar novos hábitos pessoais.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Sugere pequenas metas semanais.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a criar um plano de ação para substituir o hábito de dormir tarde por dormir antes das 23h.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Criador de Plano de Leitura Pessoal
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-680d007cb6c4819184868840388d2439-criador-de-plano-de-leitura-pessoal" target="_blank">
+        https://chatgpt.com/g/g-680d007cb6c4819184868840388d2439-criador-de-plano-de-leitura-pessoal
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Monte uma rotina de leitura semanal personalizada.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Sugere metas de capítulos ou páginas.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a montar um plano de leitura para ler 12 livros no próximo ano.
+      </p>
+     </div>
+    </details>
+   </div>
+   <div class="category-block" style="background-image: url('path/to/background.jpg');">
+    <div class="overlay">
+    </div>
+    <h2 class="category-title">
+     Empreendedorismo
+    </h2>
+    <img alt="Banner da categoria" class="category-banner" src="path/to/banner.jpg"/>
+    <p class="category-desc">
+   Mentoria digital para quem empreende: estruturação, estratégia e crescimento com foco em soluções práticas.
+    </p>
+    <details>
+     <summary>
+      🤖 Avaliador de Viabilidade de Novos Produtos
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-680adbf409808191aeeb64c7bf552cde-avaliador-de-viabilidade-de-novos-produtos" target="_blank">
+        https://chatgpt.com/g/g-680adbf409808191aeeb64c7bf552cde-avaliador-de-viabilidade-de-novos-produtos
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Avalie se uma ideia de produto é viável.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Usa perguntas rápidas de validação de mercado.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Tenho uma ideia de aplicativo de meditação. Me ajude a avaliar a viabilidade desse produto.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Gerador de Estratégias de Retenção de Clientes
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-680bab0f20108191a353fcc0fa2b2669-gerador-de-estrategias-de-retencao-de-clientes" target="_blank">
+        https://chatgpt.com/g/g-680bab0f20108191a353fcc0fa2b2669-gerador-de-estrategias-de-retencao-de-clientes
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Monte estratégias para manter clientes fiéis.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Sugere programas de fidelidade, follow-up e pesquisa de satisfação.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a criar estratégias para aumentar a retenção de clientes de um serviço de assinatura.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Gerador de MVP (Produto Mínimo Viável)
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-680d1a1c0764819183e861bade900aec-gerador-de-mvp-produto-minimo-viavel" target="_blank">
+        https://chatgpt.com/g/g-680d1a1c0764819183e861bade900aec-gerador-de-mvp-produto-minimo-viavel
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Crie a versão inicial simplificada de um produto ou serviço.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Sugere funcionalidades mínimas para teste de mercado.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a montar a versão MVP de uma plataforma de cursos online para professores.
+      </p>
+     </div>
+    </details>
+   </div>
+   <div class="category-block" style="background-image: url('path/to/background.jpg');">
+    <div class="overlay">
+    </div>
+    <h2 class="category-title">
+     🚀 Empreendedorismo e Startups
+    </h2>
+    <img alt="Banner da categoria" class="category-banner" src="path/to/banner.jpg"/>
+    <p class="category-desc">
+    Do insight inicial à validação e pitch: tudo que você precisa para criar, lançar e escalar seu negócio com suporte inteligente.
+    </p>
+    <details>
+     <summary>
+      🤖 Validador de Ideias de Negócio
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-68084731fee08191bce5252f6d43c04b-validador-de-ideias-de-negocio" target="_blank">
+        https://chatgpt.com/g/g-68084731fee08191bce5252f6d43c04b-validador-de-ideias-de-negocio
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Ajude a validar rapidamente novas ideias de negócio.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Usa análise SWOT simplificada.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Tenho uma ideia de aplicativo de finanças pessoais. Me ajude a validar essa ideia rapidamente.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Criador de Modelos de Negócios Canvas
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-68094e3018d48191bc729fdf2c2cab64-criador-de-modelos-de-negocios-canvas" target="_blank">
+        https://chatgpt.com/g/g-68094e3018d48191bc729fdf2c2cab64-criador-de-modelos-de-negocios-canvas
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Ajude a preencher o Business Model Canvas de forma prática.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Usa modelo oficial de Business Model Canvas.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a preencher um modelo de Business Model Canvas para uma cafeteria.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Gerador de Nome para Empresas
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-680acfa79dc081919e3ff8913e47f0b4-gerador-de-nome-para-empresas" target="_blank">
+        https://chatgpt.com/g/g-680acfa79dc081919e3ff8913e47f0b4-gerador-de-nome-para-empresas
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Crie nomes criativos para novos negócios.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Sugere nomes com domínio disponível e fácil memorização.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a criar nomes criativos para uma nova marca de roupas fitness.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Consultor de Precificação
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-680ad028bbd08191978d0a6ebf4fe6cf-consultor-de-precificacao" target="_blank">
+        https://chatgpt.com/g/g-680ad028bbd08191978d0a6ebf4fe6cf-consultor-de-precificacao
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Ajude a estruturar preços de produtos ou serviços.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Sugere markup, precificação psicológica e valor percebido.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a definir o preço ideal para um curso online de desenvolvimento pessoal.
+      </p>
+     </div>
+    </details>
+   </div>
+   <div class="category-block" style="background-image: url('path/to/background.jpg');">
+    <div class="overlay">
+    </div>
+    <h2 class="category-title">
+     📚 Estudo
+    </h2>
+    <img alt="Banner da categoria" class="category-banner" src="path/to/banner.jpg"/>
+    <p class="category-desc">
+    GPTs que facilitam o aprendizado, organizam seus estudos e explicam conteúdos com clareza e profundidade.
+    </p>
+    <details>
+     <summary>
+      🤖 Resumidor de Livros e Artigos
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-6801ac1321f88191bfe88c5d9254af6d-resumidor-de-livros-e-artigos" target="_blank">
+        https://chatgpt.com/g/g-6801ac1321f88191bfe88c5d9254af6d-resumidor-de-livros-e-artigos
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Resuma conteúdos longos de forma rápida e prática.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Resumo em tópicos + frase de conclusão.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Resuma esse texto de 3 páginas em tópicos principais para estudo rápido.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Explicador de Conceitos Difíceis
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-6801ad51cc508191a7f1707cf800f377-explicador-de-conceitos-dificeis" target="_blank">
+        https://chatgpt.com/g/g-6801ad51cc508191a7f1707cf800f377-explicador-de-conceitos-dificeis
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Explique qualquer conceito complicado de forma simples.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Usa analogias simples e exemplos práticos.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Explique de forma simples o conceito de Machine Learning para um iniciante.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Treinador de Técnica Feynman
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-6803bfd22f1c81919e1ef5af94cac142-treinador-de-tecnica-feynman" target="_blank">
+        https://chatgpt.com/g/g-6803bfd22f1c81919e1ef5af94cac142-treinador-de-tecnica-feynman
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Ensine a si mesmo qualquer assunto com a técnica Feynman.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Usa a sequência da Técnica Feynman passo a passo.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Quero aprender Inteligência Artificial usando a Técnica Feynman. Me ajude a estruturar o estudo.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Simulador de Perguntas de Prova
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-6804fb4f8418819195b2da33688df76c-simulador-de-perguntas-de-prova" target="_blank">
+        https://chatgpt.com/g/g-6804fb4f8418819195b2da33688df76c-simulador-de-perguntas-de-prova
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Gere questões simuladas sobre qualquer tema de estudo.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Pode gerar perguntas de múltipla escolha ou discursivas.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Crie 5 perguntas simuladas para eu treinar para a prova de certificação de marketing digital.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Organizador de Plano de Estudos
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-6804ff1b35048191a3c8476a82082bea-organizador-de-plano-de-estudos" target="_blank">
+        https://chatgpt.com/g/g-6804ff1b35048191a3c8476a82082bea-organizador-de-plano-de-estudos
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Monte um plano de estudos adaptado ao seu objetivo.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Sugere cronogramas semanais personalizados.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a montar um plano de estudos semanal para o exame da OAB.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Resolvedor de Dúvidas Acadêmicas
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-6805048b50f48191a8f50636a87dbd50-resolvedor-de-duvidas-academicas" target="_blank">
+        https://chatgpt.com/g/g-6805048b50f48191a8f50636a87dbd50-resolvedor-de-duvidas-academicas
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Ajude a esclarecer dúvidas acadêmicas de forma simples.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Responde com exemplos e analogias.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Tenho uma dúvida sobre juros compostos. Pode me explicar de forma simples?
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Gerador de Resumos em Bullet Points
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-680adb2d0884819199d316740222dd5f-gerador-de-resumos-em-bullet-points" target="_blank">
+        https://chatgpt.com/g/g-680adb2d0884819199d316740222dd5f-gerador-de-resumos-em-bullet-points
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Faça resumos em tópicos para facilitar o estudo.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Resume em 5-7 tópicos principais.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a resumir este artigo científico em bullet points para estudo rápido: [cole o texto aqui].
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Simulador de Debates Acadêmicos
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-680d058ca23881918d2e24a9a991e6e9-simulador-de-debates-academicos" target="_blank">
+        https://chatgpt.com/g/g-680d058ca23881918d2e24a9a991e6e9-simulador-de-debates-academicos
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Crie perguntas para treinar argumentação em debates.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Sugere pontos de ataque e defesa.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a criar perguntas e respostas para simular um debate sobre energias renováveis.
+      </p>
+     </div>
+    </details>
+   </div>
+   <div class="category-block" style="background-image: url('path/to/background.jpg');">
+    <div class="overlay">
+    </div>
+    <h2 class="category-title">
+     💰 Finanças Pessoais
+    </h2>
+    <img alt="Banner da categoria" class="category-banner" src="path/to/banner.jpg"/>
+    <p class="category-desc">
+    Planeje, organize e otimize seu dinheiro com inteligência. Ferramentas para decisões financeiras conscientes e estratégicas.
+    </p>
+    <details>
+     <summary>
+      🤖 Organizador de Orçamento Mensal
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-6807ac16e6ac819190d31315b7a787cc-organizador-de-orcamento-mensal" target="_blank">
+        https://chatgpt.com/g/g-6807ac16e6ac819190d31315b7a787cc-organizador-de-orcamento-mensal
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Monte um orçamento simples e funcional.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Sugere distribuição: 50% necessidades, 30% desejos, 20% investimentos.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a organizar meu orçamento mensal considerando uma renda de R$5.000.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Gerador de Metas Financeiras SMART
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-6807ae8f31ac8191a2b8ed6c8055bb9e-gerador-de-metas-financeiras-smart" target="_blank">
+        https://chatgpt.com/g/g-6807ae8f31ac8191a2b8ed6c8055bb9e-gerador-de-metas-financeiras-smart
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Crie metas financeiras específicas e realistas.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Aplica a metodologia SMART diretamente.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a criar uma meta financeira SMART para juntar R$10.000 em 12 meses.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Criador de Plano de Economia Doméstica
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-6807aefd34808191adb1a6ef10b3f339-criador-de-plano-de-economia-domestica" target="_blank">
+        https://chatgpt.com/g/g-6807aefd34808191adb1a6ef10b3f339-criador-de-plano-de-economia-domestica
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Ajude a reduzir gastos e otimizar a economia em casa.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Sugere cortes e alternativas de economia.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a montar um plano de economia doméstica para reduzir despesas mensais.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Planejador de Aposentadoria
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-68095882781481919ff73fa6363a209a-planejador-de-aposentadoria" target="_blank">
+        https://chatgpt.com/g/g-68095882781481919ff73fa6363a209a-planejador-de-aposentadoria
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Ajude a criar um plano básico para aposentadoria tranquila.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Sugere metas de poupança e tipos de investimento.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a montar um plano básico de aposentadoria para me aposentar aos 60 anos.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Organizador de Investimentos Iniciais
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-680ac7220e488191835c5805228e2c4f-organizador-de-investimentos-para-iniciantes" target="_blank">
+        https://chatgpt.com/g/g-680ac7220e488191835c5805228e2c4f-organizador-de-investimentos-para-iniciantes
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Oriente sobre primeiros passos em investimentos.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Sugere reserva de emergência + investimentos de baixo risco.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a criar um plano de investimentos iniciais para quem tem R$5.000 disponíveis.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Gerador de Planos de Quitação de Dívidas
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-680ad4da8f208191ba45bfb65eb5825b-assistente-para-planos-de-quitacao-de-dividas" target="_blank">
+        https://chatgpt.com/g/g-680ad4da8f208191ba45bfb65eb5825b-assistente-para-planos-de-quitacao-de-dividas
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Ajude a organizar um plano para quitar dívidas de forma eficiente.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Sugere priorização por taxa de juros e renegociação.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a organizar um plano para quitar minhas dívidas de cartão de crédito.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Assistente de Controle de Gastos Diários
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-680ad914284081918ebbbe19ea696e93-assistente-de-controle-de-gastos-diarios" target="_blank">
+        https://chatgpt.com/g/g-680ad914284081918ebbbe19ea696e93-assistente-de-controle-de-gastos-diarios
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Acompanhe seus gastos diários de forma prática.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Sugere revisão semanal de gastos.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a controlar meus gastos diários e sugerir ajustes para economizar R$500 por mês.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Criador de Lista de Prioridades Financeiras
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-680adf1d8bc88191a732c4b5c7b62aac-criador-de-lista-de-prioridades-financeiras" target="_blank">
+        https://chatgpt.com/g/g-680adf1d8bc88191a732c4b5c7b62aac-criador-de-lista-de-prioridades-financeiras
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Defina o que priorizar financeiramente mês a mês.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Sugere método 50-30-20 para planejamento.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a listar e organizar minhas prioridades financeiras para os próximos 6 meses.
+      </p>
+     </div>
+    </details>
+   </div>
+   <div class="category-block" style="background-image: url('path/to/background.jpg');">
+    <div class="overlay">
+    </div>
+    <h2 class="category-title">
+     📈 Marketing Digital
+    </h2>
+    <img alt="Banner da categoria" class="category-banner" src="path/to/banner.jpg"/>
+    <p class="category-desc">
+     Criação de campanhas, gestão de redes sociais, funis e conteúdo com o apoio de GPTs que entendem do assunto.
+    </p>
+    <details>
+     <summary>
+      🤖 Gerador de Estratégias de Conteúdo
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-6807af7f29208191b06b0b35fabacb03-gerador-de-estrategias-de-conteudo" target="_blank">
+        https://chatgpt.com/g/g-6807af7f29208191b06b0b35fabacb03-gerador-de-estrategias-de-conteudo
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Crie uma estratégia completa para redes sociais.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Sugere calendário de posts e formatos variados.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a criar uma estratégia de conteúdo semanal para um perfil de moda no Instagram.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Otimizador de Bio de Redes Sociais
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-6807affc18a88191bfdde8b83f82f57c-otimizador-de-bio-de-redes-sociais" target="_blank">
+        https://chatgpt.com/g/g-6807affc18a88191bfdde8b83f82f57c-otimizador-de-bio-de-redes-sociais
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Ajude a criar uma bio irresistível para o Instagram.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Sugere bio curta, clara e com call to action.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a otimizar minha bio do Instagram para atrair mais clientes de marketing digital.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Gerador de Ideias para E-books
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-6807b0d7f8a0819182f6341c4dac6d8c-gerador-de-ideias-para-e-books" target="_blank">
+        https://chatgpt.com/g/g-6807b0d7f8a0819182f6341c4dac6d8c-gerador-de-ideias-para-e-books
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Crie temas e estruturas para e-books de geração de leads.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Sugere título, subtítulo e índice inicial.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a gerar ideias de temas para um e-book sobre gestão de tempo.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Criador de Ofertas Irresistíveis
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-680acb5076e081918e785da929aa7877-criador-de-ofertas-irresistiveis" target="_blank">
+        https://chatgpt.com/g/g-680acb5076e081918e785da929aa7877-criador-de-ofertas-irresistiveis
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Ajude a montar ofertas de vendas que convertem mais.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Usa gatilhos de escassez, bônus e urgência.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a criar uma oferta irresistível para vender meu curso online de fotografia.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Otimizador de Campanhas de Anúncios
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-680acb8e3c7c8191a418200737da55b7-otimizador-de-campanhas-de-anuncios" target="_blank">
+        https://chatgpt.com/g/g-680acb8e3c7c8191a418200737da55b7-otimizador-de-campanhas-de-anuncios
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Sugira melhorias para anúncios pagos.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Sugere ajuste de copy, criativo e segmentação.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a otimizar uma campanha de anúncios para aumentar o engajamento no Instagram.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Criador de Estratégias de Lançamento
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-680ad3e90b488191bf165832205cb089-criador-de-estrategias-de-lancamentos" target="_blank">
+        https://chatgpt.com/g/g-680ad3e90b488191bf165832205cb089-criador-de-estrategias-de-lancamentos
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Ajude a planejar lançamentos de produtos ou cursos.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Sugere cronograma de pré-lançamento, lançamento e pós-venda.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a criar uma estratégia de lançamento para um novo curso de meditação online.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Gerador de Títulos para E-mails de Alta Conversão
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-680adb954ddc8191843cec7ae6cabfcd-gerador-de-titulos-para-e-mails-de-alta-conversao" target="_blank">
+        https://chatgpt.com/g/g-680adb954ddc8191843cec7ae6cabfcd-gerador-de-titulos-para-e-mails-de-alta-conversao
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Crie títulos chamativos para campanhas de e-mail marketing.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Sugere variações de urgência, curiosidade, benefício.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a criar 5 títulos para um e-mail de lançamento de um curso de produtividade.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Especialista para Ideias de Webinars
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-680adfbfd0d88191a16ac700edb2f8f8-especialista-para-ideias-de-webinars" target="_blank">
+        https://chatgpt.com/g/g-680adfbfd0d88191a16ac700edb2f8f8-especialista-para-ideias-de-webinars
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Crie temas e roteiros para webinars envolventes.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Sugere título, tópicos e call to action.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a criar 3 ideias de temas para um webinar sobre produtividade remota.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Especialista em Copywiriting e vendas
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-680d1131e11c81918d115f48ac13c360-especialista-em-copywriting-e-vendas" target="_blank">
+        https://chatgpt.com/g/g-680d1131e11c81918d115f48ac13c360-especialista-em-copywriting-e-vendas
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Especialista em copywriting e vendas com 4U, AIDA, SPIN e técnicas de superação de objeções.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Criação de variações A/B de copy para testes, sugestão de headlines e chamadas alternativas, geração de perguntas SPIN Selling personalizadas para vendedores, adaptação de copy para funil (topo, meio, fundo), diagnóstico rápido de copy já existente (o que melhorar), ideias de ganchos e aberturas para captar atenção em diferentes canais.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Quero que você atue como Especialista em Copywriting e Vendas.
+Contexto: [descreva o produto/serviço, público-alvo, objetivo, canal e tom desejado]
+Formato: [ex.: e-mail de vendas, copy para anúncio, roteiro de vídeo, mensagem no WhatsApp etc.]
+Adapte a mensagem utilizando as metodologias que julgar mais eficientes.
+Peça que antecipe objeções comuns e responda de forma empática e estratégica.
+No final, entregue também um insight breve sobre tendências relacionadas ao tema.
+      </p>
+     </div>
+    </details>
+   </div>
+   <div class="category-block" style="background-image: url('path/to/background.jpg');">
+    <div class="overlay">
+    </div>
+    <h2 class="category-title">
+     💼 Negócios e Vendas
+    </h2>
+    <img alt="Banner da categoria" class="category-banner" src="path/to/banner.jpg"/>
+    <p class="category-desc">
+    Acelere resultados com GPTs voltados à gestão, negociação, planejamento e performance comercial.
+    </p>
+    <details>
+     <summary>
+      🤖 Mestre do funil (AIDA)
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-6801b6bfbd488191886ca477d007919a-mestre-do-funil-aida" target="_blank">
+        https://chatgpt.com/g/g-6801b6bfbd488191886ca477d007919a-mestre-do-funil-aida
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Estruture um funil de vendas usando o modelo AIDA.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Aplica Attention, Interest, Desire e Action automaticamente.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a criar um funil de vendas usando o método AIDA para vender cursos online.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Gerador de Propostas Comerciais Rápidas
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-6803bd1d52ac81918dd523fd077544f8-gerador-de-propostas-comerciais-rapidas" target="_blank">
+        https://chatgpt.com/g/g-6803bd1d52ac81918dd523fd077544f8-gerador-de-propostas-comerciais-rapidas
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Crie propostas comerciais personalizadas em poucos minutos.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Estrutura proposta em Introdução, Benefícios, Valor e Chamada para Ação.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a criar uma proposta comercial rápida para vender serviços de consultoria.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Negociador de Preços Inteligente
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-6803c370a384819186c63ceca046366f-negociador-de-precos-inteligente" target="_blank">
+        https://chatgpt.com/g/g-6803c370a384819186c63ceca046366f-negociador-de-precos-inteligente
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Ajude a criar argumentos estratégicos para negociação de preços.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Usa técnicas de valorização e ancoragem.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a criar argumentos para negociar o preço de um serviço de design gráfico.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Criador de Scripts para Atendimento
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-6804fdc32e54819192fba720e53ceef8-criador-de-scripts-para-atendimento" target="_blank">
+        https://chatgpt.com/g/g-6804fdc32e54819192fba720e53ceef8-criador-de-scripts-para-atendimento
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Monte scripts prontos para atendimento ao cliente.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Sugere perguntas-chave e respostas para objeções.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a criar um script de atendimento para uma loja de roupas femininas.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Criador de Estratégias de Upsell
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-680502f8fee48191a178df16c96fca73-criador-de-estrategias-de-upsell" target="_blank">
+        https://chatgpt.com/g/g-680502f8fee48191a178df16c96fca73-criador-de-estrategias-de-upsell
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Ajude a estruturar ofertas de upsell e cross-sell.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Sugere produtos complementares e momentos de oferta.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a criar uma estratégia de upsell para vender serviços de coaching após um curso online.
+      </p>
+     </div>
+    </details>
+   </div>
+   <div class="category-block" style="background-image: url('path/to/background.jpg');">
+    <div class="overlay">
+    </div>
+    <h2 class="category-title">
+     ⚡ Produtividade
+    </h2>
+    <img alt="Banner da categoria" class="category-banner" src="path/to/banner.jpg"/>
+    <p class="category-desc">
+     Organize seu tempo, tarefas e objetivos com assistentes pensados para fazer seu dia render mais — sem estresse.
+    </p>
+    <details>
+     <summary>
+      🤖 Planejador Diário 5x5
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-68019af81a50819186978564eac73cf9-planejador-diario-5x5" target="_blank">
+        https://chatgpt.com/g/g-68019af81a50819186978564eac73cf9-planejador-diario-5x5
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Organize suas 5 tarefas mais importantes por dia para ganhar foco e produtividade.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Usa técnica 5x5 de foco. Sugere tarefas de maior impacto diário.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Liste 10 tarefas pendentes e me ajude a escolher as 5 mais importantes para o dia.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Organizador de Prioridades (Matriz Eisenhower)
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-6801af05ea9c81919b2881257ec874c8-organizador-de-prioridades" target="_blank">
+        https://chatgpt.com/g/g-6801af05ea9c81919b2881257ec874c8-organizador-de-prioridades
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Ajude a priorizar tarefas usando a matriz urgente/importante.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Aplica a Matriz de Eisenhower automaticamente.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Liste minhas tarefas e me ajude a organizá-las na Matriz de Eisenhower.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Redutor de Procrastinação
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-6803bb05d8d88191928f41e13b67cd36-redutor-de-procrastinacao" target="_blank">
+        https://chatgpt.com/g/g-6803bb05d8d88191928f41e13b67cd36-redutor-de-procrastinacao
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Ajude a superar a procrastinação e começar tarefas difíceis.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Sugere técnica dos 5 minutos e quebra de tarefas grandes.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Estou procrastinando uma tarefa importante. Me ajude a quebrá-la em microações para começar agora.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Organizador de Agenda de Reuniões
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-6803c0edeba481919bd8953961bf3d81-organizador-de-agenda-de-reunioes" target="_blank">
+        https://chatgpt.com/g/g-6803c0edeba481919bd8953961bf3d81-organizador-de-agenda-de-reunioes
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Ajude a planejar reuniões objetivas e produtivas.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Sugere pautas e tempos para cada assunto da reunião.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a montar a pauta de uma reunião de planejamento estratégico de 1 hora.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Otimizador de Rotinas Matinais
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-6804fc8239108191aac6afd1c7a60f31-otimizador-de-rotinas-matinais" target="_blank">
+        https://chatgpt.com/g/g-6804fc8239108191aac6afd1c7a60f31-otimizador-de-rotinas-matinais
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Crie uma rotina matinal energizante e produtiva.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Sugere rotinas de 15, 30 ou 60 minutos conforme disponibilidade.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a montar uma rotina matinal de 20 minutos focada em produtividade e energia.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Criador de Checklists Inteligentes
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-680500db78f88191b721adbe83569a44-criador-de-checklists-inteligentes" target="_blank">
+        https://chatgpt.com/g/g-680500db78f88191b721adbe83569a44-criador-de-checklists-inteligentes
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Gere checklists automáticos para qualquer projeto ou rotina.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Sugere checklists prontos e possibilidade de edição.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Preciso organizar um checklist para lançamento de um produto digital. Pode me ajudar?
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Cronometrador de Técnicas Pomodoro
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-680505997bd4819199481cbe46739fec-cronometrador-de-tecnicas-pomodoro" target="_blank">
+        https://chatgpt.com/g/g-680505997bd4819199481cbe46739fec-cronometrador-de-tecnicas-pomodoro
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Ajude a organizar o trabalho em blocos de tempo focados.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Trabalha com blocos de 25 minutos de foco e 5 minutos de pausa.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a usar a técnica Pomodoro para estudar para concurso público.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Gerador de Mini Planos de Projeto
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-680ad6ca96fc8191a750deb7b9aeddd5-gerador-de-mini-planos-para-projetos" target="_blank">
+        https://chatgpt.com/g/g-680ad6ca96fc8191a750deb7b9aeddd5-gerador-de-mini-planos-para-projetos
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Monte um plano rápido para projetos pessoais ou profissionais.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Sugere objetivo, etapas, prazos.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a montar um mini plano de projeto para organizar um evento corporativo.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Gerador de Microtarefas para Grandes Projetos
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-680d0d3c20648191aeecef4ca2f3d84a-gerador-de-microtarefas-para-grandes-projetos" target="_blank">
+        https://chatgpt.com/g/g-680d0d3c20648191aeecef4ca2f3d84a-gerador-de-microtarefas-para-grandes-projetos
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Quebre projetos grandes em microtarefas fáceis de executar.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Sugere tarefas diárias ou semanais.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a quebrar meu projeto de lançamento de site em microtarefas semanais.
+      </p>
+     </div>
+    </details>
+   </div>
+   <div class="category-block" style="background-image: url('path/to/background.jpg');">
+    <div class="overlay">
+    </div>
+    <h2 class="category-title">
+     🧘 Saúde e Bem-estar
+    </h2>
+    <img alt="Banner da categoria" class="category-banner" src="path/to/banner.jpg"/>
+    <p class="category-desc">
+    Cuidar de si também é inteligência. GPTs para hábitos saudáveis, equilíbrio mental, sono, alimentação e autocuidado.
+    </p>
+    <details>
+     <summary>
+      🤖 Mini Personal Trainer Diário
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-68050809a19481919c470d59fa17c033-mini-personal-trainer-diario" target="_blank">
+        https://chatgpt.com/g/g-68050809a19481919c470d59fa17c033-mini-personal-trainer-diario
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Monte treinos curtos para fazer em casa.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Sugere treinos de 5, 10 ou 15 minutos sem equipamentos.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a criar um treino diário de 10 minutos para fazer em casa sem equipamentos.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Criador de Hábitos de Sono Saudável
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-680508cdd06081918aab9cc4d9a0f7a1-criador-de-habitos-de-sono-saudavel" target="_blank">
+        https://chatgpt.com/g/g-680508cdd06081918aab9cc4d9a0f7a1-criador-de-habitos-de-sono-saudavel
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Dê dicas práticas para melhorar o sono.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Sugere rotinas noturnas e técnicas de relaxamento.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me dê 5 dicas práticas para melhorar a qualidade do meu sono.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Criador de Planos de Hidratação
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-6807aa9b6b008191b1d7aea54c5602fc-criador-de-planos-de-hidratacao" target="_blank">
+        https://chatgpt.com/g/g-6807aa9b6b008191b1d7aea54c5602fc-criador-de-planos-de-hidratacao
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Ajude a criar um plano diário para beber mais água.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Sugere metas de ingestão e lembretes.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a montar um plano de hidratação diário para atingir 2 litros de água por dia.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Gerador de Refeições Saudáveis Rápidas
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-6809525fca24819185891ac5cda0d576-gerador-de-refeicoes-saudaveis-rapidas" target="_blank">
+        https://chatgpt.com/g/g-6809525fca24819185891ac5cda0d576-gerador-de-refeicoes-saudaveis-rapidas
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Sugira refeições saudáveis e fáceis de preparar.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Sugere receitas em até 15 minutos.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me sugira uma receita saudável e rápida para o almoço usando frango e legumes.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Coach de Alongamento Diário
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-6809547fc6a88191a07311068334b67d-coach-de-alongamento-diario" target="_blank">
+        https://chatgpt.com/g/g-6809547fc6a88191a07311068334b67d-coach-de-alongamento-diario
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Monte uma rotina de alongamentos para o dia a dia.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Sugere alongamentos matinais ou noturnos.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a montar uma rotina de alongamento de 5 minutos para fazer após o trabalho.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Coach de Desafios Saudáveis
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-680ad45b799081918d3a1dc0584dcade-coach-de-desafios-saudaveis" target="_blank">
+        https://chatgpt.com/g/g-680ad45b799081918d3a1dc0584dcade-coach-de-desafios-saudaveis
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Monte desafios de 21 dias para criar hábitos saudáveis.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Sugere calendário de atividades diárias.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a montar um desafio de 21 dias para criar o hábito de leitura diária.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Criador de Rotinas de Respiração
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-680ad8275e9c8191827c9a4f94728876-criador-de-rotinas-de-respiracao" target="_blank">
+        https://chatgpt.com/g/g-680ad8275e9c8191827c9a4f94728876-criador-de-rotinas-de-respiracao
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Monte práticas de respiração para relaxamento ou energia.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Sugere respirações box breathing, 4-7-8, etc.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a criar uma rotina de respiração para reduzir ansiedade antes de dormir.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Consultor de Bem-Estar no Trabalho
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-680ade78ef5881919d39a555615b56ea-consultor-de-bem-estar-no-trabalho" target="_blank">
+        https://chatgpt.com/g/g-680ade78ef5881919d39a555615b56ea-consultor-de-bem-estar-no-trabalho
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Sugira práticas para aumentar o bem-estar durante o trabalho.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Sugere pausas ativas, alongamentos e gestão de estresse.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a criar práticas de bem-estar para melhorar a qualidade de vida no escritório.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Criador de Mini Desafios de Saúde Mental
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-680d0e0ef4208191a01840b2dbe7d37d-criador-de-mini-desafios-de-saude-mental" target="_blank">
+        https://chatgpt.com/g/g-680d0e0ef4208191a01840b2dbe7d37d-criador-de-mini-desafios-de-saude-mental
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Monte desafios simples para fortalecer a mente.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Sugere práticas diárias de autocuidado.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a criar um desafio de 7 dias para melhorar a saúde mental e reduzir o estresse.
+      </p>
+     </div>
+    </details>
+   </div>
+   <div class="category-block" style="background-image: url('path/to/background.jpg');">
+    <div class="overlay">
+    </div>
+    <h2 class="category-title">
+     ✈️ Viagens e Estilo de Vida
+    </h2>
+    <img alt="Banner da categoria" class="category-banner" src="path/to/banner.jpg"/>
+    <p class="category-desc">
+     Planeje roteiros, experiências e momentos com GPTs que tornam sua vida mais leve, criativa e bem vivida.
+    </p>
+    <details>
+     <summary>
+      🤖 Planejador de Viagens Econômicas
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-6807b263a2c081918af70c58a506cbd5-planejador-de-viagens-economicas" target="_blank">
+        https://chatgpt.com/g/g-6807b263a2c081918af70c58a506cbd5-planejador-de-viagens-economicas
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Crie roteiros de viagem gastando pouco.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Sugere transporte, hospedagem e passeios econômicos.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a planejar uma viagem econômica de 5 dias para o Rio de Janeiro.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Organizador de Checklist de Viagem
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-680845f02d20819189d285efe1532f06-organizador-de-checklist-de-viagem" target="_blank">
+        https://chatgpt.com/g/g-680845f02d20819189d285efe1532f06-organizador-de-checklist-de-viagem
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Crie uma checklist personalizada para sua viagem.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Sugere itens essenciais e opcionais.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a criar um checklist completo para uma viagem internacional de 10 dias.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Especialista de Experiências Gastronômicas
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-680ace5dbbb08191ae132922e27ac6c1-especialista-em-experiencias-gastronomicas" target="_blank">
+        https://chatgpt.com/g/g-680ace5dbbb08191ae132922e27ac6c1-especialista-em-experiencias-gastronomicas
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Sugira experiências gastronômicas únicas para viagens.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Sugere restaurantes e pratos típicos.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a montar um roteiro gastronômico para uma viagem de 3 dias em Salvador.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Criador de Roteiros de Aventura
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-680acf19ec58819185367df50352d26b-criador-de-roteiros-de-aventura" target="_blank">
+        https://chatgpt.com/g/g-680acf19ec58819185367df50352d26b-criador-de-roteiros-de-aventura
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Planeje viagens focadas em aventura e esportes radicais.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Sugere trilhas, esportes, parques de aventura.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a planejar um roteiro de aventura para um mochilão pelo Peru.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Gerador de Roteiros de Fim de Semana
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-680adc6c58d08191b34a009190162317-gerador-de-roteiros-de-fim-de-semana" target="_blank">
+        https://chatgpt.com/g/g-680adc6c58d08191b34a009190162317-gerador-de-roteiros-de-fim-de-semana
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Sugira roteiros para viagens curtas e práticas.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Sugere transporte, hospedagem e passeio principal.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a montar um roteiro de fim de semana romântico em Campos do Jordão.
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Planejador de Mochilão
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-680d060439608191bce6ecce22475ba2-planejador-de-mochilao" target="_blank">
+        https://chatgpt.com/g/g-680d060439608191bce6ecce22475ba2-planejador-de-mochilao
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Organize um mochilão prático e econômico.
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Sugere roteiros baratos, hostels e transportes alternativos.
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       Me ajude a planejar um mochilão de 15 dias pela América do Sul com orçamento limitado.
+      </p>
+     </div>
+    </details>
+   </div>
+   <div class="category-block" style="background-image: url('path/to/background.jpg');">
+    <div class="overlay">
+    </div>
+    <h2 class="category-title">
+     🎯 Culinária e Gastronomia
+    </h2>
+    <img alt="Banner da categoria" class="category-banner" src="path/to/banner.jpg"/>
+    <p class="category-desc">
+     Receitas, harmonizações e técnicas com um toque de inovação — para quem ama cozinhar ou quer aprender com prazer.
+    </p>
+    <details>
+     <summary>
+      🤖 Mestre do Churrasco
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-68164bb855248191a7b24babd1b3422d-mestre-do-churrasco" target="_blank">
+        https://chatgpt.com/g/g-68164bb855248191a7b24babd1b3422d-mestre-do-churrasco
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Técnica e temperos ideais para um churrasco perfeito
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Sugestões de marinadas, tempos de cozimento e controle de temperatura
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       “Me ajude a preparar uma picanha suculenta para 8 pessoas na churrasqueira a carvão.”
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Especialista em Finger Foods
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-68164c32c934819182d18dadc899da12-especialista-em-finger-foods" target="_blank">
+        https://chatgpt.com/g/g-68164c32c934819182d18dadc899da12-especialista-em-finger-foods
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Receitas rápidas de petiscos para qualquer evento
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Lista de ingredientes, métodos passo a passo e variações
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       “Preciso de 3 ideias de finger foods veganas para um coquetel corporativo.”
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Barista de Café da Manhã
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-68164cd817188191a0c88ce5d6d43352-barista-de-cafe-da-manha" target="_blank">
+        https://chatgpt.com/g/g-68164cd817188191a0c88ce5d6d43352-barista-de-cafe-da-manha
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Menus completos de café da manhã equilibrado e saboroso
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Substituições saudáveis, combinações de sabores e técnicas de preparo
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       “Monte um café da manhã proteico e sem glúten para um atleta antes do treino matinal.”
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Planejador de Jantar Gourmet
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-68164dd2729c81919e857133b98c362d-chef-gourmet-para-jantares" target="_blank">
+        https://chatgpt.com/g/g-68164dd2729c81919e857133b98c362d-chef-gourmet-para-jantares
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Cardápio gourmet completo para jantares especiais
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Sequência de pratos, harmonização de vinhos e decoração de pratos
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       “Crie um menu de jantar italiano (entrada, prato principal e sobremesa) para celebrar uma formatura.”
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Nutricionista para Celíacos
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-68164ec6bdd081919b5dc8d38128364e-especialista-em-nutricao-para-celiacos" target="_blank">
+        https://chatgpt.com/g/g-68164ec6bdd081919b5dc8d38128364e-especialista-em-nutricao-para-celiacos
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Refeições seguras e saborosas sem glúten
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Substituições sem glúten, tabelas de ingredientes e macros
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       “Sugira um cardápio sem glúten para um dia inteiro: café, almoço, lanche e jantar.”
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Chef Vegano Criativo
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-68165011de388191bc3cd35dd0019910-chef-vegano-criativo" target="_blank">
+        https://chatgpt.com/g/g-68165011de388191bc3cd35dd0019910-chef-vegano-criativo
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Ideias inovadoras de pratos veganos completos
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Fontes de proteína vegetal, texturas e sugestões de apresentação
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       “Me dê 5 ideias de pratos veganos rápidos usando grão-de-bico.”
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Chef de intolerantes à Lactose
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-6816509c8c908191b6b463c47b48cc90-chef-de-intolerantes-a-lactose" target="_blank">
+        https://chatgpt.com/g/g-6816509c8c908191b6b463c47b48cc90-chef-de-intolerantes-a-lactose
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Planeja dietas sem lactose, saborosas e nutritivas
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Alternativas de laticínios, dicas de culinária e valores nutricionais
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       “Preciso de 3 receitas de sobremesas sem lactose e com baixo teor de açúcar.”
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Chef para Alergicos Alimentares
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-6816512f8774819188d0d8bb050fed91-chef-para-alergicos-a-alimentos" target="_blank">
+        https://chatgpt.com/g/g-6816512f8774819188d0d8bb050fed91-chef-para-alergicos-a-alimentos
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Substituições e precauções para alergênicos comuns
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Tabelas de substituições, alertas de contaminação e fontes confiáveis
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       “Crie uma planilha de receitas seguras para quem tem alergia a nozes e frutos do mar.”
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Mestre Sommelier Enológico
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-6816520a19f48191b2d0e8a5e2230afd-mestre-sommelier-enologico" target="_blank">
+        https://chatgpt.com/g/g-6816520a19f48191b2d0e8a5e2230afd-mestre-sommelier-enologico
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Indica vinhos ideais para acompanhar diversos pratos
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Notas de degustação, faixas de preço e dicas de serviço
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       “Qual vinho tinto brasileiro devo servir com um filé mignon ao molho madeira?”
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Mestre dos Drinks
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-681652e88dc48191b3095feae2bf4320-mestre-dos-drinks" target="_blank">
+        https://chatgpt.com/g/g-681652e88dc48191b3095feae2bf4320-mestre-dos-drinks
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Cria drinks clássicos e autorais para seu bar
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Receitas, proporções, técnicas de preparo e guarnições
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       “Me ajude a criar um drink autoral com rum e maracujá para uma festa à beira da piscina.”
+      </p>
+     </div>
+    </details>
+   </div>
+   <div class="category-block" style="background-image: url('path/to/background.jpg');">
+    <div class="overlay">
+    </div>
+    <h2 class="category-title">
+     🎯 Estudantes
+    </h2>
+    <img alt="Banner da categoria" class="category-banner" src="path/to/banner.jpg"/>
+    <p class="category-desc">
+     Assistentes preparados para ajudar na organização, nos estudos e na vida acadêmica em todas as fases.
+    </p>
+    <details>
+     <summary>
+      🤖 Narrador de Histórias Incríveis
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-6816537d71b08191bb8a297cd2042fd6-narrador-de-historias-incriveis" target="_blank">
+        https://chatgpt.com/g/g-6816537d71b08191bb8a297cd2042fd6-narrador-de-historias-incriveis
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Narrativas cativantes com contexto histórico
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Linhas do tempo, fontes de referência e resumos
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       “Conte uma história envolvente sobre a Revolução Industrial para adolescentes.”
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Especialista em Conhecimentos Gerais
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-6816545e74b88191850ee9d6ef84e1bb-especialista-em-conhecimentos-gerais" target="_blank">
+        https://chatgpt.com/g/g-6816545e74b88191850ee9d6ef84e1bb-especialista-em-conhecimentos-gerais
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Ensina fatos e curiosidades de forma interativa
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Quiz, curiosidades e mapas mentais
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       “Ensine-me de forma interativa sobre a formação das estrelas no universo.”
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Especialista em Temas Polêmicos
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-68165508804c81918087f9ab6bba5eee-especialista-em-temas-polemicos" target="_blank">
+        https://chatgpt.com/g/g-68165508804c81918087f9ab6bba5eee-especialista-em-temas-polemicos
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Explora assuntos controversos com equilíbrio
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Prós &amp; contras, perspectivas múltiplas e fontes confiáveis
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       “Analise de forma imparcial os principais argumentos a favor e contra a pena de morte.”
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Mentor de Pesquisa Acadêmica
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-6816557febb48191819c9e63d7ee4cd5-mentor-de-pesquisa-academica" target="_blank">
+        https://chatgpt.com/g/g-6816557febb48191819c9e63d7ee4cd5-mentor-de-pesquisa-academica
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Orienta na condução de pesquisas e estruturação de TCCs
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Modelos de estrutura, normas ABNT e dicas de busca bibliográfica
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       “Me ajude a estruturar o TCC sobre o impacto das redes sociais na política.”
+      </p>
+     </div>
+    </details>
+    <details>
+     <summary>
+      🤖 Professor de Estudos Avançados
+     </summary>
+     <div class="content">
+      <p>
+       <strong>
+        Link:
+       </strong>
+       <a href="https://chatgpt.com/g/g-681655e963488191b145632b4bd50623-professor-de-estudos-avancados" target="_blank">
+        https://chatgpt.com/g/g-681655e963488191b145632b4bd50623-professor-de-estudos-avancados
+       </a>
+      </p>
+      <p>
+       <strong>
+        Descrição:
+       </strong>
+       Quebra temas complexos em etapas de aprendizado
+      </p>
+      <p>
+       <strong>
+        Ferramentas:
+       </strong>
+       Planos de estudo, exercícios e revisão espaçada
+      </p>
+      <p>
+       <strong>
+        Prompt Ideal:
+       </strong>
+       “Como posso estudar os conceitos básicos de mecânica quântica em 4 semanas de forma eficaz?”
+      </p>
+     </div>
+    </details>
+   </div>
+  </div>
+  <form action="https://script.google.com/macros/s/AKfycbxdnYbADXwEFEVwEWjkxNi9hqFMvoQIUhMd-w-ms8BkGfQ14nI-PYWQT9OAyUNl0mT6Xw/exec" id="suggestionForm" method="post">
+   <form id="suggestionForm" onsubmit="return handleSuggestion(event)">
+    <h2>
+     Colabore com sugestões e opiniões para aperfeiçoarmos ainda mais os nossos GPTs
+    </h2>
+    <h3>
+     Sua participação é fundamental para a evolução destes GPTs.
+    </h3>
+    <div class="form-group">
+     <label for="sugName">
+      Nome:
+     </label>
+     <input id="sugName" name="name" required="" type="text"/>
+    </div>
+    <div class="form-group">
+     <label for="sugEmail">
+      E-mail:
+     </label>
+     <input id="sugEmail" name="email" required="" type="email"/>
+    </div>
+    <div class="form-group">
+     <label for="countryCode">
+      Código do País:
+     </label>
+     <select id="countryCode" name="country_code" required="">
+      <option value="">
+       Selecione o país
+      </option>
+      <option value="+55">
+       🇧🇷 +55
+      </option>
+      <option value="+1">
+       🇺🇸 +1
+      </option>
+      <option value="+44">
+       🇬🇧 +44
+      </option>
+      <option value="+34">
+       🇪🇸 +34
+      </option>
+      <option value="+49">
+       🇩🇪 +49
+      </option>
+     </select>
+    </div>
+    <div class="form-group">
+     <label for="areaCode">
+      DDD:
+     </label>
+     <input id="areaCode" maxlength="3" name="area_code" pattern="\d{2,3}" required="" type="text"/>
+    </div>
+    <div class="form-group">
+     <label for="phoneNumber">
+      Telefone:
+     </label>
+     <input id="phoneNumber" name="phone_number" pattern="\d+" required="" type="text"/>
+    </div>
+    <div class="form-group">
+     <label for="suggestion">
+      Sugestão de GPT:
+     </label>
+     <textarea id="suggestion" name="suggestion" required="" rows="4"></textarea>
+    </div>
+    <button type="submit">
+     Enviar Sugestão
+    </button>
+   </form>
+   <footer>
+    Desenvolvido por Rodolfo da Silva Braga.
+  LinkedIn:
+    <a href="https://www.linkedin.com/in/rodolfo-da-silva-braga-cea-3a64293a" target="_blank">
+     linkedin.com/in/rodolfo-da-silva-braga-cea-3a64293a
+    </a>
+    ,
+  Site:
+    <a href="https://www.leadaizy.com" target="_blank">
+     leadaizy.com
+    </a>
+    ,
+  WhatsApp:
+    <a href="https://wa.me/5511969206719" target="_blank">
+     wa.me/5511969206719
+    </a>
+    .
+  Todos os direitos reservados de Rodolfo da Silva Braga.
+   </footer>
+   <script>
+    function filterList() {
+  const filter = document.getElementById('search').value.toLowerCase();
+  document.querySelectorAll('.category-block').forEach(block => {
+    let anyVisible = false;
+    block.querySelectorAll('details').forEach(detail => {
+      const summaryText = detail.querySelector('summary').textContent.toLowerCase();
+      if (summaryText.includes(filter)) {
+        detail.style.display = '';
+        anyVisible = true;
+      } else {
+        detail.style.display = 'none';
+      }
+    });
+    block.style.display = anyVisible ? '' : 'none';
+  });
+}
+   </script>
+   <script>
+    // inicia o widget
+  if (netlifyIdentity) {
+    netlifyIdentity.init();
+  }
+   </script>
+   <script src="main.js">
+   </script>
+  </form>
+ </body>
+</html>
