@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Clube do GPT – Protótipo</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <!-- Topbar -->
+  <header class="topbar">
+    <div class="logo">Clube do GPT</div>
+    <div class="topbar-icons">
+      <!-- Ícones numerados 1…6 -->
+      <button title="Manual">❓1</button>
+      <button title="Categorias">📂2</button>
+      <button title="Configurações">⚙️3</button>
+      <button title="Sugestões">💡4</button>
+      <button title="Plano">💳5</button>
+      <button title="Sair">🚪6</button>
+    </div>
+  </header>
+
+  <!-- Search + Favoritos -->
+  <div class="search-bar">
+    <input type="text" id="searchInput" placeholder="Pesquisar GPTs…" />
+    <button id="favoritesBtn" title="Meus Favoritos">⭐</button>
+  </div>
+
+  <!-- Abas de Categoria (Folders) -->
+  <nav class="tabs" id="categoryTabs">
+    <!-- JS irá injetar: <button data-cat="Autoestima">Autoestima</button> … -->
+  </nav>
+
+  <!-- Layout com Sidebar + Main -->
+  <div class="container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <ul>
+        <li><button data-section="manual">📖 Manual</button></li>
+        <li><button data-section="categories">📂 Categorias</button></li>
+        <li><button data-section="config">⚙️ Configurações</button></li>
+        <li><button data-section="suggestions">💡 Sugestões</button></li>
+        <li><button data-section="plan">💳 Plano</button></li>
+        <li><button data-section="logout">🚪 Sair</button></li>
+      </ul>
+    </aside>
+
+    <!-- Área principal de cards -->
+    <main id="content">
+      <!-- JS irá renderizar aqui os cartões de GPTs -->
+    </main>
+  </div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
