@@ -7,49 +7,48 @@
   <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
-  <!-- Topbar -->
-  <header class="topbar">
-    <div class="logo">Clube do GPT</div>
-    <div class="topbar-icons">
-      <!-- Ícones numerados 1…6 -->
-      <button title="Manual">❓1</button>
-      <button title="Categorias">📂2</button>
-      <button title="Configurações">⚙️3</button>
-      <button title="Sugestões">💡4</button>
-      <button title="Plano">💳5</button>
-      <button title="Sair">🚪6</button>
-    </div>
-  </header>
 
-  <!-- Search + Favoritos -->
-  <div class="search-bar">
-    <input type="text" id="searchInput" placeholder="Pesquisar GPTs…" />
-    <button id="favoritesBtn" title="Meus Favoritos">⭐</button>
-  </div>
-
-  <!-- Abas de Categoria (Folders) -->
-  <nav class="tabs" id="categoryTabs">
-    <!-- JS irá injetar: <button data-cat="Autoestima">Autoestima</button> … -->
-  </nav>
-
-  <!-- Layout com Sidebar + Main -->
-  <div class="container">
-    <!-- Sidebar -->
-    <aside class="sidebar">
-      <ul>
-        <li><button data-section="manual">📖 Manual</button></li>
-        <li><button data-section="categories">📂 Categorias</button></li>
-        <li><button data-section="config">⚙️ Configurações</button></li>
-        <li><button data-section="suggestions">💡 Sugestões</button></li>
-        <li><button data-section="plan">💳 Plano</button></li>
-        <li><button data-section="logout">🚪 Sair</button></li>
+  <div class="wrapper">
+    <!-- SIDEBAR RETRÁTIL -->
+    <aside class="sidebar" id="sidebar">
+      <button class="collapse-btn" id="collapseBtn" title="Retrair menu">
+        ‹
+      </button>
+      <ul class="menu">
+        <li data-section="manual"><span class="icon">📖</span><span class="label">Manual</span></li>
+        <li data-section="gpts"><span class="icon">📂</span><span class="label">GPTs</span></li>
+        <li data-section="favoritos"><span class="icon">⭐</span><span class="label">Favoritos</span></li>
+        <li data-section="sugestoes"><span class="icon">💡</span><span class="label">Sugestões</span></li>
+        <li data-section="cadastro"><span class="icon">📝</span><span class="label">Cadastro</span></li>
+        <li data-section="opcoes"><span class="icon">⚙️</span><span class="label">Opções</span></li>
+        <li data-section="sair"><span class="icon">🚪</span><span class="label">Sair</span></li>
       </ul>
     </aside>
 
-    <!-- Área principal de cards -->
-    <main id="content">
-      <!-- JS irá renderizar aqui os cartões de GPTs -->
-    </main>
+    <!-- ÁREA PRINCIPAL -->
+    <div class="main">
+      <!-- TOPBAR -->
+      <header class="topbar">
+        <div class="logo">Clube do GPT</div>
+        <div class="tagline">Sua coleção premium de assistentes de IA — feita para quem quer mais.</div>
+      </header>
+
+      <!-- BUSCA + ABAS -->
+      <div class="search-tabs">
+        <div class="search-bar">
+          <input type="text" id="searchInput" placeholder="Campo de pesquisa" />
+          <button id="favoritesBtn" title="Ver Favoritos">⭐</button>
+        </div>
+        <nav class="tabs" id="categoryTabs">
+          <!-- JS injeta aqui as abas de categoria -->
+        </nav>
+      </div>
+
+      <!-- CONTEÚDO DINÂMICO -->
+      <main id="content">
+        <!-- JS renderiza aqui os cards -->
+      </main>
+    </div>
   </div>
 
   <script src="js/app.js"></script>
