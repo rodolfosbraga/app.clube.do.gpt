@@ -7,11 +7,13 @@
   <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
+  <!-- Botão retrátil sidebar: sempre visível, flutuante, fora do aside -->
+  <button id="collapseBtn" class="collapse-btn" title="Retrair menu">‹</button>
+  
   <div class="wrapper">
 
     <!-- SIDEBAR FIXA -->
     <aside class="sidebar" id="sidebar">
-      <button id="collapseBtn" class="collapse-btn" title="Retrair menu">‹</button>
       <ul class="menu">
         <li data-section="manual"><span class="icon">📖</span><span class="label">Manual</span></li>
         <li data-section="gpts"><span class="icon">📂</span><span class="label">GPTs</span></li>
@@ -37,9 +39,11 @@
         </div>
       </header>
 
-      <!-- BUSCA + ABAS DE CATEGORIAS (apenas em GPTs/favoritos) -->
+      <!-- BARRA FIXA: CATEGORIAS E PESQUISA -->
       <div class="search-tabs">
         <div class="inner">
+          <!-- TÍTULO “Categorias” (visível só na seção GPTs/favoritos, via body.gpts-active) -->
+          <h2 class="section-title">Categorias</h2>
           <div class="search-bar">
             <div class="input-wrapper">
               <input type="text" id="searchInput" placeholder="Pesquisar GPTs…" />
@@ -47,23 +51,15 @@
             </div>
             <button id="favoritesBtn" title="Meus Favoritos">⭐</button>
           </div>
-
-          <!-- TÍTULO “Categorias” (visível só em GPTs/favoritos) -->
-          <h2 class="section-title">Categorias</h2>
-
           <nav class="tabs" id="categoryTabs">
-            <!-- As 17 categorias + "Favoritos" serão injetadas aqui via JS -->
+            <!-- As categorias + "Favoritos" serão injetadas aqui via JS -->
           </nav>
         </div>
       </div>
 
       <!-- CONTEÚDO DINÂMICO -->
       <main id="content" class="inner">
-        <!-- Aqui o JS renderiza:
-             - Seção Manual (texto puxado do catalog.html)
-             - Área GPTs (cards filtrados por categoria/favoritos)
-             - Formulário de Sugestões
-        -->
+        <!-- JS renderiza manual, cards, sugestões ou "Em breve!" -->
       </main>
 
     </div>
