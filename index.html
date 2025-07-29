@@ -4,15 +4,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Clube do GPT - Login</title>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;400&display=swap" rel="stylesheet">
+  <!-- Fonte Cinzel do Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --fundo-dark: #101828cc;
       --azul-glow: #03b0ec;
-      --input-bg: rgba(23, 36, 61, 0.70);
+      --input-bg: rgba(23, 36, 61, 0.67);
       --input-text: #e6f3fb;
       --input-placeholder: #a0bcd6;
-      --container-glass: rgba(15, 25, 40, 0.7);
+      --container-glass: rgba(15, 25, 40, 0.44);
       --white: #fff;
       --btn-main: #04b1f0;
       --btn-hover: #0091c4;
@@ -21,14 +21,20 @@
     html, body {
       height: 100%;
       margin: 0;
-      font-family: 'Montserrat', Arial, sans-serif;
+      font-family: 'Cinzel', serif;
+      background: #101828;
     }
     body {
       min-height: 100vh;
       min-width: 100vw;
+      /* >>> TROQUE O NOME DA IMAGEM DE FUNDO AQUI 👇 <<< */
       background: url('background-login.jpeg') no-repeat center center fixed;
+      /* ----------------------------------------------- */
       background-size: cover;
       position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
     .overlay {
       position: absolute;
@@ -37,49 +43,60 @@
       backdrop-filter: blur(1px);
       z-index: 1;
     }
-    .login-container {
+    .main-center {
       position: relative;
       z-index: 2;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .login-container {
       width: 100%;
-      max-width: 390px;
-      margin: 5vh auto;
-      padding: 36px 32px 32px 32px;
-      border-radius: 18px;
+      max-width: 420px;
+      padding: 38px 34px 32px 34px;
+      border-radius: 20px;
+      /* Transparência suave (glass) */
       background: var(--container-glass);
       box-shadow: 0 8px 32px 0 rgba(13,21,38,0.22);
-      backdrop-filter: blur(7px);
+      backdrop-filter: blur(14px);  /* Glassmorphism mais sofisticado */
       display: flex;
       flex-direction: column;
       align-items: center;
     }
     .logo-holder {
-      width: 68px;
-      height: 68px;
-      margin-bottom: 18px;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.03);
+      width: 30%;
+      min-width: 110px;
+      max-width: 150px;
+      aspect-ratio: 1 / 1;
+      margin-bottom: 22px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.08);
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 2px 10px 0 rgba(10,40,70,0.07);
+      box-shadow: 0 2px 16px 0 rgba(10,40,70,0.13);
     }
     .logo-holder img {
-      max-width: 52px;
-      max-height: 52px;
+      width: 80%;
+      height: 80%;
       object-fit: contain;
+      border-radius: 10px;
+      display: block;
     }
     .login-title {
-      font-size: 2.0rem;
+      font-size: 2.1rem;
       font-weight: 700;
       color: var(--white);
-      margin-bottom: 8px;
+      margin-bottom: 10px;
       letter-spacing: 1px;
       text-shadow: 0 2px 10px #14274466;
     }
     .login-subtitle {
-      font-size: 1rem;
+      font-size: 1.06rem;
       color: #c8e8fc;
-      margin-bottom: 26px;
+      margin-bottom: 24px;
       text-align: center;
       text-shadow: 0 1px 5px #091b3a44;
     }
@@ -99,6 +116,7 @@
       box-shadow: 0 2px 12px #0001;
       outline: none;
       transition: border-color 0.2s, background 0.2s;
+      font-family: 'Cinzel', serif;
     }
     .login-input:focus {
       border-color: var(--azul-glow);
@@ -137,14 +155,16 @@
       letter-spacing: 0.3px;
       cursor: pointer;
       transition: background 0.18s, color 0.18s, box-shadow 0.2s;
-      margin-bottom: 11px;
+      margin-bottom: 0;
       box-shadow: 0 2px 12px #03b0ec11;
+      font-family: 'Cinzel', serif;
     }
     .login-btn {
       background: var(--btn-main);
       color: #fff;
       margin-top: 8px;
-      margin-bottom: 0;
+      /* Espaço entre os botões ↓ */
+      margin-bottom: 20px;
       border: 1px solid #22a5e9;
     }
     .login-btn:hover {
@@ -164,12 +184,19 @@
       border-color: var(--azul-glow);
     }
     @media (max-width: 600px) {
+      .main-center {
+        padding: 4vw 0;
+      }
       .login-container {
-        max-width: 96vw;
-        padding: 22px 3vw 18px 3vw;
+        max-width: 98vw;
+        padding: 16px 2vw 12px 2vw;
+      }
+      .logo-holder {
+        min-width: 68px;
+        max-width: 90px;
       }
       .login-title {
-        font-size: 1.3rem;
+        font-size: 1.2rem;
       }
       .login-form {
         gap: 13px;
@@ -183,21 +210,23 @@
 </head>
 <body>
   <div class="overlay"></div>
-  <form class="login-container">
-    <div class="logo-holder">
-      <img src="logo-placeholder.jpeg" alt="Logo do Clube do GPT">
-    </div>
-    <div class="login-title">Clube do <span style="color: #04b1f0;">GPT</span></div>
-    <div class="login-subtitle">O seu espaço para aprender IA todo mês.</div>
-    <div class="login-form">
-      <input type="email" class="login-input" placeholder="Seu e-mail" required>
-      <input type="password" class="login-input" placeholder="Digite sua senha" required>
-    </div>
-    <div class="login-links">
-      <a href="#">Esqueceu a senha?</a>
-    </div>
-    <button type="submit" class="login-btn">Entrar</button>
-    <button type="button" class="signup-btn" onclick="window.location.href='https://seusite.com/pagina-de-vendas'">Quero ser membro</button>
-  </form>
+  <div class="main-center">
+    <form class="login-container">
+      <div class="logo-holder">
+        <img src="logo-placeholder.jpeg" alt="Logo do Clube do GPT">
+      </div>
+      <div class="login-title">Clube do <span style="color: #04b1f0;">GPT</span></div>
+      <div class="login-subtitle">O seu clube de inteligência artificial: GPTs que realmente ajudam no seu dia a dia</div>
+      <div class="login-form">
+        <input type="email" class="login-input" placeholder="Seu e-mail" required>
+        <input type="password" class="login-input" placeholder="Digite sua senha" required>
+      </div>
+      <div class="login-links">
+        <a href="#">Esqueceu a senha?</a>
+      </div>
+      <button type="submit" class="login-btn">Entrar</button>
+      <button type="button" class="signup-btn" onclick="window.location.href='https://seusite.com/pagina-de-vendas'">Quero ser membro</button>
+    </form>
+  </div>
 </body>
 </html>
