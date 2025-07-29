@@ -71,7 +71,7 @@ body { font-family: sans-serif; background:#f2f2f2; }
 .search-tabs {
   position: fixed;
   left: 0;
-  top: 72px;   /* Espaço extra abaixo do header */
+  top: 69px;   /* Espaço extra abaixo do header */
   width: 100vw;
   z-index: 999;
   display: none;
@@ -138,7 +138,7 @@ body { font-family: sans-serif; background:#f2f2f2; }
 
 /* MAIN E CONTEÚDO */
 .main {
-  margin-top: 60px;
+  margin-top: 100px;
   margin-left: 220px;
   transition: margin-left 0.3s;
   background: #f7f8fb;
@@ -154,7 +154,7 @@ body { font-family: sans-serif; background:#f2f2f2; }
 /* CARDS DOS GPTs ABAIXO DA BARRA FIXA */
 body.gpts-active #content,
 body.favoritos-active #content {
-  margin-top: 200px; /* header + search-tabs + título + espaçamento extra */
+  margin-top: 250px; /* header + search-tabs + título + espaçamento extra */
   padding-top: 0;
   min-height: calc(100vh - 60px - 95px);
   overflow-y: auto;
@@ -190,6 +190,7 @@ body.favoritos-active #content {
 /* MANUAL MAIS "BAIXO" */
 .manual-content.inner {
   max-width: 700px;
+  margin-top: 60px;
   margin: 4rem auto 0 auto;
   padding: 2rem 1.5rem;
   background: #fff;
@@ -200,7 +201,7 @@ body.favoritos-active #content {
   text-align: center;
 }
 @media (max-width: 768px) {
-  .manual-content.inner { margin-top: 2.2rem; padding: 1rem 0.4rem; font-size: 1rem; }
+  .manual-content.inner { margin-top: 2.6rem; padding: 1rem 0.4rem; font-size: 1rem; }
 }
 
 /* SUGESTÕES RESPONSIVO */
@@ -245,7 +246,7 @@ body.sugestoes-active #content form {
   body.gpts-active #content,
   body.favoritos-active #content {
     padding: 0.5rem 0;
-    margin-top: 200px; /* aumenta para mobile para garantir */
+    margin-top: 250px; /* aumenta para mobile para garantir */
     min-height: calc(100vh - 60px - 92px);
   }
   .card { max-width: 98vw; min-width: 0; }
