@@ -3,12 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-  <title>Clube do GPT – Protótipo Completo</title>
+  <title>Clube do GPT – Protótipo Ajustado</title>
   <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
   <div class="wrapper">
-    <!-- SIDEBAR RETRÁTIL -->
+  
+    <!-- SIDEBAR FIXA -->
     <aside class="sidebar" id="sidebar">
       <button id="collapseBtn" class="collapse-btn" title="Retrair menu">‹</button>
       <ul class="menu">
@@ -24,15 +25,19 @@
 
     <!-- ÁREA PRINCIPAL -->
     <div class="main">
-      <!-- TOPBAR -->
+    
+      <!-- TOPBAR FIXA -->
       <header class="topbar">
         <div class="inner">
-          <div class="logo">Clube do GPT</div>
-          <div class="tagline">Sua coleção premium de assistentes de IA — feita para quem quer mais.</div>
+          <img src="path/to/logo-placeholder.png" alt="GPT Club Logo" class="header-logo">
+          <div class="titles">
+            <div class="logo">Clube do GPT</div>
+            <div class="tagline">Sua coleção premium de assistentes de IA — feita para quem quer mais.</div>
+          </div>
         </div>
       </header>
 
-      <!-- BUSCA + ABAS DE CATEGORIAS -->
+      <!-- BUSCA + ABAS -->
       <div class="search-tabs">
         <div class="inner">
           <div class="search-bar">
@@ -43,19 +48,20 @@
             <button id="favoritesBtn" title="Meus Favoritos">⭐</button>
           </div>
 
-          <!-- TÍTULO “Categorias” -->
+          <!-- SÓ EXIBE EM “GPTs” -->
           <h2 class="section-title">Categorias</h2>
 
           <nav class="tabs" id="categoryTabs">
-            <!-- As 17 categorias + “Favoritos” são injetadas aqui dinamicamente -->
+            <!-- JS injeta as 17 categorias + “Favoritos” -->
           </nav>
         </div>
       </div>
 
       <!-- CONTEÚDO DINÂMICO -->
       <main id="content" class="inner">
-        <!-- Cards ou formulário de sugestões serão renderizados aqui -->
+        <!-- cards, manual ou formulário aparecem aqui -->
       </main>
+
     </div>
   </div>
 
