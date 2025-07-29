@@ -15,20 +15,19 @@
       <li data-section="favoritos"><span class="icon">⭐</span><span class="label">Favoritos</span></li>
       <li data-section="sugestoes"><span class="icon">💡</span><span class="label">Sugestões</span></li>
       <li data-section="cadastro"><span class="icon">📝</span><span class="label">Cadastro</span></li>
-      <!-- <li data-section="opcoes"><span class="icon">⚙️</span><span class="label">Opções</span></li> -->
       <li data-section="sair"><span class="icon">🚪</span><span class="label">Sair</span></li>
     </ul>
   </aside>
 
-  <!-- BOTÃO RETRÁTIL, FLUTUANTE, NUNCA DENTRO DA MAIN -->
+  <!-- BOTÃO RETRÁTIL -->
   <button id="collapseBtn" class="collapse-btn" title="Retrair menu">‹</button>
 
   <div class="wrapper">
     <div class="main">
-      <!-- HEADER SEMPRE FIXO -->
+      <!-- HEADER -->
       <header class="topbar">
         <div class="inner">
-          <img src="logo-placeholder.jpeg" alt="Logo Clube do GPT" class="header-logo" />
+          <img src="logo-placeholder.png" alt="Logo Clube do GPT" class="header-logo" />
           <div class="titles">
             <div class="logo">Clube do GPT</div>
             <div class="tagline">Sua coleção premium de assistentes de IA — feita para quem quer mais.</div>
@@ -36,7 +35,7 @@
         </div>
       </header>
 
-      <!-- BARRA FIXA (SÓ APARECE NAS SEÇÕES GPTS/FAVORITOS) -->
+      <!-- BARRA FIXA (Só aparece em GPTs e Favoritos) -->
       <div class="search-tabs" id="searchTabs" style="display: none;">
         <div class="inner">
           <h2 class="section-title" id="sectionTitle">Categorias</h2>
@@ -51,13 +50,12 @@
         </div>
       </div>
 
-      <!-- CONTEÚDO DINÂMICO -->
+      <!-- CONTEÚDO -->
       <main id="content" class="inner">
-        <!-- JS renderiza manual, cards, sugestões ou "Em breve!" -->
+        <!-- Conteúdo dinâmico (JS) -->
       </main>
     </div>
   </div>
-
   <script src="js/app.js"></script>
 </body>
 </html>
