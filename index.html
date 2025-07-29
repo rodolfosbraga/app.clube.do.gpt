@@ -2,9 +2,9 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-  <title>Clube do GPT – Protótipo</title>
-  <link rel="stylesheet" href="css/styles.css">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>Clube do GPT – Protótipo Completo</title>
+  <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
   <div class="wrapper">
@@ -26,26 +26,36 @@
     <div class="main">
       <!-- TOPBAR -->
       <header class="topbar">
-        <div class="logo">Clube do GPT</div>
-        <div class="tagline">Sua coleção premium de assistentes de IA — feita para quem quer mais.</div>
+        <div class="inner">
+          <div class="logo">Clube do GPT</div>
+          <div class="tagline">Sua coleção premium de assistentes de IA — feita para quem quer mais.</div>
+        </div>
       </header>
 
-      <!-- BUSCA + TABS -->
+      <!-- BUSCA + ABAS DE CATEGORIAS -->
       <div class="search-tabs">
-        <div class="search-bar">
-          <div class="input-wrapper">
-            <input type="text" id="searchInput" placeholder="Pesquisar GPTs…" />
-            <button id="searchBtn" class="search-icon" title="Buscar">🔍</button>
+        <div class="inner">
+          <div class="search-bar">
+            <div class="input-wrapper">
+              <input type="text" id="searchInput" placeholder="Pesquisar GPTs…" />
+              <button id="searchBtn" class="search-icon" title="Buscar">🔍</button>
+            </div>
+            <button id="favoritesBtn" title="Meus Favoritos">⭐</button>
           </div>
-          <button id="favoritesBtn" title="Meus Favoritos">⭐</button>
+
+          <!-- TÍTULO “Categorias” -->
+          <h2 class="section-title">Categorias</h2>
+
+          <nav class="tabs" id="categoryTabs">
+            <!-- As 17 categorias + “Favoritos” são injetadas aqui dinamicamente -->
+          </nav>
         </div>
-        <nav class="tabs" id="categoryTabs">
-          <!-- JS injeta as 17 categorias + Favoritos -->
-        </nav>
       </div>
 
       <!-- CONTEÚDO DINÂMICO -->
-      <main id="content"></main>
+      <main id="content" class="inner">
+        <!-- Cards ou formulário de sugestões serão renderizados aqui -->
+      </main>
     </div>
   </div>
 
