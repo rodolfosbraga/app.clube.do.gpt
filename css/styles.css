@@ -24,7 +24,7 @@ body { font-family: sans-serif; background:#f2f2f2; }
 /* SIDEBAR FIXA E ALINHADA */
 .sidebar {
   position: fixed;
-  top: 58px; /* header height */
+  top: 60px; /* header height */
   left: 0;
   width: 220px;
   height: calc(100vh - 60px);
