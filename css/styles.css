@@ -71,7 +71,7 @@ body { font-family: sans-serif; background:#f2f2f2; }
 .search-tabs {
   position: fixed;
   left: 0;
-  top: 68px;   /* Espaço extra abaixo do header */
+  top: 72px;   /* Espaço extra abaixo do header */
   width: 100vw;
   z-index: 999;
   display: none;
@@ -81,7 +81,7 @@ body { font-family: sans-serif; background:#f2f2f2; }
 }
 @media (min-width: 700px) {
   .search-tabs {
-    top: 68px;
+    top: 72px;
     left: 220px;
     width: calc(100vw - 220px);
     max-width: calc(100vw - 220px);
@@ -96,7 +96,7 @@ body { font-family: sans-serif; background:#f2f2f2; }
 .search-tabs .section-title {
   text-align: center;
   margin-bottom: .5rem;
-  margin-top: 0;
+  margin-top: 32px;
   font-weight: 700;
   letter-spacing: 0.01em;
   position: relative;
@@ -154,7 +154,7 @@ body { font-family: sans-serif; background:#f2f2f2; }
 /* CARDS DOS GPTs ABAIXO DA BARRA FIXA */
 body.gpts-active #content,
 body.favoritos-active #content {
-  margin-top: 155px; /* header + search-tabs + título + espaçamento extra */
+  margin-top: 200px; /* header + search-tabs + título + espaçamento extra */
   padding-top: 0;
   min-height: calc(100vh - 60px - 95px);
   overflow-y: auto;
@@ -245,7 +245,7 @@ body.sugestoes-active #content form {
   body.gpts-active #content,
   body.favoritos-active #content {
     padding: 0.5rem 0;
-    margin-top: 160px; /* aumenta para mobile para garantir */
+    margin-top: 200px; /* aumenta para mobile para garantir */
     min-height: calc(100vh - 60px - 92px);
   }
   .card { max-width: 98vw; min-width: 0; }
