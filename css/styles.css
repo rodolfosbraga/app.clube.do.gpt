@@ -5,7 +5,7 @@ body { font-family: sans-serif; background:#f2f2f2; }
 /* HEADER FIXO */
 .topbar {
   position: fixed;
-  top: 0; left: 0; width: 100vw; z-index: 1000;
+  top: 0; left: 0; width: 100vw; height: 60px; z-index: 1000;
   background: #16213e;
   color: #fff;
   padding: 0.5rem 0;
