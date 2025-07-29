@@ -7,90 +7,119 @@
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;400&display=swap" rel="stylesheet">
   <style>
     :root {
+      --fundo-dark: #101828cc;
+      --azul-glow: #03b0ec;
+      --input-bg: rgba(23, 36, 61, 0.70);
+      --input-text: #e6f3fb;
+      --input-placeholder: #a0bcd6;
+      --container-glass: rgba(15, 25, 40, 0.7);
       --white: #fff;
-      --primary: #1e90ff;
-      --bg-overlay: rgba(0,0,0,0.35);
-      --input-bg: rgba(255,255,255,0.08);
-      --input-border: #fff;
+      --btn-main: #04b1f0;
+      --btn-hover: #0091c4;
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body, html {
+    * { box-sizing: border-box; }
+    html, body {
       height: 100%;
+      margin: 0;
       font-family: 'Montserrat', Arial, sans-serif;
-      background: #222;
-      min-height: 100vh;
     }
-    .login-bg {
+    body {
       min-height: 100vh;
-      background: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80') no-repeat center center/cover;
+      min-width: 100vw;
+      background: url('background-login.jpeg') no-repeat center center fixed;
+      background-size: cover;
       position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
     }
-    .login-bg::after {
-      content: "";
+    .overlay {
       position: absolute;
       inset: 0;
-      background: var(--bg-overlay);
+      background: linear-gradient(120deg, #101828cc 40%, #22345599 100%);
+      backdrop-filter: blur(1px);
       z-index: 1;
     }
     .login-container {
       position: relative;
       z-index: 2;
       width: 100%;
-      max-width: 370px;
-      padding: 42px 32px 32px 32px;
-      border-radius: 16px;
-      background: rgba(0,0,0,0.20);
-      backdrop-filter: blur(1px);
-      box-shadow: 0 8px 24px rgba(0,0,0,0.16);
+      max-width: 390px;
+      margin: 5vh auto;
+      padding: 36px 32px 32px 32px;
+      border-radius: 18px;
+      background: var(--container-glass);
+      box-shadow: 0 8px 32px 0 rgba(13,21,38,0.22);
+      backdrop-filter: blur(7px);
       display: flex;
       flex-direction: column;
       align-items: center;
     }
+    .logo-holder {
+      width: 68px;
+      height: 68px;
+      margin-bottom: 18px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.03);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 10px 0 rgba(10,40,70,0.07);
+    }
+    .logo-holder img {
+      max-width: 52px;
+      max-height: 52px;
+      object-fit: contain;
+    }
     .login-title {
-      font-size: 2.2rem;
+      font-size: 2.0rem;
       font-weight: 700;
       color: var(--white);
       margin-bottom: 8px;
       letter-spacing: 1px;
+      text-shadow: 0 2px 10px #14274466;
     }
     .login-subtitle {
       font-size: 1rem;
-      color: #f4f4f4;
-      margin-bottom: 28px;
+      color: #c8e8fc;
+      margin-bottom: 26px;
+      text-align: center;
+      text-shadow: 0 1px 5px #091b3a44;
     }
     .login-form {
       width: 100%;
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: 18px;
     }
     .login-input {
-      padding: 12px 16px;
-      border-radius: 8px;
-      border: 1.5px solid var(--input-border);
+      padding: 13px 16px;
+      border-radius: 9px;
+      border: 1.5px solid #2bb5f999;
       background: var(--input-bg);
-      color: #fff;
-      font-size: 1rem;
+      color: var(--input-text);
+      font-size: 1.04rem;
+      box-shadow: 0 2px 12px #0001;
       outline: none;
-      transition: border-color 0.2s;
+      transition: border-color 0.2s, background 0.2s;
     }
     .login-input:focus {
-      border-color: var(--primary);
+      border-color: var(--azul-glow);
+      background: rgba(23, 36, 61, 0.82);
+    }
+    .login-input::placeholder {
+      color: var(--input-placeholder);
+      opacity: 1;
+      font-size: 0.99em;
     }
     .login-links {
       display: flex;
       justify-content: flex-end;
-      margin-top: 4px;
-      margin-bottom: 24px;
+      margin-top: 2px;
+      margin-bottom: 20px;
     }
     .login-links a {
-      color: #fff;
+      color: #c8e8fc;
       text-decoration: none;
-      font-size: 0.96rem;
-      opacity: 0.8;
+      font-size: 0.95rem;
+      opacity: 0.85;
       transition: opacity 0.2s;
     }
     .login-links a:hover {
@@ -101,46 +130,49 @@
     .signup-btn {
       width: 100%;
       padding: 13px 0;
-      border-radius: 8px;
+      border-radius: 9px;
       border: none;
-      font-size: 1.06rem;
+      font-size: 1.08rem;
       font-weight: 600;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.3px;
       cursor: pointer;
-      transition: background 0.2s, color 0.2s;
-      margin-bottom: 10px;
+      transition: background 0.18s, color 0.18s, box-shadow 0.2s;
+      margin-bottom: 11px;
+      box-shadow: 0 2px 12px #03b0ec11;
     }
     .login-btn {
-      background: var(--white);
-      color: #003366;
-      margin-top: 10px;
+      background: var(--btn-main);
+      color: #fff;
+      margin-top: 8px;
       margin-bottom: 0;
+      border: 1px solid #22a5e9;
     }
     .login-btn:hover {
-      background: var(--primary);
+      background: var(--btn-hover);
       color: #fff;
+      box-shadow: 0 0 10px 0 #0091c499;
     }
     .signup-btn {
       background: none;
-      color: var(--white);
-      border: 1.5px solid #fff;
+      color: #bfe8fd;
+      border: 1.5px solid #2bb5f9cc;
       margin-bottom: 0;
     }
     .signup-btn:hover {
-      background: var(--primary);
+      background: var(--azul-glow);
       color: #fff;
-      border-color: var(--primary);
+      border-color: var(--azul-glow);
     }
     @media (max-width: 600px) {
       .login-container {
-        max-width: 95vw;
-        padding: 32px 8vw 28px 8vw;
+        max-width: 96vw;
+        padding: 22px 3vw 18px 3vw;
       }
       .login-title {
-        font-size: 1.6rem;
+        font-size: 1.3rem;
       }
       .login-form {
-        gap: 12px;
+        gap: 13px;
       }
       .login-btn,
       .signup-btn {
@@ -150,20 +182,22 @@
   </style>
 </head>
 <body>
-  <div class="login-bg">
-    <form class="login-container">
-      <div class="login-title">Clube do <span style="color: #1e90ff;">GPT</span></div>
-      <div class="login-subtitle">O seu espaço para aprender e utilizar suas IA todo mês.</div>
-      <div class="login-form">
-        <input type="email" class="login-input" placeholder="Seu e-mail" required>
-        <input type="password" class="login-input" placeholder="Digite sua senha" required>
-      </div>
-      <div class="login-links">
-        <a href="#">Esqueceu a senha?</a>
-      </div>
-      <button type="submit" class="login-btn">Entrar</button>
-      <button type="button" class="signup-btn" onclick="window.location.href='https://seusite.com/pagina-de-vendas'">Quero ser membro</button>
-    </form>
-  </div>
+  <div class="overlay"></div>
+  <form class="login-container">
+    <div class="logo-holder">
+      <img src="logo-placeholder.jpeg" alt="Logo do Clube do GPT">
+    </div>
+    <div class="login-title">Clube do <span style="color: #04b1f0;">GPT</span></div>
+    <div class="login-subtitle">O seu espaço para aprender IA todo mês.</div>
+    <div class="login-form">
+      <input type="email" class="login-input" placeholder="Seu e-mail" required>
+      <input type="password" class="login-input" placeholder="Digite sua senha" required>
+    </div>
+    <div class="login-links">
+      <a href="#">Esqueceu a senha?</a>
+    </div>
+    <button type="submit" class="login-btn">Entrar</button>
+    <button type="button" class="signup-btn" onclick="window.location.href='https://seusite.com/pagina-de-vendas'">Quero ser membro</button>
+  </form>
 </body>
 </html>
