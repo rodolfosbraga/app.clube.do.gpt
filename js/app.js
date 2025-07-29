@@ -1,6 +1,6 @@
 // js/app.js
 
-// ELEMENTOS DO DOM
+// ELEMENTOS DOM
 const sidebar       = document.getElementById("sidebar");
 const collapseBtn   = document.getElementById("collapseBtn");
 const tabsContainer = document.getElementById("categoryTabs");
@@ -8,41 +8,44 @@ const contentEl     = document.getElementById("content");
 const searchInput   = document.getElementById("searchInput");
 const searchBtn     = document.getElementById("searchBtn");
 const favBtn        = document.getElementById("favoritesBtn");
-const searchTabs    = document.querySelector(".search-tabs");
+const searchTabs    = document.getElementById("searchTabs");
+const sectionTitle  = document.getElementById("sectionTitle");
 
 let categories = [];
 let gpts       = [];
 let suggestionsFormHTML = "";
 let manualContentHTML   = "";
 
-// CENTRALIZA O BOTÃO RETRÁTIL VERTICALMENTE NO SIDEBAR
+// AJUSTA CENTRALIZAÇÃO DO BOTÃO RETRÁTIL
 function updateCollapseBtnPosition() {
-  // Sidebar começa em 60px do topo (header), altura padrão ~calc(100vh - 60px)
-  const sidebarRect = sidebar.getBoundingClientRect();
-  // Centraliza o botão na metade do sidebar (ajustando altura do botão: 38px)
+  // Sidebar começa em 60px do topo (header)
   const sidebarHeight = sidebar.offsetHeight;
   const headerHeight = 60;
   const btnHeight = 38;
-  const newTop = window.scrollY + headerHeight + (sidebarHeight / 2) - (btnHeight / 2);
+  let newTop = headerHeight + (sidebarHeight / 2) - (btnHeight / 2);
+  // Mobile: sidebar mais baixa
+  if (window.innerWidth < 700) {
+    newTop = headerHeight + 60;
+  }
   collapseBtn.style.top = `${newTop}px`;
 }
 window.addEventListener('resize', updateCollapseBtnPosition);
 window.addEventListener('DOMContentLoaded', updateCollapseBtnPosition);
 sidebar.addEventListener('transitionend', updateCollapseBtnPosition);
 
-// 1️⃣ CARREGAR E PARSEAR CATALOG.HTML
+// CARREGAR E PARSEAR CATALOG
 async function loadCatalog() {
   const resp = await fetch("data/catalog.html");
   const text = await resp.text();
   const doc  = new DOMParser().parseFromString(text, "text/html");
 
-  // Formulário de Sugestões
+  // Sugestões
   const form = doc.querySelector("form");
   suggestionsFormHTML = form
     ? `<div class="inner">${form.outerHTML}</div>`
     : "<p>Formulário não encontrado.</p>";
 
-  // Conteúdo Manual (blocos .intro, .instruction, .end, .Calltosearch)
+  // Manual
   const intro       = doc.querySelector(".intro")       ?.outerHTML || "";
   const instruction = doc.querySelector(".instruction") ?.outerHTML || "";
   const end         = doc.querySelector(".end")         ?.outerHTML || "";
@@ -52,7 +55,7 @@ async function loadCatalog() {
       ${intro}${instruction}${end}${call2}
     </div>`;
 
-  // Extrai categorias e GPTs
+  // Categorias e GPTs
   const blocks = Array.from(doc.querySelectorAll(".category-block"));
   blocks.forEach(block => {
     const catTitle = block.querySelector(".category-title").textContent.trim();
@@ -93,7 +96,7 @@ async function loadCatalog() {
   initUI();
 }
 
-// 2️⃣ INICIALIZA A INTERFACE
+// INICIALIZA A INTERFACE
 function initUI() {
   // Sidebar retrátil
   collapseBtn.addEventListener("click", () => {
@@ -101,6 +104,24 @@ function initUI() {
     collapseBtn.textContent = sidebar.classList.contains("collapsed") ? "›" : "‹";
     searchTabs.classList.toggle('sidebar-collapsed', sidebar.classList.contains('collapsed'));
     updateCollapseBtnPosition();
+  });
+
+  // Sidebar fecha automaticamente em mobile ao clicar fora
+  document.addEventListener('click', function(e) {
+    if (window.innerWidth < 700) {
+      if (
+        !sidebar.contains(e.target) &&
+        !collapseBtn.contains(e.target) &&
+        !e.target.classList.contains('menu') &&
+        !e.target.classList.contains('icon') &&
+        sidebar.classList.contains('collapsed') === false
+      ) {
+        sidebar.classList.add('collapsed');
+        collapseBtn.textContent = "›";
+        searchTabs.classList.add('sidebar-collapsed');
+        updateCollapseBtnPosition();
+      }
+    }
   });
 
   // Abas de categoria
@@ -122,6 +143,14 @@ function initUI() {
 
       // Limpa classes de seção no body
       document.body.classList.remove("gpts-active", "favoritos-active", "sugestoes-active");
+
+      // Oculta barra fixa em todas seções exceto GPTs e Favoritos
+      if (sec === "gpts" || sec === "favoritos") {
+        searchTabs.style.display = "block";
+        sectionTitle.style.display = "block";
+      } else {
+        searchTabs.style.display = "none";
+      }
 
       if (sec === "manual") {
         contentEl.innerHTML = manualContentHTML;
@@ -158,6 +187,8 @@ function initUI() {
   // Botão Favoritos
   favBtn.addEventListener("click", () => {
     document.body.classList.add("gpts-active", "favoritos-active");
+    searchTabs.style.display = "block";
+    sectionTitle.style.display = "block";
     tabsContainer.querySelector("button[data-cat='Favoritos']").click();
   });
 
@@ -165,7 +196,7 @@ function initUI() {
   sidebar.querySelector("li[data-section='gpts']").click();
 }
 
-// 3️⃣ SELECIONA CATEGORIA (ou favoritos)
+// SELECIONA CATEGORIA
 function selectCategory(cat, btn) {
   document.querySelectorAll(".tabs button").forEach(b => b.classList.remove("active"));
   btn.classList.add("active");
@@ -181,7 +212,7 @@ function selectCategory(cat, btn) {
   }
 }
 
-// 4️⃣ ADICIONAR/REMOVER FAVORITO
+// ADICIONAR/REMOVER FAVORITO
 function toggleFavorite(title) {
   let favs = JSON.parse(localStorage.getItem("favorites") || "[]");
   if (favs.includes(title)) {
@@ -195,7 +226,7 @@ function toggleFavorite(title) {
   active && active.click();
 }
 
-// 5️⃣ RENDERIZA CARDS DE GPTs
+// RENDERIZA CARDS DE GPTs
 function renderCards(list) {
   contentEl.innerHTML = "";
   if (!list.length) {
@@ -223,7 +254,7 @@ function renderCards(list) {
   });
 }
 
-// 6️⃣ INICIALIZAÇÃO
+// INICIALIZAÇÃO
 document.addEventListener("DOMContentLoaded", () => {
   loadCatalog();
   updateCollapseBtnPosition();
