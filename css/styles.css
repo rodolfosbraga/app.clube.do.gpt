@@ -21,10 +21,10 @@ body { font-family: sans-serif; background:#f2f2f2; }
 .logo { font-size: 1.5rem; font-weight: bold; }
 .tagline { font-size: 0.9rem; }
 
-/* SIDEBAR ABAIXO DO HEADER */
+/* SIDEBAR FIXA E ALINHADA */
 .sidebar {
   position: fixed;
-  top: 60px; /* mesmo valor do header */
+  top: 60px; /* header height */
   left: 0;
   width: 220px;
   height: calc(100vh - 60px);
@@ -47,20 +47,18 @@ body { font-family: sans-serif; background:#f2f2f2; }
 .sidebar .label { margin-left: 0.5rem; white-space: nowrap; transition: opacity 0.3s; }
 .sidebar.collapsed .label { opacity: 0; }
 
-/* BOTÃO RETRÁTIL FLUTUANTE E SEMPRE NA LATERAL DA SIDEBAR */
+/* BOTÃO RETRÁTIL, SEM top fixo (ajustado por JS) */
 .collapse-btn {
   position: fixed;
   left: 220px;
-  /* Centralizado na sidebar (mobile/desktop): ajustável por JS se quiser! */
-  top: calc(60px + 110px);
   z-index: 1201;
   background: #ffd166;
   color: #16213e;
   border: 2px solid #16213e;
   width: 38px;
   height: 38px;
-  display: flex; align-items: center; justify-content: center;
   border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
   font-size: 1.4rem;
   box-shadow: 0 4px 14px rgba(0,0,0,0.12);
   cursor: pointer;
@@ -69,24 +67,30 @@ body { font-family: sans-serif; background:#f2f2f2; }
 .sidebar.collapsed ~ .collapse-btn { left: 60px; }
 .collapse-btn:hover { background: #ffeb99; }
 
-/* SEARCH-TABS: FIXA, SÓ EM GPTs/FAVORITOS */
+/* BARRA FIXA - SEARCH + TABS */
 .search-tabs {
   position: fixed;
-  top: 60px;
-  left: 220px;
-  width: calc(100vw - 220px);
-  max-width: calc(100vw - 220px);
-  background: #fff;
+  left: 0;
+  top: 68px;   /* Espaço extra abaixo do header */
+  width: 100vw;
   z-index: 999;
-  display: none; /* só aparece nas seções gpts/favoritos via JS! */
-  padding-bottom: 0.5rem;
+  display: none;
   box-shadow: 0 2px 4px rgba(0,0,0,0.09);
-  transition: left 0.3s, width 0.3s;
+  background: #fff;
+  padding-bottom: 0.5rem;
 }
-.sidebar.collapsed ~ .search-tabs,
-.search-tabs.sidebar-collapsed {
-  left: 60px;
-  width: calc(100vw - 60px);
+@media (min-width: 700px) {
+  .search-tabs {
+    top: 68px;
+    left: 220px;
+    width: calc(100vw - 220px);
+    max-width: calc(100vw - 220px);
+  }
+  .sidebar.collapsed ~ .search-tabs {
+    left: 60px;
+    width: calc(100vw - 60px);
+    max-width: calc(100vw - 60px);
+  }
 }
 .search-tabs .inner { padding: 0.7rem 0.7rem 0 0.7rem; }
 .search-tabs .section-title {
@@ -99,7 +103,7 @@ body { font-family: sans-serif; background:#f2f2f2; }
   z-index: 2;
 }
 
-/* BARRA DE PESQUISA */
+/* SEARCH BAR */
 .search-bar {
   display: flex; align-items: center; margin-bottom: 1rem;
 }
@@ -132,7 +136,7 @@ body { font-family: sans-serif; background:#f2f2f2; }
 }
 .tabs button.active, .tabs button:hover { background: #ffd166; }
 
-/* MAIN: NUNCA SOBREPOSTO, AO LADO DA SIDEBAR E ABAIXO DO HEADER */
+/* MAIN E CONTEÚDO */
 .main {
   margin-top: 60px;
   margin-left: 220px;
@@ -147,12 +151,12 @@ body { font-family: sans-serif; background:#f2f2f2; }
   .sidebar { width: 60px !important; }
 }
 
-/* CARDS DOS GPTs, SEMPRE ABAIXO DA BARRA FIXA */
+/* CARDS DOS GPTs ABAIXO DA BARRA FIXA */
 body.gpts-active #content,
 body.favoritos-active #content {
-  margin-top: 118px; /* header + search-tabs + título */
+  margin-top: 155px; /* header + search-tabs + título + espaçamento extra */
   padding-top: 0;
-  height: calc(100vh - 60px - 58px);
+  min-height: calc(100vh - 60px - 95px);
   overflow-y: auto;
   display: flex;
   flex-direction: column;
@@ -183,18 +187,23 @@ body.favoritos-active #content {
   background: none; border: none; font-size: 1.2rem; cursor: pointer;
 }
 
-/* MANUAL CENTRALIZADO */
+/* MANUAL MAIS "BAIXO" */
 .manual-content.inner {
-  max-width: 700px; margin: 2rem auto 0 auto; padding: 2rem 1.5rem;
-  background: #fff; border-radius: 8px;
+  max-width: 700px;
+  margin: 4rem auto 0 auto;
+  padding: 2rem 1.5rem;
+  background: #fff;
+  border-radius: 8px;
   box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-  font-size: 1.1rem; line-height: 1.7; text-align: center;
+  font-size: 1.1rem;
+  line-height: 1.7;
+  text-align: center;
 }
 @media (max-width: 768px) {
-  .manual-content.inner { padding: 1rem 0.4rem; margin: 1rem 0 0 0; font-size: 1rem; }
+  .manual-content.inner { margin-top: 2.2rem; padding: 1rem 0.4rem; font-size: 1rem; }
 }
 
-/* SUGESTÕES: BONITINHO E COM MARGEM */
+/* SUGESTÕES RESPONSIVO */
 body.sugestoes-active #content {
   display: flex; justify-content: center; align-items: flex-start;
   padding: 1rem 0; margin-top: 110px; min-height: 100vh; background: #f7f8fb;
@@ -236,13 +245,12 @@ body.sugestoes-active #content form {
   body.gpts-active #content,
   body.favoritos-active #content {
     padding: 0.5rem 0;
-    margin-top: 118px;
-    height: calc(100vh - 60px - 58px);
+    margin-top: 160px; /* aumenta para mobile para garantir */
+    min-height: calc(100vh - 60px - 92px);
   }
   .card { max-width: 98vw; min-width: 0; }
   .collapse-btn {
-    left: 60px;
-    top: calc(60px + 40px);
+    left: 40px;
   }
   .main, .search-tabs { margin-left: 60px !important; }
   .sidebar { width: 60px !important; }
@@ -268,7 +276,6 @@ body.sugestoes-active #content form {
   }
   .collapse-btn {
     left: 40px;
-    top: calc(60px + 60px);
     z-index: 1400;
   }
   .sidebar.collapsed ~ .collapse-btn { left: 10px; }
