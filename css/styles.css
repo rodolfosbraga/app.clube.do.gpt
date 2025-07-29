@@ -24,7 +24,7 @@ body { font-family: sans-serif; background:#f2f2f2; }
 /* SIDEBAR FIXA E ALINHADA */
 .sidebar {
   position: fixed;
-  top: 60px; /* header height */
+  top: 58px; /* header height */
   left: 0;
   width: 220px;
   height: calc(100vh - 60px);
@@ -71,7 +71,7 @@ body { font-family: sans-serif; background:#f2f2f2; }
 .search-tabs {
   position: fixed;
   left: 0;
-  top: 69px;   /* Espaço extra abaixo do header */
+  top: 58px;   /* Espaço extra abaixo do header */
   width: 100vw;
   z-index: 999;
   display: none;
@@ -138,7 +138,7 @@ body { font-family: sans-serif; background:#f2f2f2; }
 
 /* MAIN E CONTEÚDO */
 .main {
-  margin-top: 100px;
+  margin-top: 200px;
   margin-left: 220px;
   transition: margin-left 0.3s;
   background: #f7f8fb;
@@ -154,7 +154,7 @@ body { font-family: sans-serif; background:#f2f2f2; }
 /* CARDS DOS GPTs ABAIXO DA BARRA FIXA */
 body.gpts-active #content,
 body.favoritos-active #content {
-  margin-top: 250px; /* header + search-tabs + título + espaçamento extra */
+  margin-top: 300px; /* header + search-tabs + título + espaçamento extra */
   padding-top: 0;
   min-height: calc(100vh - 60px - 95px);
   overflow-y: auto;
@@ -190,7 +190,7 @@ body.favoritos-active #content {
 /* MANUAL MAIS "BAIXO" */
 .manual-content.inner {
   max-width: 700px;
-  margin-top: 60px;
+  margin-top: 100px;
   margin: 4rem auto 0 auto;
   padding: 2rem 1.5rem;
   background: #fff;
@@ -207,7 +207,7 @@ body.favoritos-active #content {
 /* SUGESTÕES RESPONSIVO */
 body.sugestoes-active #content {
   display: flex; justify-content: center; align-items: flex-start;
-  padding: 1rem 0; margin-top: 110px; min-height: 100vh; background: #f7f8fb;
+  padding: 1rem 0; margin-top: 200px; min-height: 100vh; background: #f7f8fb;
 }
 body.sugestoes-active #content form {
   width: 100%; max-width: 340px; margin: 0 auto; padding: 1rem;
