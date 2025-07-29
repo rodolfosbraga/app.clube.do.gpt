@@ -1,6 +1,6 @@
 // js/app.js
 
-// ELEMENTOS DOM
+// DOM ELEMENTS
 const sidebar       = document.getElementById("sidebar");
 const collapseBtn   = document.getElementById("collapseBtn");
 const tabsContainer = document.getElementById("categoryTabs");
@@ -11,21 +11,23 @@ const favBtn        = document.getElementById("favoritesBtn");
 const searchTabs    = document.getElementById("searchTabs");
 const sectionTitle  = document.getElementById("sectionTitle");
 
+// Dados
 let categories = [];
 let gpts       = [];
 let suggestionsFormHTML = "";
 let manualContentHTML   = "";
 
-// AJUSTA CENTRALIZAÇÃO DO BOTÃO RETRÁTIL
+// CENTRALIZA BOTÃO DA SIDEBAR VERTICALMENTE
 function updateCollapseBtnPosition() {
-  // Sidebar começa em 60px do topo (header)
+  const headerHeight  = 60;
   const sidebarHeight = sidebar.offsetHeight;
-  const headerHeight = 60;
-  const btnHeight = 38;
+  const btnHeight     = 38;
   let newTop = headerHeight + (sidebarHeight / 2) - (btnHeight / 2);
-  // Mobile: sidebar mais baixa
+
+  // Mobile: centralizar melhor
   if (window.innerWidth < 700) {
-    newTop = headerHeight + 60;
+    // Altura da janela - header, centralizado (ajustável)
+    newTop = headerHeight + ((window.innerHeight - headerHeight) / 2) - (btnHeight / 2);
   }
   collapseBtn.style.top = `${newTop}px`;
 }
@@ -33,7 +35,7 @@ window.addEventListener('resize', updateCollapseBtnPosition);
 window.addEventListener('DOMContentLoaded', updateCollapseBtnPosition);
 sidebar.addEventListener('transitionend', updateCollapseBtnPosition);
 
-// CARREGAR E PARSEAR CATALOG
+// CARREGAR/EXTRAIR CATALOG (substitua o caminho se necessário)
 async function loadCatalog() {
   const resp = await fetch("data/catalog.html");
   const text = await resp.text();
@@ -92,7 +94,7 @@ async function loadCatalog() {
   // Adiciona aba de Favoritos
   categories.push("Favoritos");
 
-  // Inicializa a interface
+  // Inicializa interface
   initUI();
 }
 
@@ -106,7 +108,7 @@ function initUI() {
     updateCollapseBtnPosition();
   });
 
-  // Sidebar fecha automaticamente em mobile ao clicar fora
+  // Fecha sidebar em mobile ao clicar fora
   document.addEventListener('click', function(e) {
     if (window.innerWidth < 700) {
       if (
@@ -150,6 +152,7 @@ function initUI() {
         sectionTitle.style.display = "block";
       } else {
         searchTabs.style.display = "none";
+        sectionTitle.style.display = "none";
       }
 
       if (sec === "manual") {
@@ -243,7 +246,7 @@ function renderCards(list) {
       <p><strong>Prompt Ideal:</strong> ${gpt.prompt}</p>
       <div class="card-actions">
         <a class="btn-open" href="${gpt.link}" target="_blank">Abrir GPT</a>
-        <button class="fav-card-btn">${
+        <button class="fav-card-btn" title="Favoritar">${
           JSON.parse(localStorage.getItem("favorites") || "[]").includes(gpt.title) ? "★" : "☆"
         }</button>
       </div>
