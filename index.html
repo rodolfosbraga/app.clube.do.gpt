@@ -9,13 +9,18 @@
   <style>
     :root {
       --azul-glow: #03b0ec;
+      --btn-main: #04b1f0;
+      --btn-hover: #0091c4;
+      --btn-cta: #fff;
+      --btn-cta-text: #04b1f0;
+      --btn-cta-hover: #c8e8fc;
       --input-bg: rgba(23, 36, 61, 0.67);
       --input-text: #e6f3fb;
       --input-placeholder: #a0bcd6;
       --container-glass: rgba(15, 25, 40, 0.44);
       --white: #fff;
-      --btn-main: #04b1f0;
-      --btn-hover: #0091c4;
+      --cta-outline: #2bb5f9cc;
+      --cta-bg-hover: #e6f3fb;
     }
     * { box-sizing: border-box; }
     html, body {
@@ -57,10 +62,9 @@
       max-width: 420px;
       padding: 38px 34px 32px 34px;
       border-radius: 20px;
-      /* Transparência suave (glass) */
       background: var(--container-glass);
       box-shadow: 0 8px 32px 0 rgba(13,21,38,0.22);
-      backdrop-filter: blur(14px);  /* Glassmorphism mais sofisticado */
+      backdrop-filter: blur(14px);
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -144,44 +148,76 @@
       opacity: 1;
       text-decoration: underline;
     }
-    .login-btn,
-    .signup-btn {
+    .btns-stack {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-top: 5px;
+    }
+    .login-btn {
       width: 100%;
       padding: 13px 0;
       border-radius: 9px;
-      border: none;
+      border: 1.5px solid #22a5e9;
       font-size: 1.08rem;
       font-weight: 600;
       letter-spacing: 0.3px;
       cursor: pointer;
-      transition: background 0.18s, color 0.18s, box-shadow 0.2s;
-      margin-bottom: 0;
-      box-shadow: 0 2px 12px #03b0ec11;
-      font-family: 'Cinzel', serif;
-    }
-    .login-btn {
       background: var(--btn-main);
       color: #fff;
-      margin-top: 8px;
-      /* Espaço entre os botões ↓ */
-      margin-bottom: 20px;
-      border: 1px solid #22a5e9;
+      margin-bottom: 0;
+      transition: background 0.18s, color 0.18s, box-shadow 0.2s;
+      box-shadow: 0 2px 12px #03b0ec11;
+      font-family: 'Cinzel', serif;
     }
     .login-btn:hover {
       background: var(--btn-hover);
       color: #fff;
       box-shadow: 0 0 10px 0 #0091c499;
     }
-    .signup-btn {
-      background: none;
-      color: #bfe8fd;
-      border: 1.5px solid #2bb5f9cc;
+    .firstaccess-btn {
+      width: 100%;
+      padding: 13px 0;
+      border-radius: 9px;
+      border: 1.5px solid var(--btn-main);
+      font-size: 1.08rem;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      cursor: pointer;
+      background: var(--white);
+      color: var(--btn-main);
       margin-bottom: 0;
+      transition: background 0.18s, color 0.18s, box-shadow 0.2s, border 0.2s;
+      box-shadow: 0 2px 12px #03b0ec11;
+      font-family: 'Cinzel', serif;
+    }
+    .firstaccess-btn:hover {
+      background: var(--btn-main);
+      color: #fff;
+      border-color: var(--btn-hover);
+      box-shadow: 0 0 10px 0 #0091c499;
+    }
+    .signup-btn {
+      width: 100%;
+      padding: 13px 0;
+      border-radius: 9px;
+      border: 1.5px solid var(--cta-outline);
+      background: none;
+      color: var(--btn-main);
+      font-size: 1.08rem;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      cursor: pointer;
+      margin-bottom: 0;
+      transition: background 0.18s, color 0.18s, box-shadow 0.2s, border 0.2s;
+      font-family: 'Cinzel', serif;
+      box-shadow: 0 2px 12px #03b0ec11;
     }
     .signup-btn:hover {
-      background: var(--azul-glow);
-      color: #fff;
-      border-color: var(--azul-glow);
+      background: var(--cta-bg-hover);
+      color: var(--btn-hover);
+      border-color: var(--btn-hover);
     }
     @media (max-width: 600px) {
       .main-center {
@@ -202,7 +238,8 @@
         gap: 13px;
       }
       .login-btn,
-      .signup-btn {
+      .signup-btn,
+      .firstaccess-btn {
         font-size: 1rem;
       }
     }
@@ -216,7 +253,7 @@
         <img src="logo-placeholder.jpeg" alt="Logo do Clube do GPT">
       </div>
       <div class="login-title">Clube do <span style="color: #04b1f0;">GPT</span></div>
-      <div class="login-subtitle">O seu clube de inteligência artificial: GPTs que realmente ajudam no seu dia a dia</div>
+      <div class="login-subtitle">O seu clube de inteligência artificial: GPTs que realmente ajudam no seu dia a dia.</div>
       <div class="login-form">
         <input type="email" class="login-input" placeholder="Seu e-mail" required>
         <input type="password" class="login-input" placeholder="Digite sua senha" required>
@@ -224,8 +261,11 @@
       <div class="login-links">
         <a href="#">Esqueceu a senha?</a>
       </div>
-      <button type="submit" class="login-btn">Entrar</button>
-      <button type="button" class="signup-btn" onclick="window.location.href='https://seusite.com/pagina-de-vendas'">Quero ser membro</button>
+      <div class="btns-stack">
+        <button type="submit" class="login-btn">Entrar</button>
+        <button type="button" class="firstaccess-btn" onclick="window.location.href='primeiro-acesso.html'">Primeiro acesso</button>
+        <button type="button" class="signup-btn" onclick="window.location.href='https://seusite.com/pagina-de-vendas'">Quero ser membro</button>
+      </div>
     </form>
   </div>
 </body>
