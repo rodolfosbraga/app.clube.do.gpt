@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
-  <!-- SIDEBAR FIXA -->
+  <!-- SIDEBAR -->
   <aside class="sidebar" id="sidebar">
     <ul class="menu">
       <li data-section="manual"><span class="icon">📖</span><span class="label">Manual</span></li>
@@ -15,18 +15,17 @@
       <li data-section="favoritos"><span class="icon">⭐</span><span class="label">Favoritos</span></li>
       <li data-section="sugestoes"><span class="icon">💡</span><span class="label">Sugestões</span></li>
       <li data-section="cadastro"><span class="icon">📝</span><span class="label">Cadastro</span></li>
-      <li data-section="opcoes"><span class="icon">⚙️</span><span class="label">Opções</span></li>
+      <!-- <li data-section="opcoes"><span class="icon">⚙️</span><span class="label">Opções</span></li> -->
       <li data-section="sair"><span class="icon">🚪</span><span class="label">Sair</span></li>
     </ul>
   </aside>
 
-  <!-- BOTÃO RETRÁTIL, FLUTUANTE E CENTRALIZADO NA BORDA DIREITA DO SIDEBAR -->
+  <!-- BOTÃO RETRÁTIL, FLUTUANTE, NUNCA DENTRO DA MAIN -->
   <button id="collapseBtn" class="collapse-btn" title="Retrair menu">‹</button>
 
   <div class="wrapper">
-    <!-- ÁREA PRINCIPAL -->
     <div class="main">
-      <!-- TOPBAR FIXA -->
+      <!-- HEADER SEMPRE FIXO -->
       <header class="topbar">
         <div class="inner">
           <img src="logo-placeholder.png" alt="Logo Clube do GPT" class="header-logo" />
@@ -37,10 +36,10 @@
         </div>
       </header>
 
-      <!-- BARRA FIXA: CATEGORIAS E PESQUISA -->
-      <div class="search-tabs">
+      <!-- BARRA FIXA (SÓ APARECE NAS SEÇÕES GPTS/FAVORITOS) -->
+      <div class="search-tabs" id="searchTabs" style="display: none;">
         <div class="inner">
-          <h2 class="section-title">Categorias</h2>
+          <h2 class="section-title" id="sectionTitle">Categorias</h2>
           <div class="search-bar">
             <div class="input-wrapper">
               <input type="text" id="searchInput" placeholder="Pesquisar GPTs…" />
@@ -48,9 +47,7 @@
             </div>
             <button id="favoritesBtn" title="Meus Favoritos">⭐</button>
           </div>
-          <nav class="tabs" id="categoryTabs">
-            <!-- As categorias + "Favoritos" serão injetadas aqui via JS -->
-          </nav>
+          <nav class="tabs" id="categoryTabs"></nav>
         </div>
       </div>
 
