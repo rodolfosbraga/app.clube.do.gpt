@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Clube do GPT - Login</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --white: #fff;
+      --primary: #1e90ff;
+      --bg-overlay: rgba(0,0,0,0.35);
+      --input-bg: rgba(255,255,255,0.08);
+      --input-border: #fff;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body, html {
+      height: 100%;
+      font-family: 'Montserrat', Arial, sans-serif;
+      background: #222;
+      min-height: 100vh;
+    }
+    .login-bg {
+      min-height: 100vh;
+      background: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80') no-repeat center center/cover;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .login-bg::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: var(--bg-overlay);
+      z-index: 1;
+    }
+    .login-container {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      max-width: 370px;
+      padding: 42px 32px 32px 32px;
+      border-radius: 16px;
+      background: rgba(0,0,0,0.20);
+      backdrop-filter: blur(1px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.16);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .login-title {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 8px;
+      letter-spacing: 1px;
+    }
+    .login-subtitle {
+      font-size: 1rem;
+      color: #f4f4f4;
+      margin-bottom: 28px;
+    }
+    .login-form {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .login-input {
+      padding: 12px 16px;
+      border-radius: 8px;
+      border: 1.5px solid var(--input-border);
+      background: var(--input-bg);
+      color: #fff;
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .login-input:focus {
+      border-color: var(--primary);
+    }
+    .login-links {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 4px;
+      margin-bottom: 24px;
+    }
+    .login-links a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 0.96rem;
+      opacity: 0.8;
+      transition: opacity 0.2s;
+    }
+    .login-links a:hover {
+      opacity: 1;
+      text-decoration: underline;
+    }
+    .login-btn,
+    .signup-btn {
+      width: 100%;
+      padding: 13px 0;
+      border-radius: 8px;
+      border: none;
+      font-size: 1.06rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+      margin-bottom: 10px;
+    }
+    .login-btn {
+      background: var(--white);
+      color: #003366;
+      margin-top: 10px;
+      margin-bottom: 0;
+    }
+    .login-btn:hover {
+      background: var(--primary);
+      color: #fff;
+    }
+    .signup-btn {
+      background: none;
+      color: var(--white);
+      border: 1.5px solid #fff;
+      margin-bottom: 0;
+    }
+    .signup-btn:hover {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+    @media (max-width: 600px) {
+      .login-container {
+        max-width: 95vw;
+        padding: 32px 8vw 28px 8vw;
+      }
+      .login-title {
+        font-size: 1.6rem;
+      }
+      .login-form {
+        gap: 12px;
+      }
+      .login-btn,
+      .signup-btn {
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="login-bg">
+    <form class="login-container">
+      <div class="login-title">Clube do <span style="color: #1e90ff;">GPT</span></div>
+      <div class="login-subtitle">O seu espaço para aprender e utilizar suas IA todo mês.</div>
+      <div class="login-form">
+        <input type="email" class="login-input" placeholder="Seu e-mail" required>
+        <input type="password" class="login-input" placeholder="Digite sua senha" required>
+      </div>
+      <div class="login-links">
+        <a href="#">Esqueceu a senha?</a>
+      </div>
+      <button type="submit" class="login-btn">Entrar</button>
+      <button type="button" class="signup-btn" onclick="window.location.href='https://seusite.com/pagina-de-vendas'">Quero ser membro</button>
+    </form>
+  </div>
+</body>
+</html>
