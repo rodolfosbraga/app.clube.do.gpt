@@ -83,6 +83,7 @@ function initUI() {
   collapseBtn.addEventListener("click", () => {
     sidebar.classList.toggle("collapsed");
     collapseBtn.textContent = sidebar.classList.contains("collapsed") ? "›" : "‹";
+    document.querySelector('.search-tabs').classList.toggle('sidebar-collapsed', sidebar.classList.contains('collapsed'));
   });
 
   // Abas de categoria
