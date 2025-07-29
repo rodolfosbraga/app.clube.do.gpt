@@ -1,14 +1,8 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-body {
-  font-family: sans-serif;
-  background: #f2f2f2;
-}
+/* RESET E CONFIG INICIAL */
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: sans-serif; background:#f2f2f2; }
 
-/* HEADER */
+/* HEADER FIXO */
 .topbar {
   position: fixed;
   top: 0;
@@ -32,19 +26,11 @@ body {
   height: auto;
   margin-right: 1rem;
 }
-.titles {
-  display: flex;
-  flex-direction: column;
-}
-.logo {
-  font-size: 1.5rem;
-  font-weight: bold;
-}
-.tagline {
-  font-size: 0.9rem;
-}
+.titles { display: flex; flex-direction: column; }
+.logo { font-size: 1.5rem; font-weight: bold; }
+.tagline { font-size: 0.9rem; }
 
-/* SIDEBAR */
+/* SIDEBAR FIXA LOGO ABAIXO DO HEADER */
 .sidebar {
   position: fixed;
   top: 60px;
@@ -57,9 +43,7 @@ body {
   z-index: 1100;
   box-shadow: 2px 0 12px rgba(0,0,0,0.07);
 }
-.sidebar.collapsed {
-  width: 60px;
-}
+.sidebar.collapsed { width: 60px; }
 .sidebar .menu {
   list-style: none;
   margin-top: 50px;
@@ -72,30 +56,18 @@ body {
   transition: background 0.2s;
 }
 .sidebar .menu li:hover,
-.sidebar .menu li.active {
-  background: rgba(255, 255, 255, 0.13);
-}
-.sidebar .icon {
-  width: 30px;
-  text-align: center;
-  font-size: 1.4rem;
-}
-.sidebar .label {
-  margin-left: 0.5rem;
-  white-space: nowrap;
-  transition: opacity 0.3s;
-}
-.sidebar.collapsed .label {
-  opacity: 0;
-}
+.sidebar .menu li.active { background: rgba(255, 255, 255, 0.13); }
+.sidebar .icon { width: 30px; text-align: center; font-size: 1.4rem; }
+.sidebar .label { margin-left: 0.5rem; white-space: nowrap; transition: opacity 0.3s; }
+.sidebar.collapsed .label { opacity: 0; }
 
 /* BOTÃO RETRÁTIL CENTRALIZADO NA BORDA DIREITA DO SIDEBAR */
 .collapse-btn {
   position: fixed;
   left: 220px;
-  top: calc(60px + 50% - 19px); /* 60px header + meio do sidebar */
-  transform: translateY(-50%);
-  z-index: 1200;
+  /* Centralização vertical no sidebar (ajuste 110px conforme menu!) */
+  top: calc(60px + 110px);
+  z-index: 1201;
   background: #ffd166;
   color: #16213e;
   border: 2px solid #16213e;
@@ -108,19 +80,12 @@ body {
   font-size: 1.4rem;
   box-shadow: 0 4px 14px rgba(0,0,0,0.12);
   cursor: pointer;
-  transition: left 0.3s, background .2s, border .2s;
+  transition: left 0.3s, background .2s, border .2s, top 0.3s;
 }
-.sidebar.collapsed ~ .collapse-btn {
-  left: 60px;
-}
-.collapse-btn:hover {
-  background: #ffeb99;
-}
+.sidebar.collapsed ~ .collapse-btn { left: 60px; }
+.collapse-btn:hover { background: #ffeb99; }
 
-/* SEARCH-TABS fixas, nunca sobrepõe o sidebar, só aparece em GPTs/Favoritos */
-.search-tabs {
-  display: none;
-}
+/* SEARCH-TABS AJUSTADA AO LADO DO SIDEBAR */
 body.gpts-active .search-tabs,
 body.favoritos-active .search-tabs {
   position: fixed;
@@ -129,44 +94,36 @@ body.favoritos-active .search-tabs {
   width: calc(100vw - 220px);
   max-width: calc(100vw - 220px);
   background: #fff;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.09);
   z-index: 999;
   display: block;
   padding-bottom: 0.5rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.09);
   transition: left 0.3s, width 0.3s;
 }
 .sidebar.collapsed ~ .search-tabs,
-.sidebar.collapsed ~ .main {
-  margin-left: 60px;
-}
 body.gpts-active .search-tabs.sidebar-collapsed,
 body.favoritos-active .search-tabs.sidebar-collapsed {
   left: 60px;
   width: calc(100vw - 60px);
 }
-
-.search-tabs .inner {
-  padding: 0.7rem 0.7rem 0 0.7rem;
-}
+.search-tabs .inner { padding: 0.7rem 0.7rem 0 0.7rem; }
 .search-tabs .section-title {
   text-align: center;
   margin-bottom: .5rem;
+  margin-top: 0;
   font-weight: 700;
   letter-spacing: 0.01em;
   position: relative;
   z-index: 2;
 }
 
-/* SEARCH BAR */
+/* BARRA DE PESQUISA E FAVORITOS */
 .search-bar {
   display: flex;
   align-items: center;
   margin-bottom: 1rem;
 }
-.input-wrapper {
-  position: relative;
-  flex: 1;
-}
+.input-wrapper { position: relative; flex: 1; }
 .input-wrapper input {
   width: 100%;
   padding: 0.6rem 2.5rem 0.6rem 1rem;
@@ -194,13 +151,8 @@ body.favoritos-active .search-tabs.sidebar-collapsed {
   font-size: 1.2rem;
 }
 
-/* TABS SCROLL */
-.tabs {
-  display: flex;
-  overflow-x: auto;
-  padding-bottom: 0.5rem;
-  gap: 0.3rem;
-}
+/* ABAS DAS CATEGORIAS */
+.tabs { display: flex; overflow-x: auto; padding-bottom: 0.5rem; gap: 0.3rem; }
 .tabs button {
   padding: 0.6rem 1rem;
   border: none;
@@ -210,12 +162,9 @@ body.favoritos-active .search-tabs.sidebar-collapsed {
   white-space: nowrap;
   transition: background 0.2s;
 }
-.tabs button.active,
-.tabs button:hover {
-  background: #ffd166;
-}
+.tabs button.active, .tabs button:hover { background: #ffd166; }
 
-/* MAIN (NUNCA SOBREPOSTO) */
+/* MAIN: NUNCA SOBREPOSTO, SEMPRE AO LADO DO SIDEBAR E ABAIXO DO HEADER */
 .main {
   margin-top: 60px;
   margin-left: 220px;
@@ -223,13 +172,10 @@ body.favoritos-active .search-tabs.sidebar-collapsed {
   background: #f7f8fb;
   min-height: calc(100vh - 60px);
 }
-.sidebar.collapsed ~ .main {
-  margin-left: 60px;
-}
+.sidebar.collapsed ~ .main { margin-left: 60px; }
+
 @media (max-width: 900px) {
-  .main, .search-tabs {
-    margin-left: 60px !important;
-  }
+  .main, .search-tabs { margin-left: 60px !important; }
   .sidebar { width: 60px !important; }
 }
 
@@ -241,7 +187,7 @@ body.favoritos-active .search-tabs.sidebar-collapsed {
   padding: 0 1rem;
 }
 
-/* GPTs: cards centralizados, fixos e responsivos */
+/* CARDS DOS GPTs */
 body.gpts-active #content,
 body.favoritos-active #content {
   margin-top: 118px; /* header + search-tabs + título */
@@ -264,15 +210,8 @@ body.favoritos-active #content {
   width: 100%;
   max-width: 350px;
 }
-.card h3 {
-  font-size: 1.1rem;
-  margin-bottom: 0.5rem;
-}
-.card p {
-  font-size: 0.95rem;
-  color: #333;
-  margin-bottom: 0.5rem;
-}
+.card h3 { font-size: 1.1rem; margin-bottom: 0.5rem; }
+.card p { font-size: 0.95rem; color: #333; margin-bottom: 0.5rem; }
 .card-actions {
   margin-top: auto;
   display: flex;
@@ -288,10 +227,7 @@ body.favoritos-active #content {
   text-decoration: none;
   margin-right: 0.5rem;
 }
-.card-actions .btn-open:hover {
-  background: #16213e;
-  color: #fff;
-}
+.card-actions .btn-open:hover { background: #16213e; color: #fff; }
 .card-actions .fav-card-btn {
   background: none;
   border: none;
@@ -319,13 +255,13 @@ body.favoritos-active #content {
   }
 }
 
-/* SUGESTÕES */
+/* SUGESTÕES - MARGEM AJUSTADA */
 body.sugestoes-active #content {
   display: flex;
   justify-content: center;
   align-items: flex-start;
   padding: 1rem 0;
-  margin-top: 80px;
+  margin-top: 110px;
   min-height: 100vh;
   background: #f7f8fb;
 }
@@ -344,10 +280,7 @@ body.sugestoes-active #content form {
   flex-direction: column;
   margin-bottom: 0.75rem;
 }
-#content .form-group label {
-  margin-bottom: 0.25rem;
-  font-weight: bold;
-}
+#content .form-group label { margin-bottom: 0.25rem; font-weight: bold; }
 #content .form-group input,
 #content .form-group select,
 #content .form-group textarea {
@@ -363,9 +296,7 @@ body.sugestoes-active #content form {
   border-radius: 4px;
   cursor: pointer;
 }
-#content button[type="submit"]:hover {
-  background: #0f1a33;
-}
+#content button[type="submit"]:hover { background: #0f1a33; }
 
 /* EM BREVE */
 #content .em-breve {
@@ -393,4 +324,11 @@ body.sugestoes-active #content form {
     height: calc(100vh - 60px - 58px);
   }
   .card { max-width: 98vw; min-width: 0; }
+  .collapse-btn {
+    left: 60px;
+    top: calc(60px + 40px);
+  }
+  .main, .search-tabs { margin-left: 60px !important; }
+  .sidebar { width: 60px !important; }
+  body.sugestoes-active #content { margin-top: 90px; }
 }
