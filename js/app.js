@@ -102,14 +102,19 @@ function initUI() {
       sidebar.querySelectorAll("li").forEach(x => x.classList.remove("active"));
       li.classList.add("active");
 
+      // controle de classe no body para visualização condicional de componentes
+      document.body.classList.remove("gpts-active", "favoritos-active", "sugestoes-active");
+
       if (sec === "manual") {
         contentEl.innerHTML = manualContentHTML;
       } else if (sec === "gpts") {
-        // ativa a 1ª categoria que não seja Favoritos
+        document.body.classList.add("gpts-active");
         tabsContainer.querySelector("button:not([data-cat='Favoritos'])").click();
       } else if (sec === "favoritos") {
+        document.body.classList.add("gpts-active", "favoritos-active");
         tabsContainer.querySelector("button[data-cat='Favoritos']").click();
       } else if (sec === "sugestoes") {
+        document.body.classList.add("sugestoes-active");
         contentEl.innerHTML = suggestionsFormHTML;
       }
       // (poderá estender cadastro, opcoes, sair etc.)
@@ -133,6 +138,7 @@ function initUI() {
 
   // 2.e) Botão Favoritos geral
   favBtn.addEventListener("click", () => {
+    document.body.classList.add("gpts-active", "favoritos-active");
     tabsContainer.querySelector("button[data-cat='Favoritos']").click();
   });
 
@@ -144,6 +150,9 @@ function initUI() {
 function selectCategory(cat, btn) {
   document.querySelectorAll(".tabs button").forEach(b => b.classList.remove("active"));
   btn.classList.add("active");
+
+  // rola o container pro topo sempre que muda categoria
+  if (contentEl) contentEl.scrollTop = 0;
 
   if (cat === "Favoritos") {
     const favs    = JSON.parse(localStorage.getItem("favorites") || "[]");
