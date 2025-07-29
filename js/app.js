@@ -8,11 +8,27 @@ const contentEl     = document.getElementById("content");
 const searchInput   = document.getElementById("searchInput");
 const searchBtn     = document.getElementById("searchBtn");
 const favBtn        = document.getElementById("favoritesBtn");
+const searchTabs    = document.querySelector(".search-tabs");
 
 let categories = [];
 let gpts       = [];
 let suggestionsFormHTML = "";
 let manualContentHTML   = "";
+
+// CENTRALIZA O BOTÃO RETRÁTIL VERTICALMENTE NO SIDEBAR
+function updateCollapseBtnPosition() {
+  // Sidebar começa em 60px do topo (header), altura padrão ~calc(100vh - 60px)
+  const sidebarRect = sidebar.getBoundingClientRect();
+  // Centraliza o botão na metade do sidebar (ajustando altura do botão: 38px)
+  const sidebarHeight = sidebar.offsetHeight;
+  const headerHeight = 60;
+  const btnHeight = 38;
+  const newTop = window.scrollY + headerHeight + (sidebarHeight / 2) - (btnHeight / 2);
+  collapseBtn.style.top = `${newTop}px`;
+}
+window.addEventListener('resize', updateCollapseBtnPosition);
+window.addEventListener('DOMContentLoaded', updateCollapseBtnPosition);
+sidebar.addEventListener('transitionend', updateCollapseBtnPosition);
 
 // 1️⃣ CARREGAR E PARSEAR CATALOG.HTML
 async function loadCatalog() {
@@ -83,7 +99,8 @@ function initUI() {
   collapseBtn.addEventListener("click", () => {
     sidebar.classList.toggle("collapsed");
     collapseBtn.textContent = sidebar.classList.contains("collapsed") ? "›" : "‹";
-    document.querySelector('.search-tabs').classList.toggle('sidebar-collapsed', sidebar.classList.contains('collapsed'));
+    searchTabs.classList.toggle('sidebar-collapsed', sidebar.classList.contains('collapsed'));
+    updateCollapseBtnPosition();
   });
 
   // Abas de categoria
@@ -207,4 +224,7 @@ function renderCards(list) {
 }
 
 // 6️⃣ INICIALIZAÇÃO
-document.addEventListener("DOMContentLoaded", loadCatalog);
+document.addEventListener("DOMContentLoaded", () => {
+  loadCatalog();
+  updateCollapseBtnPosition();
+});
