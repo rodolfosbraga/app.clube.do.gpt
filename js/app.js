@@ -1,6 +1,6 @@
 // js/app.js
 
-// Elementos do DOM
+// ===== Elementos do DOM =====
 const sidebar       = document.getElementById("sidebar");
 const collapseBtn   = document.getElementById("collapseBtn");
 const tabsContainer = document.getElementById("categoryTabs");
@@ -12,41 +12,53 @@ const favBtn        = document.getElementById("favoritesBtn");
 let categories = [];
 let gpts       = [];
 let suggestionsFormHTML = "";
+let manualContentHTML   = "";
 
-// 1️⃣ Carrega e parseia o HTML do catálogo (data/catalog.html)
+// ===== 1️⃣ Carrega e parseia o HTML do catálogo =====
 async function loadCatalog() {
   const resp = await fetch("data/catalog.html");
   const text = await resp.text();
-  const parser = new DOMParser();
-  const doc = parser.parseFromString(text, "text/html");
+  const doc  = new DOMParser().parseFromString(text, "text/html");
 
-  // Extrai o formulário de Sugestões
+  // 1.a) Formulário de Sugestões
   const form = doc.querySelector("form");
-  suggestionsFormHTML = form ? form.outerHTML : "<p>Formulário não encontrado.</p>";
+  suggestionsFormHTML = form
+    ? `<div class="inner">${form.outerHTML}</div>`
+    : "<p>Formulário não encontrado.</p>";
 
-  // Extrai categorias e GPTs
+  // 1.b) Conteúdo Manual (blocos .intro, .instruction, .end, .Calltosearch)
+  const intro       = doc.querySelector(".intro")       ?.outerHTML || "";
+  const instruction = doc.querySelector(".instruction") ?.outerHTML || "";
+  const end         = doc.querySelector(".end")         ?.outerHTML || "";
+  const call2       = doc.querySelector(".Calltosearch")?.outerHTML || "";
+  manualContentHTML = `
+    <div class="manual-content inner">
+      ${intro}${instruction}${end}${call2}
+    </div>`;
+
+  // 1.c) Extrai categorias e GPTs de cada .category-block
   const blocks = Array.from(doc.querySelectorAll(".category-block"));
   blocks.forEach(block => {
     const catTitle = block.querySelector(".category-title").textContent.trim();
-    if (!categories.includes(catTitle)) {
-      categories.push(catTitle);
-    }
-    // Para cada GPT (dentro de <details>)
+    if (!categories.includes(catTitle)) categories.push(catTitle);
+
     Array.from(block.querySelectorAll("details")).forEach(detail => {
       const title = detail.querySelector("summary").textContent.trim();
       const content = detail.querySelector(".content");
       const linkEl = content.querySelector("a");
-      const link = linkEl ? linkEl.href : "#";
+      const link   = linkEl ? linkEl.href : "#";
+
       let desc = "", tools = "", prompt = "";
       content.querySelectorAll("p").forEach(p => {
-        const labelEl = p.querySelector("strong");
-        if (!labelEl) return;
-        const label = labelEl.textContent.replace(":", "").trim();
-        const text  = p.textContent.replace(labelEl.textContent, "").trim();
-        if (label === "Descrição")        desc    = text;
-        else if (label === "Ferramentas") tools   = text;
-        else if (label === "Prompt Ideal") prompt = text;
+        const strong = p.querySelector("strong");
+        if (!strong) return;
+        const label = strong.textContent.replace(":", "").trim();
+        const txt   = p.textContent.replace(strong.textContent, "").trim();
+        if (label === "Descrição")        desc    = txt;
+        else if (label === "Ferramentas") tools   = txt;
+        else if (label === "Prompt Ideal") prompt = txt;
       });
+
       gpts.push({
         title,
         category: catTitle,
@@ -58,51 +70,55 @@ async function loadCatalog() {
     });
   });
 
-  // Insere aba de Favoritos
+  // 1.d) Adiciona aba de Favoritos
   categories.push("Favoritos");
 
+  // Inicializa a interface
   initUI();
 }
 
-// 2️⃣ Inicializa UI (sidebar, abas, busca, favoritos, sugestão)
+// ===== 2️⃣ Inicializa Interface =====
 function initUI() {
-  // Sidebar retrátil
+  // 2.a) Sidebar retrátil
   collapseBtn.addEventListener("click", () => {
     sidebar.classList.toggle("collapsed");
     collapseBtn.textContent = sidebar.classList.contains("collapsed") ? "›" : "‹";
   });
 
-  // Abas de categorias
+  // 2.b) Gera abas de categoria
   tabsContainer.innerHTML = "";
   categories.forEach(cat => {
     const btn = document.createElement("button");
     btn.textContent = cat;
-    btn.dataset.cat  = cat;
+    btn.dataset.cat   = cat;
     btn.addEventListener("click", () => selectCategory(cat, btn));
     tabsContainer.appendChild(btn);
   });
 
-  // Eventos do menu lateral
+  // 2.c) Evento de clique no menu lateral
   sidebar.querySelectorAll(".menu li").forEach(li => {
     li.addEventListener("click", () => {
       const sec = li.dataset.section;
       sidebar.querySelectorAll("li").forEach(x => x.classList.remove("active"));
       li.classList.add("active");
 
-      if (sec === "sugestoes") {
-        contentEl.innerHTML = suggestionsFormHTML;
+      if (sec === "manual") {
+        contentEl.innerHTML = manualContentHTML;
       } else if (sec === "gpts") {
+        // ativa a 1ª categoria que não seja Favoritos
         tabsContainer.querySelector("button:not([data-cat='Favoritos'])").click();
       } else if (sec === "favoritos") {
         tabsContainer.querySelector("button[data-cat='Favoritos']").click();
+      } else if (sec === "sugestoes") {
+        contentEl.innerHTML = suggestionsFormHTML;
       }
-      // (Outras seções: manual, cadastro, opcoes, sair – trate conforme necessário)
+      // (poderá estender cadastro, opcoes, sair etc.)
     });
   });
 
-  // Busca
+  // 2.d) Função de busca
   function doSearch() {
-    const term = searchInput.value.toLowerCase();
+    const term = searchInput.value.trim().toLowerCase();
     renderCards(
       gpts.filter(g =>
         g.title.toLowerCase().includes(term) ||
@@ -115,16 +131,16 @@ function initUI() {
   searchInput.addEventListener("input", doSearch);
   searchBtn.addEventListener("click", doSearch);
 
-  // Botão favorito geral
+  // 2.e) Botão Favoritos geral
   favBtn.addEventListener("click", () => {
     tabsContainer.querySelector("button[data-cat='Favoritos']").click();
   });
 
-  // Inicia na seção GPTs
+  // 2.f) Inicia na seção GPTs
   sidebar.querySelector("li[data-section='gpts']").click();
 }
 
-// 3️⃣ Seleção de categoria / renderização
+// ===== 3️⃣ Seleção de Categoria =====
 function selectCategory(cat, btn) {
   document.querySelectorAll(".tabs button").forEach(b => b.classList.remove("active"));
   btn.classList.add("active");
@@ -138,7 +154,7 @@ function selectCategory(cat, btn) {
   }
 }
 
-// 4️⃣ Toggle favorito (localStorage)
+// ===== 4️⃣ Toggle Favorito =====
 function toggleFavorite(title) {
   let favs = JSON.parse(localStorage.getItem("favorites") || "[]");
   if (favs.includes(title)) {
@@ -149,10 +165,10 @@ function toggleFavorite(title) {
   localStorage.setItem("favorites", JSON.stringify(favs));
   // Re-renderiza aba ativa
   const active = document.querySelector(".tabs button.active");
-  if (active) active.click();
+  active && active.click();
 }
 
-// 5️⃣ Renderização dos cards
+// ===== 5️⃣ Renderização dos Cards =====
 function renderCards(list) {
   contentEl.innerHTML = "";
   if (!list.length) {
@@ -170,7 +186,7 @@ function renderCards(list) {
       <div class="card-actions">
         <a class="btn-open" href="${gpt.link}" target="_blank">Abrir GPT</a>
         <button class="fav-card-btn">${
-          JSON.parse(localStorage.getItem("favorites")||"[]").includes(gpt.title) ? "★" : "☆"
+          JSON.parse(localStorage.getItem("favorites") || "[]").includes(gpt.title) ? "★" : "☆"
         }</button>
       </div>
     `;
@@ -180,5 +196,5 @@ function renderCards(list) {
   });
 }
 
-// ✨ Inicia tudo após o DOM carregar
+// ===== Inicialização =====
 document.addEventListener("DOMContentLoaded", loadCatalog);
