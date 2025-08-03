@@ -233,21 +233,24 @@
   }
 
   /* --- MEMBRO ATIVO? ------------------------------------------ */
-  async function handleSession(session) {
-    if (!session) return;
-    const email = session.user.email;
-    const { data: member } = await supabase
-      .from('members')
-      .select('plan_status')
-      .eq('email', email)
-      .maybeSingle();
+async function handleSession(session) {
+  if (!session) return;
+  const email = session.user.email;
+  const { data: member } = await supabase
+    .from('members')
+    .select('plan_status')
+    .eq('email', email)
+    .maybeSingle();
 
-    if (member?.plan_status === 'ativo') {
-      window.location.href = 'app.html';
-    } else {
-      window.location.href = 'convite.html';
-    }
+  if (member?.plan_status === 'ativo') {
+    window.location.href = 'app.html';
+  } else {
+    // Desloga imediatamente se não for membro ativo
+    await supabase.auth.signOut();
+    showToast('Seu e-mail não é membro ativo. Cadastre-se para acessar.');
+    setTimeout(() => window.location.href = 'index.html', 2500);
   }
+}
 
 /* --- 1) CAPTURA CALLBACK OAUTH (GOOGLE) ---------------------- */
 (async () => {
