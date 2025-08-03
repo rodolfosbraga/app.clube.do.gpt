@@ -235,17 +235,23 @@
   /* --- MEMBRO ATIVO? ------------------------------------------ */
 async function handleSession(session) {
   if (!session) return;
-const email = session.user.email.trim().toLowerCase();
-const { data: member } = await supabase
-  .from('members')
-  .select('plan_status')
-  .ilike('email', email)
-  .maybeSingle();
+  // Mostra o e-mail retornado pelo Google
+  console.log('E-mail da sessão:', session.user.email);
+
+  const email = session.user.email.trim().toLowerCase();
+  console.log('E-mail usado na busca:', email);
+
+  const { data: member, error } = await supabase
+    .from('members')
+    .select('plan_status, email')
+    .ilike('email', email)
+    .maybeSingle();
+
+  console.log('Resultado da busca:', member, 'Erro:', error);
 
   if (member?.plan_status === 'ativo') {
     window.location.href = 'app.html';
   } else {
-    // Desloga imediatamente se não for membro ativo
     await supabase.auth.signOut();
     showToast('Seu e-mail não é membro ativo. Cadastre-se para acessar.');
     setTimeout(() => window.location.href = 'index.html', 2500);
