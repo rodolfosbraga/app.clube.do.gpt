@@ -183,6 +183,32 @@
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZvdXFueXlkcmh4Z2FkbnhqdGRzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI0NjQyNDUsImV4cCI6MjA2ODA0MDI0NX0.JH2SFA-6itPBy_Vdnqm9wCmIw7m3BPHRlZkfcgaP-is'; 
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+    // ① ao carregar a página, já tenta pegar a sessão existente
+(async () => {
+  const { data: { session } } = await supabase.auth.getSession();
+  await handleSession(session);
+})();
+    // ② também ainda escuta onAuthStateChange (por exemplo, após completar o OAuth)
+supabase.auth.onAuthStateChange((event, session) => {
+  handleSession(session);
+});
+   
+    // checa se session existe e faz a validação de membro
+    async function handleSession(session) {
+      if (!session) return;
+    const email = session.user.email;
+    const { data: member, error } = await supabase
+    .from('members')
+    .select('plan_status')
+    .eq('email', email)
+    .maybeSingle();
+      if (!error && member?.plan_status === 'ativo') {
+    window.location.href = 'app.html';
+  }   else {
+    window.location.href = 'convite.html';
+  }
+}
+    
     // 2) Função de Toast
     function showToast(msg, time = 5000) {
       const t = document.getElementById('toast-gpt');
@@ -266,7 +292,7 @@
     document.getElementById('googleLoginBtn').addEventListener('click', () => {
       supabase.auth.signInWithOAuth({
         provider: 'google',
-        options: { redirectTo: window.location.origin }
+        options: { redirectTo: 'https://rodolfosbraga.github.io/app.clube.do.gpt/index.html' }
       });
     });
   </script>
