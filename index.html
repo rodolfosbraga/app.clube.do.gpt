@@ -3,297 +3,197 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Clube do GPT - Login</title>
+  <title>Clube do GPT – Login</title>
+  <!-- Fonte Cinzel -->
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --azul-glow: #03b0ec;
-      --btn-main: #04b1f0;
-      --btn-hover: #0091c4;
-      --btn-cta: #fff;
-      --btn-cta-text: #04b1f0;
-      --btn-cta-hover: #c8e8fc;
-      --input-bg: rgba(23, 36, 61, 0.67);
-      --input-text: #e6f3fb;
+      --azul-glow:      #03b0ec;
+      --btn-main:       #04b1f0;
+      --btn-hover:      #0091c4;
+      --input-bg:       rgba(23,36,61,0.67);
+      --input-text:     #e6f3fb;
       --input-placeholder: #a0bcd6;
-      --container-glass: rgba(15, 25, 40, 0.44);
-      --white: #fff;
-      --cta-outline: #2bb5f9cc;
-      --cta-bg-hover: #e6f3fb;
+      --container-glass: rgba(15,25,40,0.44);
+      --white:          #fff;
     }
-    * { box-sizing: border-box; }
+    * { box-sizing: border-box; margin:0; padding:0; }
     html, body {
-      height: 100%;
-      margin: 0;
-      font-family: 'Cinzel', serif;
-      background: #101828;
-    }
-    body {
-      min-height: 100vh;
-      min-width: 100vw;
+      height:100%; width:100%;
+      font-family:'Cinzel', serif;
       background: url('background-login.jpeg') no-repeat center center fixed;
       background-size: cover;
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    }
+    body {
+      display:flex; align-items:center; justify-content:center;
+      position:relative;
     }
     .overlay {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(120deg, #101828cc 40%, #22345599 100%);
-      backdrop-filter: blur(1px);
-      z-index: 1;
+      position:absolute; inset:0;
+      background:linear-gradient(120deg,#101828cc 40%,#22345599 100%);
+      backdrop-filter:blur(1px);
+      z-index:1;
     }
     .main-center {
-      position: relative;
-      z-index: 2;
-      width: 100vw;
-      height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      position:relative; z-index:2;
+      width:100vw; max-width:420px;
+      padding: 24px 16px;
     }
     .login-container {
-      width: 100%;
-      max-width: 420px;
-      padding: 38px 34px 32px 34px;
-      border-radius: 20px;
-      background: var(--container-glass);
-      box-shadow: 0 8px 32px 0 rgba(13,21,38,0.10);
-      backdrop-filter: blur(14px);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+      background:var(--container-glass);
+      backdrop-filter:blur(14px);
+      border-radius:20px;
+      box-shadow:0 8px 32px rgba(13,21,38,0.10);
+      padding:38px 34px 32px;
+      display:flex; flex-direction:column; align-items:center;
     }
     .logo-holder {
-      width: 30%;
-      min-width: 110px;
-      max-width: 150px;
-      aspect-ratio: 1 / 1;
-      margin-bottom: 22px;
-      border-radius: 18px;
-      background: rgba(255,255,255,0.08);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 2px 16px 0 rgba(10,40,70,0.13);
+      width:30%; min-width:110px; max-width:150px;
+      aspect-ratio:1/1;
+      background:rgba(255,255,255,0.08);
+      border-radius:18px;
+      display:flex; align-items:center; justify-content:center;
+      margin-bottom:22px;
+      box-shadow:0 2px 16px rgba(10,40,70,0.13);
     }
     .logo-holder img {
-      width: 80%;
-      height: 80%;
-      object-fit: contain;
-      border-radius: 10px;
-      display: block;
+      width:80%; height:80%; object-fit:contain;
+      border-radius:10px;
     }
     .login-title {
-      font-size: 2.1rem;
-      font-weight: 700;
-      color: var(--white);
-      margin-bottom: 10px;
-      letter-spacing: 1px;
-      text-shadow: 0 2px 10px #14274466;
+      font-size:2.1rem; font-weight:700;
+      color:var(--white);
+      text-shadow:0 2px 10px #14274466;
+      margin-bottom:10px;
     }
     .login-subtitle {
-      font-size: 1.06rem;
-      color: #c8e8fc;
-      margin-bottom: 24px;
-      text-align: center;
-      text-shadow: 0 1px 5px #091b3a44;
+      font-size:1.06rem; color:#c8e8fc;
+      text-align:center;
+      text-shadow:0 1px 5px #091b3a44;
+      margin-bottom:24px;
     }
     .login-form {
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      gap: 18px;
+      width:100%; display:flex; flex-direction:column; gap:18px;
     }
     .login-input {
-      padding: 13px 16px;
-      border-radius: 9px;
-      border: 1.5px solid #2bb5f999;
-      background: var(--input-bg);
-      color: var(--input-text);
-      font-size: 1.04rem;
-      box-shadow: 0 2px 12px #0001;
-      outline: none;
-      transition: border-color 0.2s, background 0.2s;
-      font-family: 'Cinzel', serif;
-    }
-    .login-input:focus {
-      border-color: var(--azul-glow);
-      background: rgba(23, 36, 61, 0.82);
+      padding:13px 16px;
+      border-radius:9px;
+      border:1.5px solid #2bb5f999;
+      background:var(--input-bg);
+      color:var(--input-text);
+      font-size:1.04rem;
+      outline:none;
+      transition:border-color 0.2s, background 0.2s;
     }
     .login-input::placeholder {
-      color: var(--input-placeholder);
-      opacity: 1;
-      font-size: 0.99em;
-      text-transform: none !important;
+      color:var(--input-placeholder);
+      opacity:1;
+      font-size:0.99em;
+      text-transform:none !important;
+    }
+    .login-input:focus {
+      border-color:var(--azul-glow);
+      background:rgba(23,36,61,0.82);
     }
     .login-links {
-      display: flex;
-      justify-content: flex-end;
-      margin-top: 2px;
-      margin-bottom: 20px;
+      width:100%; text-align:right;
+      margin:8px 0 16px;
     }
     .login-links a {
-      color: #c8e8fc;
-      text-decoration: none;
-      font-size: 0.95rem;
-      opacity: 0.85;
-      transition: opacity 0.2s;
-      cursor: pointer;
+      color:#c8e8fc; font-size:0.95rem;
+      text-decoration:none; opacity:0.85;
+      transition:opacity 0.2s;
     }
     .login-links a:hover {
-      opacity: 1;
-      text-decoration: underline;
+      opacity:1; text-decoration:underline;
     }
     .btns-stack {
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-      margin-top: 5px;
+      width:100%; display:flex; flex-direction:column; gap:14px;
+    }
+    .login-btn,
+    .firstaccess-btn,
+    .signup-btn,
+    .google-btn {
+      padding:13px 0;
+      border-radius:9px;
+      font-size:1.08rem;
+      font-weight:600;
+      letter-spacing:0.3px;
+      cursor:pointer;
+      font-family:'Cinzel', serif;
+      box-shadow:0 2px 12px rgba(3,176,236,0.11);
+      transition:background 0.18s, color 0.18s, box-shadow 0.2s;
     }
     .login-btn {
-      width: 100%;
-      padding: 13px 0;
-      border-radius: 9px;
-      border: 1.5px solid #22a5e9;
-      font-size: 1.08rem;
-      font-weight: 600;
-      letter-spacing: 0.3px;
-      cursor: pointer;
-      background: var(--btn-main);
-      color: #fff;
-      margin-bottom: 0;
-      transition: background 0.18s, color 0.18s, box-shadow 0.2s;
-      box-shadow: 0 2px 12px #03b0ec11;
-      font-family: 'Cinzel', serif;
+      background:var(--btn-main); color:#fff;
+      border:1.5px solid #22a5e9;
     }
     .login-btn:hover {
-      background: var(--btn-hover);
-      color: #fff;
-      box-shadow: 0 0 10px 0 #0091c499;
+      background:var(--btn-hover);
     }
     .firstaccess-btn {
-      width: 100%;
-      padding: 13px 0;
-      border-radius: 9px;
-      border: 1.5px solid var(--btn-main);
-      font-size: 1.08rem;
-      font-weight: 600;
-      letter-spacing: 0.3px;
-      cursor: pointer;
-      background: var(--white);
-      color: var(--btn-main);
-      margin-bottom: 0;
-      transition: background 0.18s, color 0.18s, box-shadow 0.2s, border 0.2s;
-      box-shadow: 0 2px 12px #03b0ec11;
-      font-family: 'Cinzel', serif;
+      background:#fff; color:var(--btn-main);
+      border:1.5px solid var(--btn-main);
     }
     .firstaccess-btn:hover {
-      background: var(--btn-main);
-      color: #fff;
-      border-color: var(--btn-hover);
-      box-shadow: 0 0 10px 0 #0091c499;
+      background:var(--btn-main); color:#fff;
+      border-color:var(--btn-hover);
     }
     .signup-btn {
-      width: 100%;
-      padding: 13px 0;
-      border-radius: 9px;
-      border: 1.5px solid var(--cta-outline);
-      background: none;
-      color: var(--btn-main);
-      font-size: 1.08rem;
-      font-weight: 600;
-      letter-spacing: 0.3px;
-      cursor: pointer;
-      margin-bottom: 0;
-      transition: background 0.18s, color 0.18s, box-shadow 0.2s, border 0.2s;
-      font-family: 'Cinzel', serif;
-      box-shadow: 0 2px 12px #03b0ec11;
+      background:transparent; color:var(--btn-main);
+      border:1.5px solid rgba(43,181,249,0.8);
     }
     .signup-btn:hover {
-      background: var(--cta-bg-hover);
-      color: var(--btn-hover);
-      border-color: var(--btn-hover);
+      background:rgba(230,232,251,1); color:var(--btn-hover);
+      border-color:var(--btn-hover);
     }
-    .text-footer:hover {
-      background: var(--cta-bg-hover);
-      color: var(--btn-hover);
-      border-color: var(--btn-hover);
-      width: 100%;
-      padding: 13px 0;
-      border-radius: 9px;
-      border: 1.5px solid var(--cta-outline);
-      background: none;
-      color: var(--btn-main);
-      font-size: 1.08rem;
-      font-weight: 600;
-      letter-spacing: 0.3px;
-      cursor: pointer;
-      margin-bottom: 0;
-      transition: background 0.18s, color 0.18s, box-shadow 0.2s, border 0.2s;
-      font-family: 'Cinzel', serif;
-      box-shadow: 0 2px 12px #03b0ec11;
+    .google-btn {
+      background:#000; color:#fff; border:none;
+      display:flex; align-items:center; justify-content:center;
     }
-    /* Toast styles */
+    .google-btn img {
+      width:18px; height:18px; margin-right:8px;
+    }
+    .google-btn:hover {
+      background:#222;
+    }
+    .links-footer {
+      text-align:center; margin:24px 0 8px;
+      font-size:0.98rem;
+    }
+    .links-footer a {
+      color:#c8e8fc; margin:0 12px;
+      text-decoration:underline; font-size:0.98rem;
+    }
+    .text-footer {
+      text-align:center; color:#fff;
+      font-size:0.85rem; margin-top:8px;
+    }
+    /* toast */
     #toast-gpt {
-      visibility: hidden;
-      min-width: 260px;
-      margin-left: -130px;
-      background-color: #04b1f0;
-      color: #fff;
-      text-align: center;
-      border-radius: 7px;
-      padding: 14px 30px;
-      position: fixed;
-      z-index: 99;
-      left: 50%;
-      bottom: 40px;
-      font-size: 1rem;
-      box-shadow: 0 3px 18px #011f2d22;
-      font-family: 'Cinzel', serif;
-      font-weight: 500;
-      letter-spacing: 0.03em;
-      transition: bottom 0.3s, opacity 0.2s;
-      opacity: 0;
+      visibility:hidden; min-width:260px;
+      margin-left:-130px;
+      background:var(--btn-main); color:#fff;
+      text-align:center;
+      border-radius:7px; padding:14px 30px;
+      position:fixed; z-index:99; left:50%; bottom:40px;
+      font-family:'Cinzel', serif; font-weight:500;
+      transition:bottom 0.3s, opacity 0.2s;
+      opacity:0;
     }
     #toast-gpt.show {
-      visibility: visible;
-      opacity: 1;
-      bottom: 40px;
+      visibility:visible; opacity:1; bottom:40px;
     }
-    @media (max-width: 600px) {
-      .main-center {
-        padding: 4vw 0;
-      }
-      .login-container {
-        max-width: 98vw;
-        padding: 16px 2vw 12px 2vw;
-      }
-      .logo-holder {
-        min-width: 68px;
-        max-width: 90px;
-      }
-      .login-title {
-        font-size: 1.2rem;
-      }
-      .login-form {
-        gap: 13px;
-      }
+
+    @media (max-width:600px) {
+      .login-container { padding:16px; }
+      .login-title { font-size:1.2rem; }
+      .login-input { font-size:1rem; }
       .login-btn,
+      .firstaccess-btn,
       .signup-btn,
-      .firstaccess-btn {
-        font-size: 1rem;
-      }
-      #toast-gpt {
-        font-size: 0.92rem;
-        min-width: 180px;
-        margin-left: -90px;
-        padding: 10px 12px;
-        bottom: 18px;
-      }
+      .google-btn { font-size:1rem; }
+      #toast-gpt { font-size:0.92rem; min-width:180px; bottom:18px; }
     }
   </style>
 </head>
@@ -304,109 +204,123 @@
       <div class="logo-holder">
         <img src="hero-placeholder.png" alt="Logo do Clube do GPT">
       </div>
-      <div class="login-title">Clube do <span style="color: #04b1f0;">GPT</span></div>
-      <div class="login-subtitle">O seu clube de inteligência artificial: GPTs que realmente ajudam no seu dia a dia.</div>
+      <div class="login-title">Clube do <span style="color:#04b1f0;">GPT</span></div>
+      <div class="login-subtitle">
+        O seu clube de inteligência artificial: GPTs que realmente ajudam no seu dia a dia.
+      </div>
       <div class="login-form">
-        <input type="email" class="login-input" placeholder="Seu e-mail" required>
+        <input type="email"    class="login-input" placeholder="Seu e-mail" required>
         <input type="password" class="login-input" placeholder="Digite sua senha" required>
       </div>
       <div class="login-links">
-        <a href="#">Esqueceu a senha?</a>
+        <a href="#" id="forgotLink">Esqueceu a senha?</a>
       </div>
       <div class="btns-stack">
         <button type="submit" class="login-btn">Entrar</button>
+        <button type="button" class="google-btn" id="googleLoginBtn">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="G">
+          Entrar com Google
+        </button>
         <button type="button" class="firstaccess-btn" id="primeiroAcessoBtn">Primeiro acesso</button>
-        <button type="button" class="signup-btn" id="queroMembroBtn">Quero ser membro</button>
+        <button type="button" class="signup-btn"    id="queroMembroBtn">Quero ser membro</button>
       </div>
-        <div style="margin-top:26px; text-align:center; width:100%;">
-        <a href="privacidade.html" target="_blank" style="color:#c8e8fc; font-size:0.98em; margin-right:18px; text-decoration:underline;">
-        Política de Privacidade
-      </a>
-      <a href="termos.html" target="_blank" style="color:#c8e8fc; font-size:0.98em; text-decoration:underline;">
-        Termos de Uso
-      </a>
+    </form>
+
+    <div class="links-footer">
+      <a href="privacidade.html" target="_blank">Política de Privacidade</a>
+      <a href="termos.html"      target="_blank">Termos de Uso</a>
     </div>
-   <div class="text-footer">
-        <a href="#">Todos os direitos reservados a Rodolfo da Silva Braga</a>
-      </form>
+    <div class="text-footer">
+      Todos os direitos reservados a Rodolfo da Silva Braga
+    </div>
   </div>
 
-  <!-- Toast Notification -->
   <div id="toast-gpt"></div>
 
-  <!-- Supabase JS CDN -->
+  <!-- Supabase JS -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.42.5/dist/umd/supabase.min.js"></script>
   <script>
-    // Troque pelas suas chaves Supabase!
-    const SUPABASE_URL = 'https://fouqnyydrhxgadnxjtds.supabase.co';
+    // Supabase config
+    const SUPABASE_URL     = 'https://fouqnyydrhxgadnxjtds.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZvdXFueXlkcmh4Z2FkbnhqdGRzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI0NjQyNDUsImV4cCI6MjA2ODA0MDI0NX0.JH2SFA-6itPBy_Vdnqm9wCmIw7m3BPHRlZkfcgaP-is';
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-  // 2. URL para onde o e-mail de reset deve apontar
-  const redirectURL = 'https://rodolfosbraga.github.io/app.clube.do.gpt/reset-password.html';
 
-  // 3. Toast flutuante
-  function showToastGPT(msg, duration = 3500) {
-    const t = document.getElementById('toast-gpt');
-    t.textContent = msg;
-    t.className = 'show';
-    setTimeout(() => t.className = t.className.replace('show',''), duration);
-  }
+    // Para o reset e primeiro acesso
+    const redirectURL = 
+      'https://rodolfosbraga.github.io/app.clube.do.gpt/reset-password.html';
 
-  // 4. Formulário de Login
-  document.querySelector('.login-container').addEventListener('submit', async function(e) {
-    e.preventDefault();
-    const email    = this.querySelector('input[type="email"]').value.trim();
-    const password = this.querySelector('input[type="password"]').value;
-    
-    if (!email || !password) {
-      showToastGPT('Preencha e-mail e senha.');
-      return;
+    // Toast helper
+    function showToastGPT(msg, duration=3500){
+      const t = document.getElementById('toast-gpt');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(()=>t.classList.remove('show'), duration);
     }
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-    if (error) {
-      showToastGPT('E-mail ou senha inválidos.');
-      return;
-    }
-    // valida status de membro (exemplo: plan_status === 'ativo')
-    const { data: member, error: memberErr } = await supabase
-      .from('members').select('plan_status').eq('email', email).maybeSingle();
-    if (memberErr || !member || member.plan_status !== 'ativo') {
-      showToastGPT('Somente membros ativos podem acessar.');
-      return;
-    }
-    showToastGPT('Login bem-sucedido! Redirecionando...');
-    setTimeout(() => window.location.href = 'app.html', 1200);
-  });
 
-  // 5. “Esqueceu a senha?”
-  document.querySelector('.login-links a').addEventListener('click', async function(e) {
-    e.preventDefault();
-    const email = prompt('Digite seu e-mail cadastrado:');
-    if (!email) return;
-    try {
-      await supabase.auth.resetPasswordForEmail(email.trim(), { redirectTo: redirectURL });
-      showToastGPT('Se existir, você receberá o link de redefinição.');
-    } catch {
-      showToastGPT('Erro ao enviar link de redefinição.');
-    }
-  });
+    // ➊ Monitora login (inclui OAuth)
+    supabase.auth.onAuthStateChange(async (event, session) => {
+      if (event==='SIGNED_IN' && session) {
+        const email = session.user.email;
+        const { data: member, error } = await supabase
+          .from('members').select('plan_status').eq('email',email).maybeSingle();
+        if (!error && member?.plan_status==='ativo') {
+          window.location.href = 'app.html';
+        } else {
+          await supabase.auth.signOut();
+          showToastGPT('Seu acesso não está liberado!');
+        }
+      }
+    });
 
-  // 6. “Primeiro acesso”
-  document.getElementById('primeiroAcessoBtn').addEventListener('click', async function() {
-    const email = prompt('Digite o e-mail usado na compra:');
-    if (!email) return;
-    try {
-      await supabase.auth.resetPasswordForEmail(email.trim(), { redirectTo: redirectURL });
-      showToastGPT('Link de criação de senha enviado!');
-    } catch {
-      showToastGPT('Erro ao enviar link de criação de senha.');
-    }
-  });
+    // ➋ Login via formulário
+    document.querySelector('.login-container').addEventListener('submit',async e=>{
+      e.preventDefault();
+      const form = e.target;
+      const email    = form.querySelector('input[type="email"]').value.trim();
+      const password = form.querySelector('input[type="password"]').value;
+      if(!email||!password){ showToastGPT('Preencha e-mail e senha.'); return; }
+      const { error } = await supabase.auth.signInWithPassword({ email,password });
+      if(error){ showToastGPT('E-mail ou senha inválidos.'); return; }
+      showToastGPT('Login bem-sucedido!'); // onAuthStateChange redireciona
+    });
 
-  // 7. “Quero ser membro”
-  document.getElementById('queroMembroBtn').addEventListener('click', function() {
-    window.open('https://rodolfosbraga.github.io/clube-do-gpt/', '_blank');
-  });
-</script>
+    // ➌ Esqueceu a senha?
+    document.getElementById('forgotLink').addEventListener('click',async e=>{
+      e.preventDefault();
+      const email = prompt('Digite seu e-mail cadastrado:');
+      if(!email) return;
+      try {
+        await supabase.auth.resetPasswordForEmail(email.trim(),{ redirectTo });
+        showToastGPT('Se existir, você receberá o link de redefinição.');
+      } catch {
+        showToastGPT('Erro ao enviar link de redefinição.');
+      }
+    });
+
+    // ➍ Primeiro acesso (mesma API de recovery)
+    document.getElementById('primeiroAcessoBtn').addEventListener('click',async()=>{
+      const email = prompt('Digite o e-mail usado na compra:');
+      if(!email) return;
+      try {
+        await supabase.auth.resetPasswordForEmail(email.trim(),{ redirectTo });
+        showToastGPT('Link de criação de senha enviado!');
+      } catch {
+        showToastGPT('Erro ao enviar link de criação de senha.');
+      }
+    });
+
+    // ➎ Quero ser membro
+    document.getElementById('queroMembroBtn').addEventListener('click',()=>{
+      window.open('https://rodolfosbraga.github.io/clube-do-gpt/','_blank');
+    });
+
+    // ➏ Entrar com Google
+    document.getElementById('googleLoginBtn').addEventListener('click',()=>{
+      supabase.auth.signInWithOAuth({
+        provider:'google',
+        options:{ redirectTo: window.location.origin + '/app.clube.do.gpt/index.html' }
+      });
+    });
+  </script>
 </body>
 </html>
