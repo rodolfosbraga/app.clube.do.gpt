@@ -248,8 +248,9 @@
       const { data: { session } } = await supabase.auth.getSession();
       if (session) handleSession(session);
     })();
-        <!-- 5) Função que checa membership e redireciona -->
-    <script>
+  
+    // 5) Função que checa membership e redireciona
+  
     async function handleSession(session) {
       if (!session) return;
       const email = session.user.email;
