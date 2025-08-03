@@ -363,24 +363,20 @@
       }, 1100);
     });
 
-    // Esqueceu a senha
-    document.querySelector('.login-links a').addEventListener('click', function(e) {
-      e.preventDefault();
-      const email = prompt('Digite o seu e-mail para redefinir a senha:');
-      if (!email) return;
-      supabase.auth.resetPasswordForEmail(email.trim())
-        .then(() => showToastGPT('Se o e-mail estiver cadastrado, você receberá as instruções para redefinir sua senha.'))
-        .catch(() => showToastGPT('Erro ao tentar redefinir senha. Tente novamente.'));
-    });
+const redirectURL = 'https://rodolfosbraga.github.io/app.clube.do.gpt/reset-password.html';
 
-    // Botão "Primeiro acesso"
-    document.getElementById('primeiroAcessoBtn').addEventListener('click', function() {
-      const email = prompt('Digite o e-mail usado na compra. Você receberá um link para criar sua senha:');
-      if (!email) return;
-      supabase.auth.resetPasswordForEmail(email.trim())
-        .then(() => showToastGPT('Enviamos o link de criação de senha para seu e-mail!'))
-        .catch(() => showToastGPT('Erro ao tentar enviar link de criação de senha.'));
-    });
+// Esqueceu a senha
+supabase.auth
+  .resetPasswordForEmail(email.trim(), { redirectTo: redirectURL })
+  .then(() => showToastGPT('Se o e-mail estiver cadastrado, você receberá as instruções.'))
+  .catch(() => showToastGPT('Erro ao tentar redefinir senha.'));
+
+// Botão “Primeiro acesso”
+supabase.auth
+  .resetPasswordForEmail(email.trim(), { redirectTo: redirectURL })
+  .then(() => showToastGPT('Enviamos o link de criação de senha para seu e-mail!'))
+  .catch(() => showToastGPT('Erro ao tentar enviar link de criação de senha.'));
+
 
     // Botão "Quero ser membro"
     document.getElementById('queroMembroBtn').addEventListener('click', function() {
