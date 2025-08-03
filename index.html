@@ -249,24 +249,30 @@
     }
   }
 
-    /* --- 1) CAPTURA CALLBACK OAUTH (GOOGLE) ---------------------- */
+/* --- 1) CAPTURA CALLBACK OAUTH (GOOGLE) ---------------------- */
 (async () => {
-  // detecta se a URL traz parâmetros do OAuth
-  const hasOAuthParams =
-    window.location.search.includes('code=')      ||   // PKCE / implicit
-    window.location.search.includes('access_token=') ||
-    window.location.hash.includes('access_token=');
+  // Analisa search (?…)
+  const qs   = new URLSearchParams(window.location.search);
+  // Analisa hash (#…)
+  const hash = new URLSearchParams(window.location.hash.replace(/^#/, ''));
+
+  const hasCode         = qs.has('code');
+  const hasAccessToken  = qs.has('access_token') || hash.has('access_token');
 
   let oauthSession = null;
 
-  if (hasOAuthParams) {
-    // troca code → sessão persistida
+  if (hasCode || hasAccessToken) {
+    // Tenta trocar code → sessão
     const { data, error } = await supabase.auth.exchangeCodeForSession();
     if (error) {
       console.warn('OAuth callback error:', error);
-      // opcional: showToast('Falha no login Google');
+      showToast('Falha no login Google');          // opcional
     }
-    oauthSession = data.session;
+    oauthSession = data?.session;
+  } else if (qs.has('error')) {
+    // Veio da Google mas com erro na querystring
+    console.warn('OAuth provider devolveu erro:', qs.get('error_description'));
+    showToast('Erro de autenticação Google');
   }
 
   if (oauthSession) {
@@ -274,18 +280,10 @@
     return handleSession(oauthSession);
   }
 
-  // não veio do OAuth → tenta sessão já salva
+  // fluxo normal (navegação sem OAuth)
   const { data: { session } } = await supabase.auth.getSession();
   if (session) handleSession(session);
 })();
-
-  /* --- 2) BACKUP: quando a sessão mudar ----------------------- */
-  supabase.auth.onAuthStateChange((ev, session) => {
-    if (ev === 'SIGNED_IN') {
-      showToast('🔄 Realizando verificações…');
-      handleSession(session);
-    }
-  });
 
   /* --- 3) LOGIN COM E-MAIL+SENHA ------------------------------ */
   document.getElementById('loginForm').addEventListener('submit', async e => {
