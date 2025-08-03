@@ -45,16 +45,16 @@
       aspect-ratio:1;
       margin-bottom:1.5rem;
       background:rgba(255,255,255,0.08);
-      border: none;
+      border:none;
       display:flex; align-items:center; justify-content:center;
       box-shadow:0 2px 16px rgba(10,40,70,0.13);
     }
-    .logo-holder img { width:80%; height:80%; object-fit:contain; border: none; }
+    .logo-holder img { width:80%; height:80%; object-fit:contain; border:none; }
     .login-title { font-size:2rem; color:var(--white); margin-bottom:.5rem; text-shadow:0 2px 10px rgba(20,39,68,.4); }
     .login-subtitle { color:#c8e8fc; font-size:1rem; text-align:center; margin-bottom:1.5rem; }
     .login-form { width:100%; display:flex; flex-direction:column; gap:1rem; }
     .login-input {
-      padding: .8rem 1rem; border-radius:9px; border:1.5px solid rgba(43,181,249,.6);
+      padding:.8rem 1rem; border-radius:9px; border:1.5px solid rgba(43,181,249,.6);
       background:var(--input-bg); color:var(--input-text);
       font-size:1rem; transition:.2s; outline:none;
     }
@@ -90,8 +90,7 @@
       background:#000; border:1.5px solid #000; color:#fff;
     }
     .google-btn img.google-icon {
-      width:20px; height:20px; margin-right: 8px;
-      vertical-align: middle;
+      width:20px; height:20px; margin-right:8px; vertical-align:middle;
     }
     .google-btn:hover { background:#111; }
 
@@ -124,13 +123,17 @@
       z-index:999;
     }
     #toast-gpt.show { opacity:1; }
+
+    @media (max-width: 600px) {
+      .login-container { padding:1.5rem 1rem; }
+    }
   </style>
 </head>
 <body>
   <div class="main-center">
     <form class="login-container" id="loginForm">
       <div class="logo-holder">
-        <img src="logo-placeholder.png" alt="Logo Clube do GPT">
+        <img src="hero-placeholder.png" alt="Logo Clube do GPT">
       </div>
       <div class="login-title">Clube do <span style="color:#04b1f0">GPT</span></div>
       <div class="login-subtitle">
@@ -179,73 +182,52 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script>
     // 1) Configurações Supabase
-    const SUPABASE_URL = 'https://fouqnyydrhxgadnxjtds.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZvdXFueXlkcmh4Z2FkbnhqdGRzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI0NjQyNDUsImV4cCI6MjA2ODA0MDI0NX0.JH2SFA-6itPBy_Vdnqm9wCmIw7m3BPHRlZkfcgaP-is'; 
+    const SUPABASE_URL     = 'https://fouqnyydrhxgadnxjtds.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZvdXFueXlkcmh4Z2FkbnhqdGRzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI0NjQyNDUsImV4cCI6MjA2ODA0MDI0NX0.JH2SFA-6itPBy_Vdnqm9wCmIw7m3BPHRlZkfcgaP-is';
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    // ① ao carregar a página, já tenta pegar a sessão existente
-(async () => {
-  const { data: { session } } = await supabase.auth.getSession();
-  await handleSession(session);
-})();
-    // ② também ainda escuta onAuthStateChange (por exemplo, após completar o OAuth)
-supabase.auth.onAuthStateChange((event, session) => {
-  handleSession(session);
-});
-   
-    // checa se session existe e faz a validação de membro
-    async function handleSession(session) {
-      if (!session) return;
-    const email = session.user.email;
-    const { data: member, error } = await supabase
-    .from('members')
-    .select('plan_status')
-    .eq('email', email)
-    .maybeSingle();
-      if (!error && member?.plan_status === 'ativo') {
-    window.location.href = 'app.html';
-  }   else {
-    window.location.href = 'convite.html';
-  }
-}
-    
     // 2) Função de Toast
-    function showToast(msg, time = 5000) {
+    function showToast(msg, time = 3000) {
       const t = document.getElementById('toast-gpt');
       t.textContent = msg;
       t.classList.add('show');
       setTimeout(() => t.classList.remove('show'), time);
     }
 
-    // 3) Redirecionamento do Magic Link (recovery & signup)
-    //    permite ao reset-password.html capturar o token e trocar senha
-    const redirectTo = `${window.location.origin}/reset-password.html`;
-
-    // 4) Listen em mudanças de auth (e também login via Google)
-    supabase.auth.onAuthStateChange(async (event, session) => {
-      if (event === 'SIGNED_IN' && session) {
-        const email = session.user.email;
-        // verifica se existe member ativo
-        const { data: member, error } = await supabase
-          .from('members')
-          .select('plan_status')
-          .eq('email', email)
-          .maybeSingle();
-
-        if (!error && member && member.plan_status === 'ativo') {
-          // membro ativo
-          window.location.href = 'app.html';
-        } else {
-          // não-membro
-          window.location.href = 'convite.html';
-        }
+    // 3) handleSession: verifica sessão e membership
+    async function handleSession(session) {
+      if (!session) return;
+      const email = session.user.email;
+      const { data: member, error } = await supabase
+        .from('members')
+        .select('plan_status')
+        .eq('email', email)
+        .maybeSingle();
+      if (!error && member?.plan_status === 'ativo') {
+        window.location.href = 'app.html';
+      } else {
+        window.location.href = 'convite.html';
       }
+    }
+
+    // 4) Ao carregar a página, recupera sessão existente
+    (async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      await handleSession(session);
+    })();
+
+    // 5) Escuta mudanças de auth (inclui OAuth)
+    supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_IN') handleSession(session);
     });
 
-    // 5) Login “tradicional”
+    // 6) Magic Link (recovery & signup)
+    const redirectTo = `${window.location.origin}/reset-password.html`;
+
+    // 7) Login “tradicional”
     document.getElementById('loginForm').addEventListener('submit', async e => {
       e.preventDefault();
-      const email = e.target.querySelector('input[type="email"]').value.trim();
+      const email    = e.target.querySelector('input[type="email"]').value.trim();
       const password = e.target.querySelector('input[type="password"]').value;
       if (!email || !password) {
         showToast('Preencha e-mail e senha.');
@@ -255,10 +237,10 @@ supabase.auth.onAuthStateChange((event, session) => {
       if (error) {
         showToast('E-mail ou senha inválidos.');
       }
-      // a verificação de membership e redirecionamento vão ocorrer no onAuthStateChange acima
+      // Se login for bem-sucedido, onAuthStateChange cuidará do redirect
     });
 
-    // 6) “Esqueceu a senha?”
+    // “Esqueceu a senha?”
     document.getElementById('forgotPwdLink').addEventListener('click', async e => {
       e.preventDefault();
       const email = prompt('Informe seu e-mail cadastrado:');
@@ -267,11 +249,14 @@ supabase.auth.onAuthStateChange((event, session) => {
         email: email.trim(),
         options: { redirectTo }
       });
-      if (error) showToast('Erro ao enviar link de redefinição.');
-      else       showToast('Link de redefinição enviado (se e-mail cadastrado).');
+      if (error) {
+        showToast('Erro ao enviar link de redefinição.');
+      } else {
+        showToast('Link de redefinição enviado (se e-mail cadastrado).');
+      }
     });
 
-    // 7) “Primeiro acesso” → Magic Link para criar senha
+    // “Primeiro acesso” (magic link para criação de senha)
     document.getElementById('firstAccessBtn').addEventListener('click', async () => {
       const email = prompt('Digite o e-mail usado na compra:');
       if (!email) return;
@@ -279,20 +264,25 @@ supabase.auth.onAuthStateChange((event, session) => {
         email: email.trim(),
         options: { redirectTo }
       });
-      if (error) showToast('Erro ao enviar link de criação de senha.');
-      else       showToast('Link de criação de senha enviado!');
+      if (error) {
+        showToast('Erro ao enviar link de criação de senha.');
+      } else {
+        showToast('Link de criação de senha enviado!');
+      }
     });
 
-    // 8) “Quero ser membro”
+    // “Quero ser membro”
     document.getElementById('signupBtn').addEventListener('click', () => {
       window.open('https://rodolfosbraga.github.io/clube-do-gpt/', '_blank');
     });
 
-    // 9) Login via Google
+    // “Entrar com Google”
     document.getElementById('googleLoginBtn').addEventListener('click', () => {
       supabase.auth.signInWithOAuth({
         provider: 'google',
-        options: { redirectTo: 'https://rodolfosbraga.github.io/app.clube.do.gpt/index.html' }
+        options: {
+          redirectTo: window.location.origin + '/app.clube.do.gpt/index.html'
+        }
       });
     });
   </script>
