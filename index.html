@@ -235,12 +235,12 @@
   /* --- MEMBRO ATIVO? ------------------------------------------ */
 async function handleSession(session) {
   if (!session) return;
-  const email = session.user.email;
-  const { data: member } = await supabase
-    .from('members')
-    .select('plan_status')
-    .eq('email', email)
-    .maybeSingle();
+const email = session.user.email.trim().toLowerCase();
+const { data: member } = await supabase
+  .from('members')
+  .select('plan_status')
+  .ilike('email', email)
+  .maybeSingle();
 
   if (member?.plan_status === 'ativo') {
     window.location.href = 'app.html';
