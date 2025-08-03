@@ -7,6 +7,40 @@
   <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
+   <!-- Proteção de acesso -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script>
+    const SUPABASE_URL      = 'https://fouqnyydrhxgadnxjtds.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZvdXFueXlkcmh4Z2FkbnhqdGRzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI0NjQyNDUsImV4cCI6MjA2ODA0MDI0NX0.JH2SFA-6itPBy_Vdnqm9wCmIw7m3BPHRlZkfcgaP-is'; // a mesma key que usa no index
+
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    (async () => {
+      // 1. Checa se o usuário está autenticado
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        window.location.href = 'index.html';
+        return;
+      }
+
+      // 2. Checa se é membro ativo
+      const email = session.user.email.trim().toLowerCase();
+      const { data: member } = await supabase
+        .from('members')
+        .select('plan_status')
+        .ilike('email', email)
+        .maybeSingle();
+
+      if (member?.plan_status !== 'ativo') {
+        await supabase.auth.signOut();
+        alert('Acesso restrito a membros ativos.');
+        window.location.href = 'index.html';
+        return;
+      }
+
+      // Se passou, pode exibir a página normalmente
+    })();
+  </script>
   <!-- SIDEBAR -->
   <aside class="sidebar" id="sidebar">
     <ul class="menu">
