@@ -224,112 +224,82 @@
     // 2) Magic-link redirect
     const redirectTo = `${window.location.origin}${window.location.pathname}`;
 
-    // 3) Toast helper
-    function showToast(msg, duration = 3000) {
-      const t = document.getElementById('toast-gpt');
-      t.textContent = msg;
-      t.classList.add('show');
-      setTimeout(() => t.classList.remove('show'), duration);
+   /* --- TOAST --------------------------------------------------- */
+  function showToast(text, ms = 3000) {
+    const t = document.getElementById('toast-gpt');
+    t.textContent = text;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), ms);
+  }
+
+  /* --- MEMBRO ATIVO? ------------------------------------------ */
+  async function handleSession(session) {
+    if (!session) return;
+    const email = session.user.email;
+    const { data: member } = await supabase
+      .from('members')
+      .select('plan_status')
+      .eq('email', email)
+      .maybeSingle();
+
+    if (member?.plan_status === 'ativo') {
+      window.location.href = 'app.html';
+    } else {
+      window.location.href = 'convite.html';
+    }
+  }
+
+  /* --- 1) CAPTURA CALLBACK OAUTH (GOOGLE) ---------------------- */
+  (async () => {
+    // troca o code/PKCE da URL por sessão persistida
+    const { data: { session: oauthSession }, error } =
+      await supabase.auth.exchangeCodeForSession();
+    if (error) console.warn('OAuth error', error);
+
+    if (oauthSession) {
+      showToast('🔄 Realizando verificações…');
+      return handleSession(oauthSession);
     }
 
-    // 4) ⚡️ Se vier do OAuth do Google, captura a sessão da URL
-    (async () => {
-      const { data: { session: oauthSession }, error: urlError } =
-        await supabase.auth.getSessionFromUrl({ storeSession: true });
-      if (urlError) console.error('OAuth callback error:', urlError);
+    // se não veio do OAuth, tenta sessão já salva
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session) handleSession(session);
+  })();
 
-      if (oauthSession) {
-        // só para Google: avisa o usuário que estamos checando
-        showToast('🔄 Realizando verificações...');
-        return handleSession(oauthSession);
-      }
-
-      // não veio do OAuth → pega sessão armazenada normalmente
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session) handleSession(session);
-    })();
-  
-    // 5) Função que checa membership e redireciona
-  
-    async function handleSession(session) {
-      if (!session) return;
-      const email = session.user.email;
-      const { data: member, error } = await supabase
-        .from('members')
-        .select('plan_status')
-        .eq('email', email)
-        .maybeSingle();
-
-      if (!error && member?.plan_status === 'ativo') {
-        window.location.href = 'app.html';
-      } else {
-        window.location.href = 'convite.html';
-      }
+  /* --- 2) BACKUP: quando a sessão mudar ----------------------- */
+  supabase.auth.onAuthStateChange((ev, session) => {
+    if (ev === 'SIGNED_IN') {
+      showToast('🔄 Realizando verificações…');
+      handleSession(session);
     }
+  });
 
-    // 6) Backup: sempre que a sessão mudar
-    supabase.auth.onAuthStateChange((event, session) => {
-      if (event === 'SIGNED_IN') {
-        showToast('🔄 Realizando verificações...');
-        handleSession(session);
-      }
-    });
+  /* --- 3) LOGIN COM E-MAIL+SENHA ------------------------------ */
+  document.getElementById('loginForm').addEventListener('submit', async e => {
+    e.preventDefault();
+    const email = e.target.querySelector('input[type="email"]').value.trim();
+    const pass  = e.target.querySelector('input[type="password"]').value;
+    if (!email || !pass) return showToast('Preencha e-mail e senha.');
+    const { error } = await supabase.auth.signInWithPassword({ email, password: pass });
+    if (error) showToast('E-mail ou senha inválidos.');
+  });
 
-    // 7) Login via e-mail + senha
-    document.getElementById('loginForm').addEventListener('submit', async e => {
-      e.preventDefault();
-      const form = e.target;
-      const email    = form.querySelector('input[type="email"]').value.trim();
-      const password = form.querySelector('input[type="password"]').value;
-      if (!email || !password) {
-        showToast('Preencha e-mail e senha.');
-        return;
-      }
-      const { error } = await supabase.auth.signInWithPassword({ email, password });
-      if (error) {
-        showToast('E-mail ou senha inválidos.');
-      }
-      // onAuthStateChange cuidará do redirecionamento
-    });
+  /* --- 4) ESQUECEU A SENHA & PRIMEIRO ACESSO ------------------ */
+  async function sendMagic(email) {
+    const { error } = await supabase.auth.signInWithOtp({ email, options:{ redirectTo }});
+    showToast(error ? 'Falha ao enviar link.' : 'Link enviado para seu e-mail.');
+  }
+  document.getElementById('forgotPwdLink').onclick   = () => { const e=prompt('E-mail:'); if(e) sendMagic(e); };
+  document.getElementById('firstAccessBtn').onclick  = () => { const e=prompt('E-mail da compra:'); if(e) sendMagic(e); };
 
-    // 8) “Esqueceu a senha?” → Magic Link
-    document.getElementById('forgotPwdLink').addEventListener('click', async e => {
-      e.preventDefault();
-      const email = prompt('Informe seu e-mail cadastrado:');
-      if (!email) return;
-      const { error } = await supabase.auth.signInWithOtp({
-        email: email.trim(),
-        options: { redirectTo }
-      });
-      if (error) showToast('Erro ao enviar link de redefinição.');
-      else       showToast('Link de redefinição enviado.');
-    });
+  /* --- 5) QUERO SER MEMBRO ------------------------------------ */
+  document.getElementById('signupBtn').onclick = () =>
+    window.open('https://rodolfosbraga.github.io/clube-do-gpt/','_blank');
 
-    // 9) “Primeiro acesso” → Magic Link para cadastro
-    document.getElementById('firstAccessBtn').addEventListener('click', async () => {
-      const email = prompt('Digite o e-mail usado na compra:');
-      if (!email) return;
-      const { error } = await supabase.auth.signInWithOtp({
-        email: email.trim(),
-        options: { redirectTo }
-      });
-      if (error) showToast('Erro ao enviar link de criação de senha.');
-      else       showToast('Link de criação de senha enviado!');
-    });
-
-    // 10) “Quero ser membro”
-    document.getElementById('signupBtn').addEventListener('click', () => {
-      window.open('https://rodolfosbraga.github.io/clube-do-gpt/', '_blank');
-    });
-
-    // 11) “Entrar com Google” (inicia OAuth)
-    document.getElementById('googleLoginBtn').addEventListener('click', () => {
-      supabase.auth.signInWithOAuth({
-        provider: 'google',
-        options: { redirectTo }
-      });
-    });
-    </script>
+  /* --- 6) ENTRAR COM GOOGLE ----------------------------------- */
+  document.getElementById('googleLoginBtn').onclick = () =>
+    supabase.auth.signInWithOAuth({ provider:'google', options:{ redirectTo } });
+</script>
 </body>
 </html>
 
