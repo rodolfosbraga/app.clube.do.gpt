@@ -320,68 +320,72 @@
     const SUPABASE_URL = 'https://fouqnyydrhxgadnxjtds.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZvdXFueXlkcmh4Z2FkbnhqdGRzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI0NjQyNDUsImV4cCI6MjA2ODA0MDI0NX0.JH2SFA-6itPBy_Vdnqm9wCmIw7m3BPHRlZkfcgaP-is';
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  // 2. URL para onde o e-mail de reset deve apontar
+  const redirectURL = 'https://rodolfosbraga.github.io/app.clube.do.gpt/reset-password.html';
 
-    // Toast flutuante customizado
-    function showToastGPT(message, duration = 3500) {
-      const toast = document.getElementById("toast-gpt");
-      toast.textContent = message;
-      toast.className = "show";
-      setTimeout(() => {
-        toast.className = toast.className.replace("show", "");
-      }, duration);
+  // 3. Toast flutuante
+  function showToastGPT(msg, duration = 3500) {
+    const t = document.getElementById('toast-gpt');
+    t.textContent = msg;
+    t.className = 'show';
+    setTimeout(() => t.className = t.className.replace('show',''), duration);
+  }
+
+  // 4. Formulário de Login
+  document.querySelector('.login-container').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const email    = this.querySelector('input[type="email"]').value.trim();
+    const password = this.querySelector('input[type="password"]').value;
+    
+    if (!email || !password) {
+      showToastGPT('Preencha e-mail e senha.');
+      return;
     }
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) {
+      showToastGPT('E-mail ou senha inválidos.');
+      return;
+    }
+    // valida status de membro (exemplo: plan_status === 'ativo')
+    const { data: member, error: memberErr } = await supabase
+      .from('members').select('plan_status').eq('email', email).maybeSingle();
+    if (memberErr || !member || member.plan_status !== 'ativo') {
+      showToastGPT('Somente membros ativos podem acessar.');
+      return;
+    }
+    showToastGPT('Login bem-sucedido! Redirecionando...');
+    setTimeout(() => window.location.href = 'app.html', 1200);
+  });
 
-    // Entrar
-    document.querySelector('.login-container').addEventListener('submit', async function(e) {
-      e.preventDefault();
-      const email = document.querySelector('.login-input[type="email"]').value.trim();
-      const password = document.querySelector('.login-input[type="password"]').value;
+  // 5. “Esqueceu a senha?”
+  document.querySelector('.login-links a').addEventListener('click', async function(e) {
+    e.preventDefault();
+    const email = prompt('Digite seu e-mail cadastrado:');
+    if (!email) return;
+    try {
+      await supabase.auth.resetPasswordForEmail(email.trim(), { redirectTo: redirectURL });
+      showToastGPT('Se existir, você receberá o link de redefinição.');
+    } catch {
+      showToastGPT('Erro ao enviar link de redefinição.');
+    }
+  });
 
-      // 1. Login via Supabase Auth
-      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-      if (error) {
-        showToastGPT('E-mail ou senha inválidos.');
-        return;
-      }
+  // 6. “Primeiro acesso”
+  document.getElementById('primeiroAcessoBtn').addEventListener('click', async function() {
+    const email = prompt('Digite o e-mail usado na compra:');
+    if (!email) return;
+    try {
+      await supabase.auth.resetPasswordForEmail(email.trim(), { redirectTo: redirectURL });
+      showToastGPT('Link de criação de senha enviado!');
+    } catch {
+      showToastGPT('Erro ao enviar link de criação de senha.');
+    }
+  });
 
-      // 2. Consultar tabela de membros para validar status (exemplo: 'ativo')
-      const { data: member, error: memberError } = await supabase
-        .from('members')
-        .select('plan_status')
-        .eq('email', email)
-        .maybeSingle();
-
-      if (memberError || !member || member.plan_status !== 'ativo') {
-        showToastGPT('Seu acesso não está liberado! Apenas membros ativos podem acessar. Verifique sua assinatura.');
-        return;
-      }
-
-      // 3. Usuário autenticado e membro ativo, pode acessar o app!
-      showToastGPT('Login realizado com sucesso!');
-      setTimeout(() => {
-        window.location.href = 'app.html';
-      }, 1100);
-    });
-
-const redirectURL = 'https://rodolfosbraga.github.io/app.clube.do.gpt/reset-password.html';
-
-// Esqueceu a senha
-supabase.auth
-  .resetPasswordForEmail(email.trim(), { redirectTo: redirectURL })
-  .then(() => showToastGPT('Se o e-mail estiver cadastrado, você receberá as instruções.'))
-  .catch(() => showToastGPT('Erro ao tentar redefinir senha.'));
-
-// Botão “Primeiro acesso”
-supabase.auth
-  .resetPasswordForEmail(email.trim(), { redirectTo: redirectURL })
-  .then(() => showToastGPT('Enviamos o link de criação de senha para seu e-mail!'))
-  .catch(() => showToastGPT('Erro ao tentar enviar link de criação de senha.'));
-
-
-    // Botão "Quero ser membro"
-    document.getElementById('queroMembroBtn').addEventListener('click', function() {
-      window.open('https://rodolfosbraga.github.io/clube-do-gpt/', '_blank');
-    });
-  </script>
+  // 7. “Quero ser membro”
+  document.getElementById('queroMembroBtn').addEventListener('click', function() {
+    window.open('https://rodolfosbraga.github.io/clube-do-gpt/', '_blank');
+  });
+</script>
 </body>
 </html>
