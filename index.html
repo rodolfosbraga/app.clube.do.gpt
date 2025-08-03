@@ -236,7 +236,7 @@
 async function handleSession(session) {
   if (!session) return;
   const email = session.user.email;
-  const { data: member } = await supabase
+  const { data: public.member } = await supabase
     .from('public.members')
     .select('plan_status')
     .eq('email', email)
