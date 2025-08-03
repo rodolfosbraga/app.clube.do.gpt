@@ -249,22 +249,35 @@
     }
   }
 
-  /* --- 1) CAPTURA CALLBACK OAUTH (GOOGLE) ---------------------- */
-  (async () => {
-    // troca o code/PKCE da URL por sessão persistida
-    const { data: { session: oauthSession }, error } =
-      await supabase.auth.exchangeCodeForSession();
-    if (error) console.warn('OAuth error', error);
+    /* --- 1) CAPTURA CALLBACK OAUTH (GOOGLE) ---------------------- */
+(async () => {
+  // detecta se a URL traz parâmetros do OAuth
+  const hasOAuthParams =
+    window.location.search.includes('code=')      ||   // PKCE / implicit
+    window.location.search.includes('access_token=') ||
+    window.location.hash.includes('access_token=');
 
-    if (oauthSession) {
-      showToast('🔄 Realizando verificações…');
-      return handleSession(oauthSession);
+  let oauthSession = null;
+
+  if (hasOAuthParams) {
+    // troca code → sessão persistida
+    const { data, error } = await supabase.auth.exchangeCodeForSession();
+    if (error) {
+      console.warn('OAuth callback error:', error);
+      // opcional: showToast('Falha no login Google');
     }
+    oauthSession = data.session;
+  }
 
-    // se não veio do OAuth, tenta sessão já salva
-    const { data: { session } } = await supabase.auth.getSession();
-    if (session) handleSession(session);
-  })();
+  if (oauthSession) {
+    showToast('🔄 Realizando verificações…');
+    return handleSession(oauthSession);
+  }
+
+  // não veio do OAuth → tenta sessão já salva
+  const { data: { session } } = await supabase.auth.getSession();
+  if (session) handleSession(session);
+})();
 
   /* --- 2) BACKUP: quando a sessão mudar ----------------------- */
   supabase.auth.onAuthStateChange((ev, session) => {
