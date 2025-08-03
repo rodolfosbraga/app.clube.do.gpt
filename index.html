@@ -216,15 +216,15 @@
   <!-- Supabase JS -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script>
-    // — 1) Cria client Supabase
+    // 1) Cria client Supabase
     const SUPABASE_URL     = 'https://fouqnyydrhxgadnxjtds.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZvdXFueXlkcmh4Z2FkbnhqdGRzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI0NjQyNDUsImV4cCI6MjA2ODA0MDI0NX0.JH2SFA-6itPBy_Vdnqm9wCmIw7m3BPHRlZkfcgaP-is';
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    // — 2) Magic-link redirect
+    // 2) Magic-link redirect
     const redirectTo = `${window.location.origin}${window.location.pathname}`;
 
-    // — 3) Toast helper
+    // 3) Toast helper
     function showToast(msg, duration = 3000) {
       const t = document.getElementById('toast-gpt');
       t.textContent = msg;
@@ -232,7 +232,24 @@
       setTimeout(() => t.classList.remove('show'), duration);
     }
 
-    // — 4) Verifica sessão e membership → redireciona
+    // 4) ⚡️ Se vier do OAuth do Google, captura a sessão da URL
+    (async () => {
+      const { data: { session: oauthSession }, error: urlError } =
+        await supabase.auth.getSessionFromUrl({ storeSession: true });
+      if (urlError) console.error('OAuth callback error:', urlError);
+
+      if (oauthSession) {
+        // só para Google: avisa o usuário que estamos checando
+        showToast('🔄 Realizando verificações...');
+        return handleSession(oauthSession);
+      }
+
+      // não veio do OAuth → pega sessão armazenada normalmente
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) handleSession(session);
+    })();
+        <!-- 5) Função que checa membership e redireciona -->
+    <script>
     async function handleSession(session) {
       if (!session) return;
       const email = session.user.email;
@@ -241,6 +258,7 @@
         .select('plan_status')
         .eq('email', email)
         .maybeSingle();
+
       if (!error && member?.plan_status === 'ativo') {
         window.location.href = 'app.html';
       } else {
@@ -248,18 +266,15 @@
       }
     }
 
-    // — 5) No load, pega sessão atual
-    (async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      await handleSession(session);
-    })();
-
-    // — 6) Também escuta mudanças de auth (inclui OAuth)
+    // 6) Backup: sempre que a sessão mudar
     supabase.auth.onAuthStateChange((event, session) => {
-      if (event === 'SIGNED_IN') handleSession(session);
+      if (event === 'SIGNED_IN') {
+        showToast('🔄 Realizando verificações...');
+        handleSession(session);
+      }
     });
 
-    // — 7) Login por e-mail + senha
+    // 7) Login via e-mail + senha
     document.getElementById('loginForm').addEventListener('submit', async e => {
       e.preventDefault();
       const form = e.target;
@@ -273,10 +288,10 @@
       if (error) {
         showToast('E-mail ou senha inválidos.');
       }
-      // onAuthStateChange tratará o redirecionamento
+      // onAuthStateChange cuidará do redirecionamento
     });
 
-    // — 8) “Esqueceu a senha?” → Magic Link
+    // 8) “Esqueceu a senha?” → Magic Link
     document.getElementById('forgotPwdLink').addEventListener('click', async e => {
       e.preventDefault();
       const email = prompt('Informe seu e-mail cadastrado:');
@@ -289,7 +304,7 @@
       else       showToast('Link de redefinição enviado.');
     });
 
-    // — 9) “Primeiro acesso” → Magic Link para cadastro
+    // 9) “Primeiro acesso” → Magic Link para cadastro
     document.getElementById('firstAccessBtn').addEventListener('click', async () => {
       const email = prompt('Digite o e-mail usado na compra:');
       if (!email) return;
@@ -301,18 +316,20 @@
       else       showToast('Link de criação de senha enviado!');
     });
 
-    // — 10) “Quero ser membro”
+    // 10) “Quero ser membro”
     document.getElementById('signupBtn').addEventListener('click', () => {
       window.open('https://rodolfosbraga.github.io/clube-do-gpt/', '_blank');
     });
 
-    // — 11) “Entrar com Google”
+    // 11) “Entrar com Google” (inicia OAuth)
     document.getElementById('googleLoginBtn').addEventListener('click', () => {
       supabase.auth.signInWithOAuth({
         provider: 'google',
         options: { redirectTo }
       });
     });
-  </script>
+    </script>
+
 </body>
 </html>
+
