@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Clube do GPT - Login</title>
-  <!-- Fonte Cinzel do Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -32,9 +31,7 @@
     body {
       min-height: 100vh;
       min-width: 100vw;
-      /* >>> TROQUE O NOME DA IMAGEM DE FUNDO AQUI 👇 <<< */
-      background: url('background-login.jpeg') no-repeat center center fixed;
-      /* ----------------------------------------------- */
+      background: url('background-login.jpeg') no-repeat center center fixed; /* Troque o nome da imagem de fundo aqui! */
       background-size: cover;
       position: relative;
       display: flex;
@@ -143,6 +140,7 @@
       font-size: 0.95rem;
       opacity: 0.85;
       transition: opacity 0.2s;
+      cursor: pointer;
     }
     .login-links a:hover {
       opacity: 1;
@@ -250,7 +248,7 @@
   <div class="main-center">
     <form class="login-container">
       <div class="logo-holder">
-        <img src="hero-placeholder.png" alt="Logo do Clube do GPT">
+        <img src="logo-placeholder.jpeg" alt="Logo do Clube do GPT">
       </div>
       <div class="login-title">Clube do <span style="color: #04b1f0;">GPT</span></div>
       <div class="login-subtitle">O seu clube de inteligência artificial: GPTs que realmente ajudam no seu dia a dia.</div>
@@ -263,10 +261,72 @@
       </div>
       <div class="btns-stack">
         <button type="submit" class="login-btn">Entrar</button>
-        <button type="button" class="firstaccess-btn" onclick="window.location.href='primeiro-acesso.html'">Primeiro acesso</button>
-        <button type="button" class="signup-btn" onclick="window.location.href='https://seusite.com/pagina-de-vendas'">Quero ser membro</button>
+        <button type="button" class="firstaccess-btn" id="primeiroAcessoBtn">Primeiro acesso</button>
+        <button type="button" class="signup-btn" id="queroMembroBtn">Quero ser membro</button>
       </div>
     </form>
   </div>
+
+  <!-- Supabase JS CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm"></script>
+  <script>
+    // Troque pelas suas chaves Supabase!
+    const SUPABASE_URL = 'https://fouqnyydrhxgadnxjtds.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZvdXFueXlkcmh4Z2FkbnhqdGRzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI0NjQyNDUsImV4cCI6MjA2ODA0MDI0NX0.JH2SFA-6itPBy_Vdnqm9wCmIw7m3BPHRlZkfcgaP-is';
+    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    // Entrar
+    document.querySelector('.login-container').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const email = document.querySelector('.login-input[type="email"]').value.trim();
+      const password = document.querySelector('.login-input[type="password"]').value;
+
+      // 1. Login via Supabase Auth
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) {
+        alert('E-mail ou senha inválidos.');
+        return;
+      }
+
+      // 2. Consultar tabela de membros para validar status (exemplo: 'ativo')
+      const { data: member, error: memberError } = await supabase
+        .from('members')
+        .select('plan_status')
+        .eq('email', email)
+        .maybeSingle();
+
+      if (memberError || !member || member.plan_status !== 'ativo') {
+        alert('Seu acesso não está liberado! Apenas membros ativos podem acessar. Verifique sua assinatura.');
+        return;
+      }
+
+      // 3. Usuário autenticado e membro ativo, pode acessar o app!
+      window.location.href = 'app.html';
+    });
+
+    // Esqueceu a senha
+    document.querySelector('.login-links a').addEventListener('click', function(e) {
+      e.preventDefault();
+      const email = prompt('Digite o seu e-mail para redefinir a senha:');
+      if (!email) return;
+      supabase.auth.resetPasswordForEmail(email.trim())
+        .then(() => alert('Se o e-mail estiver cadastrado, você receberá as instruções para redefinir sua senha.'))
+        .catch(() => alert('Erro ao tentar redefinir senha. Tente novamente.'));
+    });
+
+    // Botão "Primeiro acesso"
+    document.getElementById('primeiroAcessoBtn').addEventListener('click', function() {
+      const email = prompt('Digite o e-mail usado na compra. Você receberá um link para criar sua senha:');
+      if (!email) return;
+      supabase.auth.resetPasswordForEmail(email.trim())
+        .then(() => alert('Enviamos o link de criação de senha para seu e-mail!'))
+        .catch(() => alert('Erro ao tentar enviar link de criação de senha.'));
+    });
+
+    // Botão "Quero ser membro"
+    document.getElementById('queroMembroBtn').addEventListener('click', function() {
+      window.open('https://rodolfosbraga.github.io/clube-do-gpt/', '_blank');
+    });
+  </script>
 </body>
 </html>
