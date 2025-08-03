@@ -31,7 +31,7 @@
     body {
       min-height: 100vh;
       min-width: 100vw;
-      background: url('background-login.jpeg') no-repeat center center fixed; /* Troque o nome da imagem de fundo aqui! */
+      background: url('background-login.jpeg') no-repeat center center fixed;
       background-size: cover;
       position: relative;
       display: flex;
@@ -127,6 +127,7 @@
       color: var(--input-placeholder);
       opacity: 1;
       font-size: 0.99em;
+      text-transform: none !important;
     }
     .login-links {
       display: flex;
@@ -217,6 +218,33 @@
       color: var(--btn-hover);
       border-color: var(--btn-hover);
     }
+    /* Toast styles */
+    #toast-gpt {
+      visibility: hidden;
+      min-width: 260px;
+      margin-left: -130px;
+      background-color: #04b1f0;
+      color: #fff;
+      text-align: center;
+      border-radius: 7px;
+      padding: 14px 30px;
+      position: fixed;
+      z-index: 99;
+      left: 50%;
+      bottom: 40px;
+      font-size: 1rem;
+      box-shadow: 0 3px 18px #011f2d22;
+      font-family: 'Cinzel', serif;
+      font-weight: 500;
+      letter-spacing: 0.03em;
+      transition: bottom 0.3s, opacity 0.2s;
+      opacity: 0;
+    }
+    #toast-gpt.show {
+      visibility: visible;
+      opacity: 1;
+      bottom: 40px;
+    }
     @media (max-width: 600px) {
       .main-center {
         padding: 4vw 0;
@@ -239,6 +267,13 @@
       .signup-btn,
       .firstaccess-btn {
         font-size: 1rem;
+      }
+      #toast-gpt {
+        font-size: 0.92rem;
+        min-width: 180px;
+        margin-left: -90px;
+        padding: 10px 12px;
+        bottom: 18px;
       }
     }
   </style>
@@ -265,7 +300,7 @@
         <button type="button" class="signup-btn" id="queroMembroBtn">Quero ser membro</button>
       </div>
     </form>
-        <div style="margin-top:26px; text-align:center; width:100%;">
+    <div style="margin-top:26px; text-align:center; width:100%;">
       <a href="privacidade.html" target="_blank" style="color:#c8e8fc; font-size:0.98em; margin-right:18px; text-decoration:underline;">
         Política de Privacidade
       </a>
@@ -275,6 +310,9 @@
     </div>
   </div>
 
+  <!-- Toast Notification -->
+  <div id="toast-gpt"></div>
+
   <!-- Supabase JS CDN -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.42.5/dist/umd/supabase.min.js"></script>
   <script>
@@ -282,6 +320,16 @@
     const SUPABASE_URL = 'https://fouqnyydrhxgadnxjtds.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZvdXFueXlkcmh4Z2FkbnhqdGRzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI0NjQyNDUsImV4cCI6MjA2ODA0MDI0NX0.JH2SFA-6itPBy_Vdnqm9wCmIw7m3BPHRlZkfcgaP-is';
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    // Toast flutuante customizado
+    function showToastGPT(message, duration = 3500) {
+      const toast = document.getElementById("toast-gpt");
+      toast.textContent = message;
+      toast.className = "show";
+      setTimeout(() => {
+        toast.className = toast.className.replace("show", "");
+      }, duration);
+    }
 
     // Entrar
     document.querySelector('.login-container').addEventListener('submit', async function(e) {
@@ -292,7 +340,7 @@
       // 1. Login via Supabase Auth
       const { data, error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) {
-        alert('E-mail ou senha inválidos.');
+        showToastGPT('E-mail ou senha inválidos.');
         return;
       }
 
@@ -304,12 +352,15 @@
         .maybeSingle();
 
       if (memberError || !member || member.plan_status !== 'ativo') {
-        alert('Seu acesso não está liberado! Apenas membros ativos podem acessar. Verifique sua assinatura.');
+        showToastGPT('Seu acesso não está liberado! Apenas membros ativos podem acessar. Verifique sua assinatura.');
         return;
       }
 
       // 3. Usuário autenticado e membro ativo, pode acessar o app!
-      window.location.href = 'app.html';
+      showToastGPT('Login realizado com sucesso!');
+      setTimeout(() => {
+        window.location.href = 'app.html';
+      }, 1100);
     });
 
     // Esqueceu a senha
@@ -318,8 +369,8 @@
       const email = prompt('Digite o seu e-mail para redefinir a senha:');
       if (!email) return;
       supabase.auth.resetPasswordForEmail(email.trim())
-        .then(() => alert('Se o e-mail estiver cadastrado, você receberá as instruções para redefinir sua senha.'))
-        .catch(() => alert('Erro ao tentar redefinir senha. Tente novamente.'));
+        .then(() => showToastGPT('Se o e-mail estiver cadastrado, você receberá as instruções para redefinir sua senha.'))
+        .catch(() => showToastGPT('Erro ao tentar redefinir senha. Tente novamente.'));
     });
 
     // Botão "Primeiro acesso"
@@ -327,8 +378,8 @@
       const email = prompt('Digite o e-mail usado na compra. Você receberá um link para criar sua senha:');
       if (!email) return;
       supabase.auth.resetPasswordForEmail(email.trim())
-        .then(() => alert('Enviamos o link de criação de senha para seu e-mail!'))
-        .catch(() => alert('Erro ao tentar enviar link de criação de senha.'));
+        .then(() => showToastGPT('Enviamos o link de criação de senha para seu e-mail!'))
+        .catch(() => showToastGPT('Erro ao tentar enviar link de criação de senha.'));
     });
 
     // Botão "Quero ser membro"
