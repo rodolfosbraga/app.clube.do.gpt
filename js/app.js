@@ -169,20 +169,20 @@ function initUI() {
       } else if (sec === "cadastro") {
         contentEl.innerHTML = "<div class='em-breve'>Em breve!</div>";
       }
-      if (sec === "Sair") {
-      // 1. Supabase logoff (se usar Supabase Auth)
+      if (sec === "sair") {
+       try {
       if (typeof supabase !== 'undefined' && supabase.auth) {
-        await supabase.auth.signOut();
+      await supabase.auth.signOut();
       }
-      // 2. Limpar localStorage/sessionStorage
-      localStorage.clear();
-      sessionStorage.clear();
-      // 3. Redirecionar para a tela de login
-      window.location.href = "index.html"; // ou "/" se seu login for na home
-    }
-      
-    });
-  });
+  } catch (err) {
+    console.warn("Erro ao fazer logoff:", err);
+  }
+  localStorage.clear();
+  sessionStorage.clear();
+  window.location.href = "index.html"; // ou outro caminho do seu login
+  return; // importante para não rodar nada abaixo!
+}
+ });
 
   // Busca
   function doSearch() {
