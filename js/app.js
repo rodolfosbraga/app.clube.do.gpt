@@ -169,7 +169,7 @@ function initUI() {
       } else if (sec === "cadastro") {
         contentEl.innerHTML = "<div class='em-breve'>Em breve!</div>";
       }
-      if (sec === "sair") {
+      if (sec === "Sair") {
       // 1. Supabase logoff (se usar Supabase Auth)
       if (typeof supabase !== 'undefined' && supabase.auth) {
         await supabase.auth.signOut();
