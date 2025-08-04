@@ -51,8 +51,9 @@ body { font-family: sans-serif; background:#f2f2f2; }
 .collapse-btn {
   position: absolute;
   right: -19px;
+  top: 50%;
   transform: translateY(-50%);
-  z-index: 1201;
+  z-index: 1002;
   background: #ffd166;
   color: #16213e;
   border: 2px solid #16213e;
