@@ -157,7 +157,7 @@ body { font-family: sans-serif; background:#f2f2f2; }
 /* CARDS DOS GPTs ABAIXO DA BARRA FIXA */
 body.gpts-active #content,
 body.favoritos-active #content {
-  margin-top: 400px; /* header + search-tabs + título + espaçamento extra */
+  margin-top: 360px; /* header + search-tabs + título + espaçamento extra */
   padding-top: 0;
   min-height: calc(100vh - 60px - 95px);
   overflow-y: auto;
