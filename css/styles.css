@@ -49,8 +49,9 @@ body { font-family: sans-serif; background:#f2f2f2; }
 
 /* BOTÃO RETRÁTIL, SEM top fixo (ajustado por JS) */
 .collapse-btn {
-  position: fixed;
-  left: 220px;
+  position: absolute;
+  right: -19px;
+  transform: translateY(-50%);
   z-index: 1201;
   background: #ffd166;
   color: #16213e;
@@ -62,7 +63,7 @@ body { font-family: sans-serif; background:#f2f2f2; }
   font-size: 1.4rem;
   box-shadow: 0 4px 14px rgba(0,0,0,0.12);
   cursor: pointer;
-  transition: left 0.3s, background .2s, border .2s, top 0.3s;
+  transition: right 0.3s, background .2s, border .2s, top 0.3s;
 }
 .sidebar.collapsed ~ .collapse-btn { left: 60px; }
 .collapse-btn:hover { background: #ffeb99; }
