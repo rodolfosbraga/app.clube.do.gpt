@@ -141,17 +141,21 @@ body { font-family: sans-serif; background:#f2f2f2; }
 
 /* MAIN E CONTEÚDO */
 .main {
-  margin-top: 190px;
+  margin-top: 90px;
   margin-left: 220px;
   transition: margin-left 0.3s;
   background: #f7f8fb;
-  min-height: calc(100vh - 60px);
+  min-height: calc(100vh - 90px);
+  padding: 1.5rem 1.2rem;
+  box-sizing: border-box;
+  width: 100%;
 }
 .sidebar.collapsed ~ .main { margin-left: 60px; }
 
 @media (max-width: 900px) {
-  .main, .search-tabs { margin-left: 60px !important; }
-  .sidebar { width: 60px !important; }
+  .main, .search-tabs { margin-left: 60px !important; padding: 1rem 0.4rem; }
+  .sidebar { width: 60px !important; z-index: 1001; }
+  .sidebar.collapsed ~ .main { margin-left: 60px !important; }
 }
 
 /* CARDS DOS GPTs ABAIXO DA BARRA FIXA */
@@ -236,7 +240,7 @@ body.sugestoes-active #content form {
 }
 
 /* MOBILE RESPONSIVO */
-@media (max-width: 1000px) {
+@media (max-width: 900px) {
   .main, .topbar .inner, .search-tabs { max-width: 100vw; }
 }
 @media (max-width: 768px) {
@@ -287,6 +291,6 @@ body.sugestoes-active #content form {
 }
 
 /* BLOCO INNER CENTRALIZADO */
-.inner {
+.main {
   width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 1rem;
 }
