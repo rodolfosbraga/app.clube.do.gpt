@@ -169,6 +169,18 @@ function initUI() {
       } else if (sec === "cadastro") {
         contentEl.innerHTML = "<div class='em-breve'>Em breve!</div>";
       }
+      if (sec === "sair") {
+      // 1. Supabase logoff (se usar Supabase Auth)
+      if (typeof supabase !== 'undefined' && supabase.auth) {
+        await supabase.auth.signOut();
+      }
+      // 2. Limpar localStorage/sessionStorage
+      localStorage.clear();
+      sessionStorage.clear();
+      // 3. Redirecionar para a tela de login
+      window.location.href = "index.html"; // ou "/" se seu login for na home
+    }
+      
     });
   });
 
