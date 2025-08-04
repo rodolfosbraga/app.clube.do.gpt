@@ -267,11 +267,11 @@ body.sugestoes-active #content form {
     left: 0;
     top: 60px;
     width: 220px !important;
-    transition: left 0.3s, width 0.3s;
+    transition: width 0.3s;
     box-shadow: 4px 0 14px rgba(0,0,0,0.18);
   }
   .sidebar.collapsed {
-    left: -160px !important;
+    left: 0 !important;
     width: 60px !important;
     box-shadow: none;
   }
