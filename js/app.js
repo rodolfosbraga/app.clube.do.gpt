@@ -138,7 +138,7 @@ function initUI() {
 
   // Menu lateral - navegação das seções
   sidebar.querySelectorAll(".menu li").forEach(li => {
-    li.addEventListener("click", () => {
+    li.addEventListener("click", async () => {
       const sec = li.dataset.section;
       sidebar.querySelectorAll("li").forEach(x => x.classList.remove("active"));
       li.classList.add("active");
