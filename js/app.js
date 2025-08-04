@@ -181,8 +181,9 @@ function initUI() {
   sessionStorage.clear();
   window.location.href = "index.html"; // ou outro caminho do seu login
   return; // importante para não rodar nada abaixo!
-}
- });
+  }
+   });
+  });
 
   // Busca
   function doSearch() {
