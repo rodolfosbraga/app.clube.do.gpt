@@ -415,3 +415,43 @@ body { font-family: sans-serif; background: #f2f2f2; }
     right: 0 !important;
   }
 }
+/* MOBILE: barra fixa nunca sobrepõe sidebar, labels somem */
+@media (max-width: 900px) {
+  .search-tabs {
+    left: 60px !important;
+    width: calc(100vw - 60px) !important;
+  }
+  .sidebar.collapsed .label {
+    display: none !important;
+  }
+}
+
+/* DESKTOP: Cards em 3 colunas, centralizados e alinhados */
+.cards-container {
+  width: 100%;
+  max-width: 1000px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  justify-items: center;
+  align-items: flex-start;
+  margin: 0 auto;
+  padding-top: 8px;
+}
+.cards-container > .card {
+  margin: 0;
+}
+@media (max-width: 1000px) {
+  .cards-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 700px) {
+  .cards-container {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    padding: 0;
+    width: 100vw !important;
+    max-width: 99vw !important;
+  }
+}
