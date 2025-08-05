@@ -275,7 +275,7 @@ async function handleSession(session) {
     const { data, error } = await supabase.auth.exchangeCodeForSession();
     if (error) {
       console.warn('OAuth callback error:', error);
-      showToast('Falha no login Google');          // opcional
+      showToast('Realizando verificações…');          // opcional
     }
     oauthSession = data?.session;
   } else if (qs.has('error')) {
