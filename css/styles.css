@@ -47,7 +47,8 @@ body { font-family: sans-serif; background:#f2f2f2; }
 .collapse-btn {
   position: absolute;
   left: 100%;
-  bottom: 32px;  
+  top: unset;
+  bottom: 32px;
   transform: translate(-50%, 0);
   width: 38px; height: 38px;
   z-index: 1002;
@@ -64,29 +65,25 @@ body { font-family: sans-serif; background:#f2f2f2; }
 .sidebar.collapsed ~ .collapse-btn { left: 60px; }
 .collapse-btn:hover { background: #ffeb99; }
 
-/* BARRA FIXA - SEARCH + TABS */
+/* --------- BARRA FIXA (SEARCH + TABS) ----------- */
 .search-tabs {
-  position: fixed; left: 0; top: 58px;
+  position: fixed; left: 0; top: 60px;
   width: 100vw; z-index: 999;
   display: none;
   box-shadow: 0 2px 4px rgba(0,0,0,0.09);
-  background: #fff; padding-bottom: 0.5rem;
+  background: #fff;
+  padding-bottom: 0.5rem;
+  margin: 0;
+  /* Desktop, alinhar com main depois */
 }
-@media (min-width: 700px) {
-  .search-tabs {
-    top: 72px; left: 220px;
-    width: calc(100vw - 220px); max-width: calc(100vw - 220px);
-  }
-  .sidebar.collapsed ~ .search-tabs {
-    left: 60px;
-    width: calc(100vw - 60px); max-width: calc(100vw - 60px);
-  }
+.search-tabs .inner {
+  max-width: 1200px; margin: 0 auto;
+  padding: 0.7rem 0.7rem 0 0.7rem;
 }
-.search-tabs .inner { padding: 0.7rem 0.7rem 0 0.7rem; }
 .search-tabs .section-title {
   text-align: center;
   margin-bottom: .5rem;
-  margin-top: 32px;
+  margin-top: 0.7rem;
   font-weight: 700;
   letter-spacing: 0.01em;
   position: relative;
@@ -122,59 +119,92 @@ body { font-family: sans-serif; background:#f2f2f2; }
 }
 .tabs button.active, .tabs button:hover { background: #ffd166; color: #222; }
 
-/* MAIN */
+/* MAIN (AJUSTE DE ALINHAMENTO E CENTRALIZAÇÃO) */
 .main {
-  margin-top: 90px;
+  margin-top: 120px; /* Garantir espaço para header+barra fixa */
   margin-left: 220px;
-  width: 100%;
+  width: calc(100vw - 220px);
   max-width: 1200px;
-  min-height: calc(100vh - 90px);
+  min-height: calc(100vh - 120px);
   padding: 1.5rem 1.2rem;
   background: #f7f8fb;
   box-sizing: border-box;
-  transition: margin-left 0.3s;
-  margin-right: 0;
+  transition: margin-left 0.3s, width 0.3s;
+  margin-right: auto;
+  margin-bottom: 0;
+  display: flex; flex-direction: column; align-items: center;
 }
-.sidebar.collapsed ~ .main { margin-left: 60px; }
-
+.sidebar.collapsed ~ .main {
+  margin-left: 60px;
+  width: calc(100vw - 60px);
+}
+@media (max-width: 1200px) {
+  .main, .search-tabs .inner {
+    max-width: 99vw;
+  }
+}
 @media (max-width: 900px) {
-  .main, .search-tabs { 
+  .main, .search-tabs {
     margin-left: 60px !important;
-    max-width: 98vw;
+    max-width: 100vw;
+    width: calc(100vw - 60px);
     padding: 1rem 0.4rem;
   }
   .sidebar { width: 60px !important; z-index: 1001; }
   .sidebar.collapsed ~ .main { margin-left: 60px !important; }
 }
-
 @media (max-width: 700px) {
   .main, .search-tabs {
+    margin-top: 108px !important;
+    margin-left: 0 !important;
+    width: 100vw !important;
     max-width: 100vw;
-    padding: 0.8rem 0.2rem;
-    margin-left: 60px !important;
+    padding: 0.8rem 0.3rem;
   }
-  .sidebar { width: 60px !important; }
-  .sidebar.collapsed ~ .main { margin-left: 60px !important; }
+  .sidebar { width: 60px !important; left: 0; }
+  .sidebar.collapsed ~ .main { margin-left: 0 !important; }
 }
 
 /* CARDS DE GPTs */
 body.gpts-active #content,
 body.favoritos-active #content {
-  margin-top: 380px;
+  margin-top: 24px;
   padding-top: 0;
-  min-height: calc(100vh - 60px - 95px);
+  min-height: calc(100vh - 120px);
   overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 1rem;
+  align-items: flex-start;
+  justify-content: center;
   background: #f7f8fb;
+  width: 100%;
+  max-width: 980px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media (min-width: 700px) {
+  body.gpts-active #content,
+  body.favoritos-active #content {
+    grid-template-columns: repeat(2, 1fr);
+    max-width: 900px;
+  }
+}
+@media (min-width: 1100px) {
+  body.gpts-active #content,
+  body.favoritos-active #content {
+    grid-template-columns: repeat(3, 1fr);
+    max-width: 1200px;
+  }
 }
 @media (max-width: 768px) {
   body.gpts-active #content,
   body.favoritos-active #content {
-    margin-top: 250px;
-    min-height: calc(100vh - 60px - 92px);
-    padding: 0.5rem 0;
+    grid-template-columns: 1fr;
+    max-width: 100vw;
+    margin-top: 18px;
+    padding: 0.5rem 0.2rem;
   }
 }
 .card {
@@ -183,7 +213,7 @@ body.favoritos-active #content {
   padding: 1rem;
   box-shadow: 0 2px 6px rgba(0,0,0,0.10);
   display: flex; flex-direction: column;
-  margin: 1rem auto 0 auto;
+  margin: 0 auto;
   width: 100%;
   max-width: 350px;
 }
@@ -252,9 +282,10 @@ body.sugestoes-active #content form {
 @media (max-width: 650px) {
   .sidebar { left: 0; top: 60px; width: 220px !important; transition: width 0.3s; box-shadow: 4px 0 14px rgba(0,0,0,0.18);}
   .sidebar.collapsed { left: 0 !important; width: 60px !important; box-shadow: none;}
-  .main, .search-tabs { margin-left: 60px !important; transition: margin-left 0.3s;}
+  .main, .search-tabs { margin-left: 0 !important; transition: margin-left 0.3s;}
   .collapse-btn { left: 40px; z-index: 1400;}
   .sidebar.collapsed ~ .collapse-btn { left: 10px; }
+  .sidebar { height: calc(100vh - 60px); min-height: calc(100vh - 60px);}
 }
 
 /* BLOCO CENTRALIZADO SEMPRE */
