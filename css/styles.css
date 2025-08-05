@@ -146,7 +146,7 @@ body { font-family: sans-serif; background: #f2f2f2; }
 }
 .search-tabs .inner {
   width: 100%;
-  max-width: 950px;
+  max-width: none;
   margin: 0 auto;
   padding: 0 10px;
 }
@@ -237,6 +237,9 @@ body { font-family: sans-serif; background: #f2f2f2; }
   flex-direction: column;
   align-items: center;
   transition: margin-left .3s;
+  width: 100%;
+  max-width: 1000px;     /* <-- igual ao cards-container */
+  margin-right: auto;
 }
 .sidebar.collapsed ~ .main {
   margin-left: 60px;
@@ -269,8 +272,13 @@ body { font-family: sans-serif; background: #f2f2f2; }
   grid-template-columns: repeat(3, 1fr);
   gap: 1.5rem;
   justify-content: center;
+  align-items: flex-start;
   margin: 0 auto;
   padding-top: 8px;
+  
+ .cards-container > .card {
+  margin: 0; /* grid já centraliza */
+} 
 }
 @media (max-width: 1000px) {
   .cards-container {
@@ -408,7 +416,7 @@ body { font-family: sans-serif; background: #f2f2f2; }
 }
 
 /* Garante que barra fixa e header cubram toda a largura */
-@media (max-width: 700px) {
+@media (max-width: 500px) {
   .search-tabs, .topbar {
     width: 100vw !important;
     left: 0 !important;
