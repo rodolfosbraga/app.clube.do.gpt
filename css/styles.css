@@ -223,6 +223,7 @@ body {
 .tabs button.active,
 .tabs button:hover {
   background: #ffd166;
+  color: #111; 
 }
 
 /* MAIN (CONTEÚDO) */
@@ -235,7 +236,7 @@ body {
   flex-direction: column;
   align-items: center;
   margin-left: 220px;
-  margin-top: 150px; /* header + barra fixa */
+  margin-top: 180px; /* header + barra fixa */
   padding-bottom: 32px;
   transition: margin-left 0.3s, margin-top 0.3s;
 }
@@ -392,7 +393,7 @@ body.sugestoes-active #content form {
     display: block; */
   } 
   .sidebar .menu {
-    margin-top: 0;
+    margin-top: 2rem;
   }
   .sidebar .label {
     display: none !important;
@@ -419,7 +420,16 @@ body.sugestoes-active #content form {
     margin-top: 124px;
     padding-bottom: 24px;
   }
-
+   .tabs button {
+    background: #eee;    /* mesma cor base do desktop */
+    color: #222;
+  }
+  .tabs button.active,
+  .tabs button:hover {
+    background: #ffd166; /* ativa/amarela do desktop */
+    color: #111;         /* texto mais escuro */
+  }
+  
   /* Grid adapta para 1 coluna */
   #content {
     grid-template-columns: 1fr;
