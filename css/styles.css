@@ -1,9 +1,19 @@
+/* Variáveis Globais */
+:root {
+  --header-height: 100px;
+  --fixed-bar-height: 50px;
+  --sidebar-width: 220px;
+  --sidebar-collapsed-width: 60px;
+}
+
 /* RESET + BOX-SIZING */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
+
+/* BODY */
 body {
   font-family: sans-serif;
   background: #f2f2f2;
@@ -13,6 +23,7 @@ body {
 .wrapper {
   display: flex;
   min-height: 100vh;
+  margin-top: var(--header-height);
 }
 
 /* SIDEBAR */
@@ -20,7 +31,7 @@ body {
   position: fixed;
   top: 0;
   left: 0;
-  width: 220px;
+  width: var(--sidebar-width);
   height: 100vh;
   background: #1a1a2e;
   color: #fff;
@@ -31,7 +42,7 @@ body {
 }
 .sidebar .menu {
   list-style: none;
-  margin-top: 68px; /* abaixo do header */
+  margin-top: var(--header-height);
   flex: 1;
 }
 .sidebar .menu li {
@@ -56,7 +67,7 @@ body {
   transition: opacity 0.3s;
 }
 .sidebar.collapsed {
-  width: 60px;
+  width: var(--sidebar-collapsed-width);
 }
 .sidebar.collapsed .label {
   opacity: 0;
@@ -91,42 +102,42 @@ body {
   top: 0;
   left: 0;
   width: 100vw;
-  height: 68px;
+  height: var(--header-height);
   background: #16213e;
   color: #fff;
   display: flex;
   align-items: center;
-  padding: 0 1rem 0 240px; /* espaço para sidebar */
+  padding: 0 1rem;
+  padding-left: calc(var(--sidebar-width) + 1rem);
   z-index: 300;
   box-shadow: 0 2px 8px rgba(0,0,0,0.08);
 }
 .sidebar.collapsed ~ .wrapper .topbar {
-  padding-left: 80px;
+  padding-left: calc(var(--sidebar-collapsed-width) + 1rem);
 }
+
+/* Logo e Titles */
 .topbar .header-logo {
-  height: 36px;
-  margin-right: 10px;
+  height: 60px;
+  margin-right: 1rem;
+  flex-shrink: 0;
 }
 .topbar .titles {
   display: flex;
   flex-direction: column;
 }
-.topbar .logo {
-  font-size: 1.6rem;
-  font-weight: bold;
-}
+.topbar .logo,
 .topbar .tagline {
-  font-size: 0.98rem;
-  margin-top: 2px;
-  color: #e3e3e3;
+  margin: 0;
+  line-height: 1.2;
 }
 
 /* SEARCH + TABS FIXA */
 .search-tabs {
   position: fixed;
-  top: 68px;
-  left: 220px;
-  width: calc(100vw - 220px);
+  top: var(--header-height);
+  left: var(--sidebar-width);
+  width: calc(100vw - var(--sidebar-width));
   background: #fff;
   z-index: 250;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
@@ -136,14 +147,16 @@ body {
   align-items: center;
 }
 .sidebar.collapsed ~ .wrapper .search-tabs {
-  left: 60px;
-  width: calc(100vw - 60px);
+  left: var(--sidebar-collapsed-width);
+  width: calc(100vw - var(--sidebar-collapsed-width));
 }
 .search-tabs .inner {
   width: 100%;
   max-width: 1024px;
   margin: 0 auto;
 }
+
+/* SECTION TITLE */
 .section-title {
   font-size: 2rem;
   font-weight: bold;
@@ -217,21 +230,18 @@ body {
 }
 
 /* MAIN (CONTEÚDO) */
-.wrapper {
-  margin-top: 68px; /* espaço para header */
-}
 .main {
   flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-left: 220px;
-  margin-top: 120px; /* header + barra fixa */
+  margin-left: var(--sidebar-width);
+  margin-top: calc(var(--header-height) + var(--fixed-bar-height));
   padding-bottom: 32px;
-  transition: margin-left 0.3s, margin-top 0.3s;
+  transition: margin 0.3s;
 }
 .sidebar.collapsed ~ .wrapper .main {
-  margin-left: 60px;
+  margin-left: var(--sidebar-collapsed-width);
 }
 
 /* GRID DE CARDS */
@@ -302,7 +312,7 @@ body.sugestoes-active #content {
   justify-content: center;
   align-items: flex-start;
   padding-top: 0;
-  margin-top: 120px;
+  margin-top: calc(var(--header-height) + var(--fixed-bar-height));
   width: 100%;
 }
 body.sugestoes-active #content form {
@@ -315,6 +325,8 @@ body.sugestoes-active #content form {
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
+
+/* FORMULÁRIOS */
 #content .form-group {
   display: flex;
   flex-direction: column;
@@ -343,7 +355,7 @@ body.sugestoes-active #content form {
   background: #0f1a33;
 }
 
-/* “Em breve” (cadastro) */
+/* EM BREVE */
 .em-breve {
   margin: 3rem auto 0;
   text-align: center;
@@ -358,7 +370,7 @@ body.sugestoes-active #content form {
 
 /* RESPONSIVIDADE */
 
-/* Tablets / telas menores que 1200px */
+/* Tablets / telas <1200px */
 @media (max-width: 1200px) {
   #content {
     max-width: 800px;
@@ -366,38 +378,37 @@ body.sugestoes-active #content form {
   }
 }
 
-/* Mobile / telas menores que 900px */
+/* Mobile / telas <900px */
 @media (max-width: 900px) {
-  /* Sidebar retraída e labels ocultas */
+  /* Sidebar e labels */
   .sidebar {
-    width: 60px;
+    width: var(--sidebar-collapsed-width);
   }
   .sidebar .label {
     display: none !important;
   }
-  .collapse-btn {
-    top: 56px !important;
+  /* Ocultar botão da sidebar */
+  #collapseBtn {
+    display: none !important;
   }
-
   /* Header e barra fixa */
   .topbar {
-    padding-left: 80px;
+    padding-left: calc(var(--sidebar-collapsed-width) + 1rem);
   }
   .search-tabs {
-    left: 60px;
-    width: calc(100vw - 60px);
-    top: 56px;
+    top: var(--header-height);
+    left: var(--sidebar-collapsed-width);
+    width: calc(100vw - var(--sidebar-collapsed-width));
     padding: 12px 8px 8px;
   }
   .wrapper {
-    margin-top: 124px; /* 68 + 56 */
+    margin-top: calc(var(--header-height) + var(--fixed-bar-height));
   }
   .main {
-    margin-left: 60px;
-    margin-top: 124px;
+    margin-left: var(--sidebar-collapsed-width);
+    margin-top: calc(var(--header-height) + var(--fixed-bar-height));
     padding-bottom: 24px;
   }
-
   /* Grid adapta para 1 coluna */
   #content {
     grid-template-columns: 1fr;
@@ -408,11 +419,17 @@ body.sugestoes-active #content form {
   .card {
     max-width: 98vw;
   }
+  /* Tabs mobile: letras pretas e negrito */
+  .tabs button {
+    color: #000 !important;
+    font-weight: bold !important;
+  }
 }
 
-/* Scrollbars customizadas */
+/* Scrollbars */
 ::-webkit-scrollbar {
-  width: 8px; height: 8px;
+  width: 8px;
+  height: 8px;
 }
 ::-webkit-scrollbar-thumb {
   background: #bbb;
