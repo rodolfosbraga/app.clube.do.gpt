@@ -393,6 +393,10 @@ body {
     width: calc(100vw - var(--sidebar-collapsed-width));
     padding: 12px 8px 8px;
   }
+    .tabs button {
+    color: #000 !important;
+    font-weight: bold !important;
+  } 
   /* main */
   .wrapper {
     margin-top: calc(var(--header-height) + var(--search-tabs-height));
