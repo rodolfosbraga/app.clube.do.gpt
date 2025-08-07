@@ -1,25 +1,23 @@
-/*=======================================
+
   Variáveis Globais
-=======================================*/
+--------------------------------*/
 :root {
-  --sidebar-width: 220px;
-  --sidebar-collapsed-width: 60px;
-  --topbar-height: 68px;             /* ↑ aumentado para melhor alinhamento interno */
-  --header-bg: #16213e;
-  --sidebar-bg: #1a1a2e;
-  --collapse-btn-bg: #ffd166;
-  --collapse-btn-border: #16213e;
-  --fixedbar-bg: #fff;
-  --active-tab-bg: #ffd166;
-  --tab-bg: #eee;
-  --card-gap: 1.25rem;
-  --card-max-width: 350px;
-  --content-bg: #f7f8fb;
+  --sidebar-width:                  220px;
+  --sidebar-collapsed-width:         60px;
+  --topbar-height:                   68px;
+  --header-bg:                   #16213e;
+  --sidebar-bg:                  #1a1a2e;
+  --collapse-btn-bg:             #ffd166;
+  --collapse-btn-border:         #16213e;
+  --fixedbar-bg:                 #ffffff;
+  --card-gap:                    1.25rem;
+  --card-max-width:              350px;
+  --content-bg:                  #f7f8fb;
 }
 
-/*=======================================
+/*--------------------------------
   RESET & BOX-SIZING
-=======================================*/
+--------------------------------*/
 *,
 *::before,
 *::after {
@@ -33,13 +31,12 @@ body {
   overflow-x: hidden;
 }
 
-/*=======================================
-  HEADER FIXO
-=======================================*/
+/*--------------------------------
+  HEADER FIXO (Topbar)
+--------------------------------*/
 .topbar {
   position: fixed;
-  top: 0;
-  left: 0;
+  top: 0; left: 0;
   width: 100vw;
   height: var(--topbar-height);
   background: var(--header-bg);
@@ -59,7 +56,6 @@ body {
 }
 .header-logo {
   width: 44px;
-  height: auto;
   margin-right: 0.75rem;
 }
 .titles {
@@ -76,9 +72,9 @@ body {
   margin-top: 0.25rem;
 }
 
-/*=======================================
+/*--------------------------------
   SIDEBAR
-=======================================*/
+--------------------------------*/
 .sidebar {
   position: fixed;
   top: var(--topbar-height);
@@ -128,18 +124,15 @@ body {
   overflow: hidden;
 }
 
-/*=======================================
+/*--------------------------------
   BOTÃO RETRÁTIL
-  • Desktop: à direita do sidebar
-  • Mobile: dentro do sidebar, acima do 1º item
-=======================================*/
+--------------------------------*/
 .collapse-btn {
   position: absolute;
   left: 100%;
   bottom: 32px;
   transform: translateX(-50%);
-  width: 40px;
-  height: 40px;
+  width: 40px; height: 40px;
   background: var(--collapse-btn-bg);
   border: 3px solid var(--collapse-btn-border);
   color: var(--collapse-btn-border);
@@ -155,22 +148,20 @@ body {
 .sidebar.collapsed + .collapse-btn {
   left: var(--sidebar-collapsed-width);
 }
-
-/* Mobile: coloca o botão dentro do sidebar, acima de "Manual" */
+/* Mobile: botão vira item interno do sidebar */
 @media (max-width: 700px) {
   .collapse-btn {
     position: relative;
-    left: auto;
-    bottom: auto;
     top: 0.5rem;
+    left: 0;
     margin: 0 auto 1rem;
     transform: none;
   }
 }
 
-/*=======================================
-  BARRA FIXA DE BUSCA + TABS
-=======================================*/
+/*--------------------------------
+  SEARCH-TABS (barra fixa de busca + abas)
+--------------------------------*/
 .search-tabs {
   position: fixed;
   top: var(--topbar-height);
@@ -183,15 +174,15 @@ body {
   flex-direction: column;
   padding-bottom: 0.5rem;
 }
-.search-tabs.show { display: flex !important; }
-
-/* Ajusta ao colapsar sidebar (desktop) */
+.search-tabs.show {
+  display: flex !important;
+}
+/* DESKTOP: barra acompanha sidebar expandido/retraído */
 .sidebar.collapsed ~ .search-tabs {
   left: var(--sidebar-collapsed-width);
   width: calc(100vw - var(--sidebar-collapsed-width));
 }
-
-/* Mobile: não invade o sidebar e empurra corretamente */
+/* MOBILE: barra não invade o sidebar */
 @media (max-width: 700px) {
   .search-tabs {
     left: var(--sidebar-collapsed-width) !important;
@@ -199,29 +190,35 @@ body {
   }
 }
 
+
+/*--------------------------------*/
 .search-tabs .inner {
-  max-width: 950px;
-  width: 100%;
-  margin: 0 auto;
+  margin: 0;           /* remove auto-centering */
   padding: 0 1rem;
+  padding-left: calc(var(--sidebar-width) + 1rem);
+  width: calc(100vw - var(--sidebar-width) - 2rem);
+  max-width: none;
 }
+/* DESKTOP: quando sidebar retraída, ajusta padding-left */
+.sidebar.collapsed ~ .search-tabs .inner {
+  padding-left: calc(var(--sidebar-collapsed-width) + 1rem);
+  width: calc(100vw - var(--sidebar-collapsed-width) - 2rem);
+}
+
+/* Título "Categorias" alinhado à esquerda, acima da sidebar */
 .section-title {
-  text-align: center;
-  font-size: 1.8rem;
-  font-weight: 600;
-  margin: 1rem 0 0.5rem;
+  text-align: left;
+  margin: 1rem 0 0.5rem 0;
 }
 .search-bar {
   display: flex;
   align-items: center;
-  justify-content: center;
   gap: 0.5rem;
   margin-bottom: 0.75rem;
 }
 .input-wrapper {
   position: relative;
   flex: 1;
-  max-width: 400px;
 }
 .input-wrapper input {
   width: 100%;
@@ -250,9 +247,9 @@ body {
   cursor: pointer;
 }
 
-/*=======================================
-  ABAS DE CATEGORIA
-=======================================*/
+/*--------------------------------
+  Abas de categorias
+--------------------------------*/
 .tabs {
   display: flex;
   overflow-x: auto;
@@ -276,62 +273,43 @@ body {
   color: #111;
 }
 
-/*=======================================
-  MAIN & CONTEÚDO
-  • Desktop: empurra junto com sidebar
-  • Gap extra entre barra fixa e cards
-=======================================*/
+/*--------------------------------
+  MAIN & GRID DE CARDS (MOBILE-FIRST)
+--------------------------------*/
 .main {
-  position: relative;
-  margin-top: calc(var(--topbar-height) + 1rem + 2rem);
-  margin-left: var(--sidebar-width);
-  padding: 2rem 1rem;
-  background: var(--content-bg);
-  min-height: calc(100vh - var(--topbar-height));
-  transition: margin-left 0.3s;
-}
-
-/* Após colapsar sidebar (desktop) */
-.sidebar.collapsed ~ .main {
+  margin-top: calc(var(--topbar-height) + 4rem);
   margin-left: var(--sidebar-collapsed-width);
+  padding: 1rem;
+  background: var(--content-bg);
+  min-height: calc(100vh - var(--topbar-height) - 4rem);
+  transition: margin-left 0.3s, margin-top 0.3s;
 }
-
-/* Quando em seção GPTs/Favoritos, reduz gap só vertical */
-body.gpts-active .main,
-body.favoritos-active .main {
-  margin-top: calc(var(--topbar-height) + 6rem);
-}
-
-/* Mobile geral */
-@media (max-width: 900px) {
+@media (min-width: 900px) {
   .main {
-    margin-left: var(--sidebar-collapsed-width) !important;
-    padding: 1rem 0.5rem;
-    min-height: calc(100vh - var(--topbar-height));
+    margin-left: var(--sidebar-width);
+    margin-top: calc(var(--topbar-height) + 6rem);
   }
 }
 
-/*=======================================
-  GRID DE CARDS (3 colunas no desktop)
-=======================================*/
+/* Container de cards */
 .cards-container {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: 1fr;
   gap: var(--card-gap);
   width: 100%;
-  max-width: 1000px;
   margin: 0 auto;
 }
-@media (max-width: 600px) {
+@media (min-width: 900px) {
   .cards-container {
-    grid-template-columns: 1fr;
-    padding: 0 var(--card-gap);
+    grid-template-columns: repeat(3, 1fr);
+    max-width: 1000px;
+    gap: var(--card-gap);
   }
 }
 
-/*=============================
+/*--------------------------------
   CARD
-=============================*/
+--------------------------------*/
 .card {
   background: #fff;
   border-radius: 8px;
@@ -378,9 +356,10 @@ body.favoritos-active .main {
   cursor: pointer;
 }
 
-/*=======================================
-  SEÇÕES MANUAL, SUGESTÕES e CADASTRO
-=======================================*/
+/*--------------------------------
+  Seções Manual, Sugestões & Cadastro
+--------------------------------*/
+/* Manual */
 .manual-content.inner {
   max-width: 700px;
   margin: calc(var(--topbar-height) + 2rem) auto 0;
@@ -391,6 +370,8 @@ body.favoritos-active .main {
   text-align: center;
   line-height: 1.6;
 }
+
+/* Sugestões */
 body.sugestoes-active #content {
   display: flex;
   justify-content: center;
@@ -418,23 +399,10 @@ body.sugestoes-active #content {
 .sugestoes-form-container button[type="submit"]:hover {
   background: #0f1a33;
 }
+
+/* Cadastro 'Em breve' */
 .em-breve {
   margin: 3rem auto;
   font-size: 1.2rem;
   color: #555;
 }
-
-/*=======================================
-  SCROLLBAR CUSTOMIZADA
-=======================================*/
-::-webkit-scrollbar {
-  width: 8px;
-}
-::-webkit-scrollbar-thumb {
-  background: #ccc;
-  border-radius: 4px;
-}
-::-webkit-scrollbar-track {
-  background: #f2f2f2;
-}
-
