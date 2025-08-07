@@ -382,14 +382,14 @@ body.sugestoes-active #content form {
     width: 60px;
     padding-top: 1rem;
   }  
-   #collapseBtn {
+   /*#collapseBtn {
     position: relative;
     left: auto;
     top: auto;
     bottom: auto;
     transform: none;
     margin: 0 auto 1rem;
-    display: block;
+    display: block; */
   } 
   .sidebar .menu {
     margin-top: 0;
@@ -408,7 +408,7 @@ body.sugestoes-active #content form {
   .search-tabs {
     left: 60px;
     width: calc(100vw - 60px);
-    top: 56px;
+    top: 70px;  /*anterior 56px */
     padding: 12px 8px 8px;
   }
   .wrapper {
