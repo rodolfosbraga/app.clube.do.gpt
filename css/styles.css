@@ -1,58 +1,75 @@
-/* =============================================
-   Variáveis Globais
-   ============================================= */
+/*===============================================
+  1) VARIÁVEIS GLOBAIS (cores, tamanhos, espaçamentos)
+===============================================*/
 :root {
-  --header-height: 100px;         /* altura total do header */
-  --fixed-bar-height: 50px;       /* altura da barra fixa abaixo */
-  --sidebar-width: 220px;         /* largura padrão da sidebar */
-  --sidebar-collapsed-width: 60px;/* largura da sidebar colapsada */
+  /* cores */
+  --color-sidebar-bg:    #191a2b;
+  --color-sidebar-text:  #ffffff;
+  --color-header-bg:     #16213e;
+  --color-primary:       #ffd166;
+  --color-white:         #ffffff;
+  --color-text:          #232445;
+
+  /* dimensões */
+  --sidebar-width:             220px;
+  --sidebar-collapsed-width:    60px;
+  --header-height:              68px;   /* aumentado para alinhar logo + título */
+  --searchbar-height:          100px;   /* altura da barra fixa (search + tabs) */
+  --collapse-btn-size:          40px;
+  --card-max-width:            350px;
+
+  /* espaçamentos */
+  --gap:                       1.25rem;
+
+  /* tipografia */
+  --font-base:                sans-serif;
+  --font-size-title:          1.5rem;
+  --font-size-subtitle:       0.92rem;
+  --font-size-body:           1rem;
 }
 
-/* =============================================
-   Reset + Box-Sizing
-   ============================================= */
-* {
+/*===============================================
+  2) RESET E BOX-SIZING
+===============================================*/
+*,
+*::before,
+*::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
-
-/* =============================================
-   Body
-   ============================================= */
 body {
-  font-family: sans-serif;
+  font-family: var(--font-base);
+  font-size: var(--font-size-body);
   background: #f2f2f2;
+  color: var(--color-text);
+  overflow-x: hidden;
 }
 
-/* =============================================
-   Layout Principal
-   ============================================= */
-/* Empurra todo o conteúdo abaixo do header */
-.wrapper {
-  display: flex;
-  min-height: 100vh;
-  margin-top: var(--header-height);
-}
-
-/* =============================================
-   Sidebar
-   ============================================= */
+/*===============================================
+  3) SIDEBAR
+===============================================*/
 .sidebar {
   position: fixed;
-  top: 0; left: 0;
+  top: var(--header-height);
+  left: 0;
   width: var(--sidebar-width);
-  height: 100vh;
-  background: #1a1a2e;
-  color: #fff;
+  height: calc(100vh - var(--header-height));
+  background: var(--color-sidebar-bg);
+  color: var(--color-sidebar-text);
   display: flex;
   flex-direction: column;
   transition: width 0.3s;
-  z-index: 200;
+  z-index: 1001;
 }
+/* Sidebar retraída */
+.sidebar.collapsed {
+  width: var(--sidebar-collapsed-width);
+}
+/* Menu interno da sidebar */
 .sidebar .menu {
   list-style: none;
-  margin-top: var(--header-height);
+  margin-top: calc(var(--collapse-btn-size) + var(--gap)); /* ajustado para não sobrepor colapso */
   flex: 1;
 }
 .sidebar .menu li {
@@ -71,126 +88,126 @@ body {
   width: 30px;
   text-align: center;
   font-size: 1.4rem;
+  flex-shrink: 0;
 }
 .sidebar .label {
   margin-left: 0.5rem;
   transition: opacity 0.3s;
 }
-
-/* Sidebar colapsada */
-.sidebar.collapsed {
-  width: var(--sidebar-collapsed-width);
-}
+/* Quando retraída, oculta texto */
 .sidebar.collapsed .label {
   opacity: 0;
-  pointer-events: none;
 }
 
-/* =============================================
-   Botão de Colapso (collapse-btn)
-   ============================================= */
-.collapse-btn {
-  position: fixed !important;              /* fixa na viewport */
-  left: calc(var(--sidebar-width) - 18px) !important;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 36px;  height: 36px;
+/*===============================================
+  4) BOTÃO DE COLAPSO (posicionado dentro da sidebar)
+===============================================*/
+.sidebar .collapse-btn {
+  position: absolute;
+  top: var(--gap);       /* acima do primeiro item de menu */
+  right: var(--gap);
+  width: var(--collapse-btn-size);
+  height: var(--collapse-btn-size);
+  background: var(--color-primary);
+  color: var(--color-text);
+  border: 2px solid var(--color-header-bg);
   border-radius: 50%;
-  background: #ffd166;
-  color: #333;
-  border: none;
-  font-size: 1.3rem;
+  font-size: 1.4rem;
   cursor: pointer;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-  z-index: 250;
-  transition: left 0.3s, top 0.3s;
-}
-/* Ajuste quando a sidebar é colapsada */
-.sidebar.collapsed ~ .collapse-btn {
-  left: calc(var(--sidebar-collapsed-width) - 18px) !important;
-}
-
-/* =============================================
-   Topbar (Header Fixo)
-   ============================================= */
-.topbar {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100vw;
-  height: var(--header-height);
-  background: #16213e;
-  color: #fff;
   display: flex;
   align-items: center;
-  /* Agora cola todo o conteúdo 1rem da esquerda */
-  padding: 0 1rem;
-  padding-left: 1rem !important;
-  z-index: 300;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  justify-content: center;
+  transition: background 0.2s;
+  z-index: 1002;
+}
+.sidebar .collapse-btn:hover {
+  background: #ffeb99;
+}
+/* Ajuste lateral quando retraída */
+.sidebar.collapsed .collapse-btn {
+  right: calc((var(--sidebar-collapsed-width) - var(--collapse-btn-size)) / 2);
 }
 
-/* Logo + título/tagline alinhados à esquerda */
+/*===============================================
+  5) HEADER (topbar)
+===============================================*/
+.topbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: var(--header-height);    /* aumentado conforme pedido */
+  background: var(--color-header-bg);
+  color: var(--color-white);
+  display: flex;
+  align-items: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  z-index: 1000;
+  padding: 0 1rem;
+}
 .topbar .header-logo {
-  height: 60px;
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
   margin-right: 1rem;
-  flex-shrink: 0;
 }
 .topbar .titles {
   display: flex;
   flex-direction: column;
-  margin-right: 1rem;
 }
-.topbar .logo,
+.topbar .logo {
+  font-size: var(--font-size-title);
+  font-weight: bold;
+}
 .topbar .tagline {
-  margin: 0;
-  line-height: 1.2;
+  font-size: var(--font-size-subtitle);
+  color: #e3e3e3;
+  margin-top: 0.25rem;
 }
 
-/* =============================================
-   Barra Fixa de Busca + Tabs
-   ============================================= */
+/*===============================================
+  6) BARRA FIXA – SEARCH + TABS
+===============================================*/
 .search-tabs {
   position: fixed;
   top: var(--header-height);
-  left: var(--sidebar-width);
-  width: calc(100vw - var(--sidebar-width));
-  background: #fff;
-  z-index: 250;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  padding: 16px 24px 12px;
-  display: flex;
+  left: 0;
+  width: 100vw;
+  background: var(--color-white);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.09);
+  padding: 0.5rem 0;
+  display: none;
   flex-direction: column;
   align-items: center;
+  z-index: 999;
 }
-.sidebar.collapsed ~ .wrapper .search-tabs {
-  left: var(--sidebar-collapsed-width);
-  width: calc(100vw - var(--sidebar-collapsed-width));
-}
-
-/* Inner para reorder e largura máxima */
-.search-tabs .inner {
+/* mostrar a barra fixa quando necessária */
+.search-tabs.show {
   display: flex;
-  flex-direction: column;
+}
+.search-tabs .inner {
   width: 100%;
-  max-width: 1024px;
+  max-width: calc(100vw - var(--sidebar-width));
   margin: 0 auto;
+  padding: 0 1rem;
+}
+/* ajuste quando sidebar retraída */
+.sidebar.collapsed ~ .search-tabs .inner {
+  max-width: calc(100vw - var(--sidebar-collapsed-width));
+}
+.section-title {
+  text-align: center;
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin: 0.5rem 0 0.7rem;
 }
 
-/* Reordena: 1) Título, 2) Busca, 3) Tabs */
-#sectionTitle { order: 1; margin: 0 0 0.5rem; }
-.search-bar     { order: 2; }
-.tabs           { order: 3; }
-
-/* =============================================
-   Search Bar
-   ============================================= */
+/* search bar */
 .search-bar {
   display: flex;
-  align-items: center;
   width: 100%;
-  max-width: 400px;
-  margin: 0 auto 12px;
-  gap: 8px;
+  max-width: 640px;
+  margin-bottom: 0.7rem;
 }
 .input-wrapper {
   position: relative;
@@ -201,13 +218,11 @@ body {
   padding: 0.6rem 2.5rem 0.6rem 1rem;
   border: 1px solid #ccc;
   border-radius: 4px;
-  background: #f9f9f9;
-  font-size: 1rem;
 }
 .search-icon {
   position: absolute;
   top: 50%;
-  right: 0.6rem;
+  right: 0.5rem;
   transform: translateY(-50%);
   background: none;
   border: none;
@@ -215,109 +230,116 @@ body {
   cursor: pointer;
 }
 #favoritesBtn {
-  background: #ffd166;
+  margin-left: 0.7rem;
+  background: var(--color-primary);
   border: none;
+  color: var(--color-text);
   padding: 0.6rem 1rem;
   border-radius: 4px;
   cursor: pointer;
   font-size: 1.1rem;
-  color: #222;
 }
 
-/* =============================================
-   Tabs (Categorias)
-   ============================================= */
+/* abas de categoria */
 .tabs {
   display: flex;
   overflow-x: auto;
-  width: 100%;
-  gap: 8px;
-  padding-bottom: 4px;
+  gap: 0.5rem;
+  padding-bottom: 0.3rem;
 }
 .tabs button {
   padding: 0.6rem 1rem;
-  background: #eee;
   border: none;
+  background: #eee;
+  color: var(--color-text);
   border-radius: 4px;
   cursor: pointer;
   white-space: nowrap;
-  font-size: 1rem;
   transition: background 0.2s;
 }
 .tabs button.active,
 .tabs button:hover {
-  background: #ffd166;
+  background: var(--color-primary);
+  color: var(--color-text);
 }
 
-/* =============================================
-   Título de Seção
-   ============================================= */
-.section-title {
-  font-size: 2rem;
-  font-weight: bold;
-  text-align: center;
-  margin-bottom: 12px;
-  letter-spacing: 1px;
-}
-
-/* =============================================
-   Main & Grid de Cards
-   ============================================= */
+/*===============================================
+  7) MAIN E GRID DE CARTÕES
+===============================================*/
 .main {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  position: relative;
+  margin-top: calc(var(--header-height) + var(--searchbar-height));
   margin-left: var(--sidebar-width);
-  /* 1rem extra pra não ficar atrás da barra fixa */
-  margin-top: calc(var(--header-height) + var(--fixed-bar-height) + 1rem) !important;
-  padding-bottom: 32px;
-  transition: margin 0.3s;
+  padding: 2rem 1rem;
+  background: #f7f8fb;
+  min-height: calc(100vh - var(--header-height) - var(--searchbar-height));
+  transition: margin-left 0.3s;
 }
-.sidebar.collapsed ~ .wrapper .main {
+/* desloca main quando sidebar retraída */
+.sidebar.collapsed ~ .main {
   margin-left: var(--sidebar-collapsed-width);
 }
 
-#content {
+/* container grid de cards */
+.cards-container {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
-  width: 100%;
-  max-width: 960px;
+  gap: var(--gap);
   margin: 0 auto;
-  padding-top: 12px;
+  width: 100%;
+  max-width: calc(100vw - var(--sidebar-width) - 2rem);
 }
+/* Desktop: 3 colunas */
+@media (min-width: 900px) {
+  .cards-container {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+/* Mobile: 1 coluna */
+@media (max-width: 899px) {
+  .cards-container {
+    grid-template-columns: 1fr;
+    max-width: 100vw;
+    padding: 0 1rem;
+  }
+}
+
+/* estilo de cada cartão */
 .card {
-  background: #fff;
-  border-radius: 6px;
+  background: var(--color-white);
+  border-radius: 8px;
   padding: 1rem;
   box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  max-width: var(--card-max-width);
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
-  width: 100%;
-  max-width: 320px;
-  margin: 0 auto;
 }
 .card h3 {
+  margin-bottom: 0.5rem;
   font-size: 1.1rem;
-  margin-bottom: 0.6rem;
-  font-weight: bold;
 }
 .card p {
-  font-size: 0.95rem;
-  color: #333;
   margin-bottom: 0.5rem;
+  font-size: 0.95rem;
 }
 .card-actions {
   margin-top: auto;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  gap: 0.5rem;
 }
-.card-actions a {
-  color: #16213e;
+.card-actions .btn-open {
+  background: #fff;
+  border: 1px solid var(--color-text);
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
   text-decoration: none;
+  color: var(--color-text);
   font-weight: bold;
+  transition: background 0.2s;
+}
+.card-actions .btn-open:hover {
+  background: var(--color-text);
+  color: var(--color-white);
 }
 .card-actions .fav-card-btn {
   background: none;
@@ -326,54 +348,71 @@ body {
   cursor: pointer;
 }
 
-/* =============================================
-   Responsividade (Mobile)
-   ============================================= */
-@media (max-width: 900px) {
-  /* Sidebar colapsada */
-  .sidebar {
-    width: var(--sidebar-collapsed-width);
-  }
-  .sidebar .label {
-    display: none !important;
-  }
-  /* Esconder botão collapse no mobile */
-  #collapseBtn {
-    display: none !important;
-  }
-  /* Topbar */
+/*===============================================
+  8) SEÇÕES “MANUAL”, “SUGESTÕES” E “EM BREVE”
+===============================================*/
+.manual-content.inner {
+  max-width: 700px;
+  margin: 4rem auto 0;
+  padding: 2rem;
+  background: var(--color-white);
+  border-radius: 8px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  font-size: 1.1rem;
+  line-height: 1.7;
+  text-align: center;
+}
+.sugestoes-form-container {
+  /* seu estilo de form… */
+}
+.em-breve {
+  margin: 3rem auto;
+  text-align: center;
+  font-size: 1.3rem;
+  color: #555;
+}
+
+/*===============================================
+  9) AJUSTES RESPONSIVOS FINAIS
+===============================================*/
+@media (max-width: 768px) {
+  /* header: padding reduzido e alinhado lateral */
   .topbar {
-    padding-left: calc(var(--sidebar-collapsed-width) + 1rem) !important;
+    padding: 0 0.5rem;
+    justify-content: flex-start;
   }
-  /* Search-tabs */
-  .search-tabs {
-    top: var(--header-height);
-    left: var(--sidebar-collapsed-width);
-    width: calc(100vw - var(--sidebar-collapsed-width));
-    padding: 12px 8px 8px;
+  /* move sidebar para abaixo do header + barra fixa */
+  .sidebar {
+    top: calc(var(--header-height) + var(--searchbar-height));
+    height: calc(100vh - var(--header-height) - var(--searchbar-height));
   }
-  /* Main */
-  .wrapper {
-    margin-top: calc(var(--header-height) + var(--fixed-bar-height));
+  /* ajusta menu da sidebar para começar abaixo do botão de colapso */
+  .sidebar .menu {
+    margin-top: calc(var(--collapse-btn-size) + var(--gap));
   }
+  /* collapse btn dentro da sidebar, no topo, sem sobrepor */
+  .sidebar .collapse-btn {
+    top: var(--gap);
+    right: var(--gap);
+  }
+  /* main: ocupa largura inteira e começa abaixo da barra fixa */
   .main {
     margin-left: var(--sidebar-collapsed-width);
-    margin-top: calc(var(--header-height) + var(--fixed-bar-height));
-    padding-bottom: 24px;
+    margin-top: calc(var(--header-height) + var(--searchbar-height));
+    padding: 1rem 0.5rem;
   }
-  /* Grid adapta para 1 coluna */
-  #content {
+  /* cards em 1 coluna */
+  .cards-container {
     grid-template-columns: 1fr;
-    max-width: 95vw;
-    gap: 16px;
-    padding-top: 8px;
+    max-width: 100vw;
+    padding: 0 1rem;
   }
-  .card {
-    max-width: 98vw;
+  /* textos do header menores e alinhados à esquerda */
+  .topbar .logo {
+    font-size: 1.2rem;
   }
-  /* Tabs mobile: letras pretas e negrito */
-  .tabs button {
-    color: #000 !important;
-    font-weight: bold !important;
+  .topbar .tagline {
+    font-size: 0.8rem;
   }
 }
+
