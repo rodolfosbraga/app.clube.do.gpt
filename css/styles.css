@@ -143,15 +143,11 @@ body {
   display: flex;
   flex-direction: column;
   margin-right: 1rem;
- #sectionTitle {
-  text-align: center;
-  width: 100%; 
 }
 .topbar .logo,
 .topbar .tagline {
   margin: 0;
   line-height: 1.2;
-font-size: 0.8rem;
 }
 
 /* ===========================================================
@@ -246,7 +242,7 @@ font-size: 0.8rem;
 }
 .tabs button {
   padding: 0.6rem 1rem;
-  background: #e0f7fa;
+  background: #eee;
   border: none;
   border-radius: 4px;
   cursor: pointer;
