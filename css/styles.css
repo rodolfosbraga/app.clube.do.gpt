@@ -1,42 +1,43 @@
-/* ===========================================================
+/* =============================================
    Variáveis Globais
-   =========================================================== */
+   ============================================= */
 :root {
-  --header-height: 100px;          /* altura total do header */
-  --search-tabs-height: 80px;      /* altura da barra fixa (ajuste conforme medido) */
-  --sidebar-width: 220px;          /* largura padrão da sidebar */
-  --sidebar-collapsed-width: 60px; /* largura da sidebar colapsada */
+  --header-height: 100px;         /* altura total do header */
+  --fixed-bar-height: 50px;       /* altura da barra fixa abaixo */
+  --sidebar-width: 220px;         /* largura padrão da sidebar */
+  --sidebar-collapsed-width: 60px;/* largura da sidebar colapsada */
 }
 
-/* ===========================================================
+/* =============================================
    Reset + Box-Sizing
-   =========================================================== */
+   ============================================= */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-/* ===========================================================
+/* =============================================
    Body
-   =========================================================== */
+   ============================================= */
 body {
   font-family: sans-serif;
   background: #f2f2f2;
 }
 
-/* ===========================================================
-   Wrapper (empurra tudo abaixo do header)
-   =========================================================== */
+/* =============================================
+   Layout Principal
+   ============================================= */
+/* Empurra todo o conteúdo abaixo do header */
 .wrapper {
   display: flex;
   min-height: 100vh;
-  margin-top: var(--header-height); /* antes: margin-top: 68px :contentReference[oaicite:0]{index=0} */
+  margin-top: var(--header-height);
 }
 
-/* ===========================================================
+/* =============================================
    Sidebar
-   =========================================================== */
+   ============================================= */
 .sidebar {
   position: fixed;
   top: 0; left: 0;
@@ -85,16 +86,15 @@ body {
   pointer-events: none;
 }
 
-/* ===========================================================
-   Botão de Colapso
-   =========================================================== */
+/* =============================================
+   Botão de Colapso (collapse-btn)
+   ============================================= */
 .collapse-btn {
-  position: fixed !important; 
-  /* antes: position:absolute + right:-18px :contentReference[oaicite:1]{index=1} */
+  position: fixed !important;              /* fixa na viewport */
   left: calc(var(--sidebar-width) - 18px) !important;
   top: 50%;
   transform: translateY(-50%);
-  width: 36px; height: 36px;
+  width: 36px;  height: 36px;
   border-radius: 50%;
   background: #ffd166;
   color: #333;
@@ -105,35 +105,31 @@ body {
   z-index: 250;
   transition: left 0.3s, top 0.3s;
 }
+/* Ajuste quando a sidebar é colapsada */
 .sidebar.collapsed ~ .collapse-btn {
   left: calc(var(--sidebar-collapsed-width) - 18px) !important;
 }
 
-/* ===========================================================
+/* =============================================
    Topbar (Header Fixo)
-   =========================================================== */
+   ============================================= */
 .topbar {
   position: fixed;
-  top: 0; 
-  left: var(--sidebar-width);
-  width: calc(100vw - var(--sidebar-width));
+  top: 0; left: 0;
+  width: 100vw;
   height: var(--header-height);
   background: #16213e;
   color: #fff;
   display: flex;
   align-items: center;
+  /* Agora cola todo o conteúdo 1rem da esquerda */
   padding: 0 1rem;
+  padding-left: 1rem !important;
   z-index: 300;
   box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-  transition: left 0.3s;
-}
-/* Ajusta no colapso */
-.sidebar.collapsed ~ .topbar {
-  left: var(--sidebar-collapsed-width);
-  width: calc(100vw - var(--sidebar-collapsed-width));
 }
 
-/* Logo + títulos alinhados à esquerda */
+/* Logo + título/tagline alinhados à esquerda */
 .topbar .header-logo {
   height: 60px;
   margin-right: 1rem;
@@ -150,15 +146,14 @@ body {
   line-height: 1.2;
 }
 
-/* ===========================================================
+/* =============================================
    Barra Fixa de Busca + Tabs
-   =========================================================== */
+   ============================================= */
 .search-tabs {
   position: fixed;
   top: var(--header-height);
   left: var(--sidebar-width);
   width: calc(100vw - var(--sidebar-width));
-  height: var(--search-tabs-height);
   background: #fff;
   z-index: 250;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
@@ -166,15 +161,13 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  transition: left 0.3s;
 }
-/* Ajusta no colapso */
-.sidebar.collapsed ~ .search-tabs {
+.sidebar.collapsed ~ .wrapper .search-tabs {
   left: var(--sidebar-collapsed-width);
   width: calc(100vw - var(--sidebar-collapsed-width));
 }
 
-/* Inner para reordenação */
+/* Inner para reorder e largura máxima */
 .search-tabs .inner {
   display: flex;
   flex-direction: column;
@@ -182,14 +175,15 @@ body {
   max-width: 1024px;
   margin: 0 auto;
 }
-/* <h2> acima da busca */
+
+/* Reordena: 1) Título, 2) Busca, 3) Tabs */
 #sectionTitle { order: 1; margin: 0 0 0.5rem; }
 .search-bar     { order: 2; }
 .tabs           { order: 3; }
 
-/* ===========================================================
+/* =============================================
    Search Bar
-   =========================================================== */
+   ============================================= */
 .search-bar {
   display: flex;
   align-items: center;
@@ -230,9 +224,9 @@ body {
   color: #222;
 }
 
-/* ===========================================================
+/* =============================================
    Tabs (Categorias)
-   =========================================================== */
+   ============================================= */
 .tabs {
   display: flex;
   overflow-x: auto;
@@ -255,21 +249,31 @@ body {
   background: #ffd166;
 }
 
-/* ===========================================================
+/* =============================================
+   Título de Seção
+   ============================================= */
+.section-title {
+  font-size: 2rem;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 12px;
+  letter-spacing: 1px;
+}
+
+/* =============================================
    Main & Grid de Cards
-   =========================================================== */
+   ============================================= */
 .main {
   flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-left: var(--sidebar-width); /* acompanha sidebar */
-  margin-top: calc(var(--header-height) + var(--search-tabs-height));
-                                   /* antes: margin-top: 120px :contentReference[oaicite:2]{index=2} */
+  margin-left: var(--sidebar-width);
+  /* 1rem extra pra não ficar atrás da barra fixa */
+  margin-top: calc(var(--header-height) + var(--fixed-bar-height) + 1rem) !important;
   padding-bottom: 32px;
-  transition: margin-left 0.3s, margin-top 0.3s;
+  transition: margin 0.3s;
 }
-/* Ajusta no colapso */
 .sidebar.collapsed ~ .wrapper .main {
   margin-left: var(--sidebar-collapsed-width);
 }
@@ -322,49 +326,42 @@ body {
   cursor: pointer;
 }
 
-/* ===========================================================
-   Manual, Sugestões, Em Breve etc.
-   (idem ao seu CSS anterior)
-   =========================================================== */
-/* … (mantenha as regras que você já tinha para .manual-content,
-       body.sugestoes-active, form, .em-breve etc.) … */
-
-/* ===========================================================
-   Responsividade
-   =========================================================== */
-/* Mobile (<900px) */
+/* =============================================
+   Responsividade (Mobile)
+   ============================================= */
 @media (max-width: 900px) {
+  /* Sidebar colapsada */
   .sidebar {
     width: var(--sidebar-collapsed-width);
   }
   .sidebar .label {
     display: none !important;
   }
-  /* Esconder botão de collapse */
+  /* Esconder botão collapse no mobile */
   #collapseBtn {
     display: none !important;
   }
-  /* Topbar e search-tabs acompanham */
+  /* Topbar */
   .topbar {
-    left: var(--sidebar-collapsed-width);
-    width: calc(100vw - var(--sidebar-collapsed-width));
+    padding-left: calc(var(--sidebar-collapsed-width) + 1rem) !important;
   }
+  /* Search-tabs */
   .search-tabs {
+    top: var(--header-height);
     left: var(--sidebar-collapsed-width);
     width: calc(100vw - var(--sidebar-collapsed-width));
-    top: var(--header-height);
     padding: 12px 8px 8px;
   }
   /* Main */
   .wrapper {
-    margin-top: calc(var(--header-height) + var(--search-tabs-height));
+    margin-top: calc(var(--header-height) + var(--fixed-bar-height));
   }
   .main {
     margin-left: var(--sidebar-collapsed-width);
-    margin-top: calc(var(--header-height) + var(--search-tabs-height));
+    margin-top: calc(var(--header-height) + var(--fixed-bar-height));
     padding-bottom: 24px;
   }
-  /* Grid 1 coluna */
+  /* Grid adapta para 1 coluna */
   #content {
     grid-template-columns: 1fr;
     max-width: 95vw;
@@ -374,23 +371,9 @@ body {
   .card {
     max-width: 98vw;
   }
-  /* Tabs mobile negrito/preto */
+  /* Tabs mobile: letras pretas e negrito */
   .tabs button {
     color: #000 !important;
     font-weight: bold !important;
   }
-}
-
-/* ===========================================================
-   Custom Scrollbars (opcional)
-   =========================================================== */
-::-webkit-scrollbar {
-  width: 8px; height: 8px;
-}
-::-webkit-scrollbar-thumb {
-  background: #bbb;
-  border-radius: 4px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #999;
 }
