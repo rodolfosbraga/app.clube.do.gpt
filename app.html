@@ -1,14 +1,13 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-  <title>Clube do GPT</title>
-  <link rel="stylesheet" href="css/styles.css" />
-</head>
-<body>
-   <!-- Proteção de acesso -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Clube dos GPTs</title>
+  <link rel="stylesheet" href="styles.css">
+
+  <!-- ==== Proteção de Acesso via Supabase ==== -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
   <script>
     const SUPABASE_URL      = 'https://fouqnyydrhxgadnxjtds.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZvdXFueXlkcmh4Z2FkbnhqdGRzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI0NjQyNDUsImV4cCI6MjA2ODA0MDI0NX0.JH2SFA-6itPBy_Vdnqm9wCmIw7m3BPHRlZkfcgaP-is'; // a mesma key que usa no index
@@ -41,55 +40,74 @@
       // Se passou, pode exibir a página normalmente
     })();
   </script>
+  <!-- ========================================== -->
+</head>
+<body>
   <!-- SIDEBAR -->
-  <aside class="sidebar" id="sidebar">
+  <aside id="sidebar" class="sidebar">
     <ul class="menu">
-      <button id="collapseBtn" class="collapse-btn" title="Retrair menu">‹</button>
-      <li data-section="manual"><span class="icon">📖</span><span class="label">Manual</span></li>
-      <li data-section="gpts"><span class="icon">📂</span><span class="label">GPTs</span></li>
-      <li data-section="favoritos"><span class="icon">⭐</span><span class="label">Favoritos</span></li>
-      <li data-section="sugestoes"><span class="icon">💡</span><span class="label">Sugestões</span></li>
-      <li data-section="cadastro"><span class="icon">📝</span><span class="label">Cadastro</span></li>
-      <li data-section="sair"><span class="icon">🚪</span><span class="label">Sair</span></li>
+      <li data-section="gpts" class="active">
+        <span class="icon">🤖</span>
+        <span class="label">GPTs</span>
+      </li>
+      <li data-section="favoritos">
+        <span class="icon">★</span>
+        <span class="label">Favoritos</span>
+      </li>
+      <li data-section="sugestoes">
+        <span class="icon">✉️</span>
+        <span class="label">Sugestões</span>
+      </li>
+      <li data-section="manual">
+        <span class="icon">📖</span>
+        <span class="label">Manual</span>
+      </li>
+      <li data-section="cadastro">
+        <span class="icon">📝</span>
+        <span class="label">Cadastro</span>
+      </li>
+      <li data-section="sair">
+        <span class="icon">🚪</span>
+        <span class="label">Sair</span>
+      </li>
     </ul>
-      <!-- BOTÃO RETRÁTIL -->
-  <!--<button id="collapseBtn" class="collapse-btn" title="Retrair menu">‹</button> -->
   </aside>
 
-  <div class="wrapper">
-    <div class="main">
-      <!-- HEADER -->
-      <header class="topbar">
-        <div class="inner">
-          <img src="logo-placeholder.png" alt="Logo Clube do GPT" class="header-logo" />
-          <div class="titles">
-            <div class="logo">Clube do GPT</div>
-            <div class="tagline">Sua coleção premium de assistentes de IA</div>
-          </div>
-        </div>
-      </header>
+  <!-- BOTÃO DE COLAPSO -->
+  <button id="collapseBtn" class="collapse-btn" aria-label="Toggle sidebar">‹</button>
 
-      <!-- BARRA FIXA (Só aparece em GPTs e Favoritos) -->
-      <div class="search-tabs" id="searchTabs" style="display: none;">
-        <div class="inner">
-          <h2 class="section-title" id="sectionTitle">Categorias</h2>
-          <div class="search-bar">
-            <div class="input-wrapper">
-              <input type="text" id="searchInput" placeholder="Pesquisar GPTs…" />
-              <button id="searchBtn" class="search-icon" title="Buscar">🔍</button>
-            </div>
-            <button id="favoritesBtn" title="Meus Favoritos">⭐</button>
-          </div>
-          <nav class="tabs" id="categoryTabs"></nav>
+  <!-- HEADER FIXO -->
+  <header class="topbar">
+    <img src="logo.png" alt="Logo do Clube" class="header-logo">
+    <div class="titles">
+      <h1 class="logo">Clube dos GPTs</h1>
+      <p class="tagline">Explore e aproveite!</p>
+    </div>
+  </header>
+
+  <!-- BARRA DE BUSCA + TABS FIXA -->
+  <div id="searchTabs" class="search-tabs">
+    <div class="inner">
+      <div class="search-bar">
+        <div class="input-wrapper">
+          <input id="searchInput" type="text" placeholder="Pesquise um GPT...">
+          <button id="searchBtn" class="search-icon" aria-label="Buscar">🔍</button>
         </div>
+        <button id="favoritesBtn">Favoritos</button>
       </div>
-
-      <!-- CONTEÚDO -->
-      <main id="content" class="main">
-        <!-- Conteúdo dinâmico (JS) -->
-      </main>
+      <div id="categoryTabs" class="tabs"></div>
+      <h2 id="sectionTitle" class="section-title">Categoria</h2>
     </div>
   </div>
-  <script src="js/app.js"></script>
+
+  <!-- CONTEÚDO PRINCIPAL -->
+  <div class="wrapper">
+    <main class="main">
+      <div id="content"></div>
+    </main>
+  </div>
+
+  <!-- SCRIPTS -->
+  <script src="js/app.js" defer></script>
 </body>
 </html>
