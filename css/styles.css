@@ -1,43 +1,53 @@
-/* Variáveis Globais */
+/* =============================================
+   Variáveis Globais
+   ============================================= */
 :root {
-  --header-height: 100px;
-  --fixed-bar-height: 50px;
-  --sidebar-width: 220px;
-  --sidebar-collapsed-width: 60px;
+  --header-height: 100px;         /* altura total do header */
+  --fixed-bar-height: 50px;       /* altura da barra fixa abaixo */
+  --sidebar-width: 220px;         /* largura padrão da sidebar */
+  --sidebar-collapsed-width: 60px;/* largura da sidebar colapsada */
 }
 
-/* RESET + BOX-SIZING */
+/* =============================================
+   Reset + Box-Sizing
+   ============================================= */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-/* BODY */
+/* =============================================
+   Body
+   ============================================= */
 body {
   font-family: sans-serif;
   background: #f2f2f2;
 }
 
-/* WRAPPER */
+/* =============================================
+   Layout Principal
+   ============================================= */
+/* Empurra todo o conteúdo abaixo do header */
 .wrapper {
   display: flex;
   min-height: 100vh;
   margin-top: var(--header-height);
 }
 
-/* SIDEBAR */
+/* =============================================
+   Sidebar
+   ============================================= */
 .sidebar {
   position: fixed;
-  top: 0;
-  left: 0;
+  top: 0; left: 0;
   width: var(--sidebar-width);
   height: 100vh;
   background: #1a1a2e;
   color: #fff;
   display: flex;
   flex-direction: column;
-  transition: width 0.3s, left 0.3s;
+  transition: width 0.3s;
   z-index: 200;
 }
 .sidebar .menu {
@@ -55,7 +65,7 @@ body {
 }
 .sidebar .menu li:hover,
 .sidebar .menu li.active {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255,255,255,0.1);
 }
 .sidebar .icon {
   width: 30px;
@@ -66,6 +76,8 @@ body {
   margin-left: 0.5rem;
   transition: opacity 0.3s;
 }
+
+/* Sidebar colapsada */
 .sidebar.collapsed {
   width: var(--sidebar-collapsed-width);
 }
@@ -74,14 +86,15 @@ body {
   pointer-events: none;
 }
 
-/* BOTÃO RETRÁTIL */
+/* =============================================
+   Botão de Colapso (collapse-btn)
+   ============================================= */
 .collapse-btn {
-  position: absolute;
+  position: fixed !important;              /* fixa na viewport */
+  left: calc(var(--sidebar-width) - 18px) !important;
   top: 50%;
-  right: -18px;
   transform: translateY(-50%);
-  width: 36px;
-  height: 36px;
+  width: 36px;  height: 36px;
   border-radius: 50%;
   background: #ffd166;
   color: #333;
@@ -90,33 +103,33 @@ body {
   cursor: pointer;
   box-shadow: 0 2px 8px rgba(0,0,0,0.08);
   z-index: 250;
-  transition: right 0.3s, top 0.3s;
+  transition: left 0.3s, top 0.3s;
 }
-.sidebar.collapsed + .collapse-btn {
-  right: -18px;
+/* Ajuste quando a sidebar é colapsada */
+.sidebar.collapsed ~ .collapse-btn {
+  left: calc(var(--sidebar-collapsed-width) - 18px) !important;
 }
 
-/* TOPBAR (HEADER) */
+/* =============================================
+   Topbar (Header Fixo)
+   ============================================= */
 .topbar {
   position: fixed;
-  top: 0;
-  left: 0;
+  top: 0; left: 0;
   width: 100vw;
   height: var(--header-height);
   background: #16213e;
   color: #fff;
   display: flex;
   align-items: center;
+  /* Agora cola todo o conteúdo 1rem da esquerda */
   padding: 0 1rem;
-  padding-left: calc(var(--sidebar-width) + 1rem);
+  padding-left: 1rem !important;
   z-index: 300;
   box-shadow: 0 2px 8px rgba(0,0,0,0.08);
 }
-.sidebar.collapsed ~ .wrapper .topbar {
-  padding-left: calc(var(--sidebar-collapsed-width) + 1rem);
-}
 
-/* Logo e Titles */
+/* Logo + título/tagline alinhados à esquerda */
 .topbar .header-logo {
   height: 60px;
   margin-right: 1rem;
@@ -125,6 +138,7 @@ body {
 .topbar .titles {
   display: flex;
   flex-direction: column;
+  margin-right: 1rem;
 }
 .topbar .logo,
 .topbar .tagline {
@@ -132,7 +146,9 @@ body {
   line-height: 1.2;
 }
 
-/* SEARCH + TABS FIXA */
+/* =============================================
+   Barra Fixa de Busca + Tabs
+   ============================================= */
 .search-tabs {
   position: fixed;
   top: var(--header-height);
@@ -141,8 +157,8 @@ body {
   background: #fff;
   z-index: 250;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  padding: 16px 24px 12px 24px;
-  display: none;
+  padding: 16px 24px 12px;
+  display: flex;
   flex-direction: column;
   align-items: center;
 }
@@ -150,22 +166,24 @@ body {
   left: var(--sidebar-collapsed-width);
   width: calc(100vw - var(--sidebar-collapsed-width));
 }
+
+/* Inner para reorder e largura máxima */
 .search-tabs .inner {
+  display: flex;
+  flex-direction: column;
   width: 100%;
   max-width: 1024px;
   margin: 0 auto;
 }
 
-/* SECTION TITLE */
-.section-title {
-  font-size: 2rem;
-  font-weight: bold;
-  text-align: center;
-  margin-bottom: 12px;
-  letter-spacing: 1px;
-}
+/* Reordena: 1) Título, 2) Busca, 3) Tabs */
+#sectionTitle { order: 1; margin: 0 0 0.5rem; }
+.search-bar     { order: 2; }
+.tabs           { order: 3; }
 
-/* SEARCH BAR */
+/* =============================================
+   Search Bar
+   ============================================= */
 .search-bar {
   display: flex;
   align-items: center;
@@ -206,7 +224,9 @@ body {
   color: #222;
 }
 
-/* TABS */
+/* =============================================
+   Tabs (Categorias)
+   ============================================= */
 .tabs {
   display: flex;
   overflow-x: auto;
@@ -229,14 +249,28 @@ body {
   background: #ffd166;
 }
 
-/* MAIN (CONTEÚDO) */
+/* =============================================
+   Título de Seção
+   ============================================= */
+.section-title {
+  font-size: 2rem;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 12px;
+  letter-spacing: 1px;
+}
+
+/* =============================================
+   Main & Grid de Cards
+   ============================================= */
 .main {
   flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
   margin-left: var(--sidebar-width);
-  margin-top: calc(var(--header-height) + var(--fixed-bar-height));
+  /* 1rem extra pra não ficar atrás da barra fixa */
+  margin-top: calc(var(--header-height) + var(--fixed-bar-height) + 1rem) !important;
   padding-bottom: 32px;
   transition: margin 0.3s;
 }
@@ -244,7 +278,6 @@ body {
   margin-left: var(--sidebar-collapsed-width);
 }
 
-/* GRID DE CARDS */
 #content {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -293,114 +326,33 @@ body {
   cursor: pointer;
 }
 
-/* MANUAL (texto estático) */
-.manual-content.inner {
-  max-width: 700px;
-  margin: 4rem auto 0;
-  padding: 2rem 1.5rem;
-  background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-  font-size: 1.1rem;
-  line-height: 1.7;
-  text-align: center;
-}
-
-/* SUGESTÕES (formulário) */
-body.sugestoes-active #content {
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  padding-top: 0;
-  margin-top: calc(var(--header-height) + var(--fixed-bar-height));
-  width: 100%;
-}
-body.sugestoes-active #content form {
-  width: 100%;
-  max-width: 340px;
-  margin: 0 auto;
-  padding: 1rem;
-  background: #fff;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-/* FORMULÁRIOS */
-#content .form-group {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 0.75rem;
-}
-#content .form-group label {
-  margin-bottom: 0.25rem;
-  font-weight: bold;
-}
-#content .form-group input,
-#content .form-group select,
-#content .form-group textarea {
-  padding: 0.5rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-#content button[type="submit"] {
-  background: #16213e;
-  color: #fff;
-  border: none;
-  padding: 0.6rem 1.2rem;
-  border-radius: 4px;
-  cursor: pointer;
-}
-#content button[type="submit"]:hover {
-  background: #0f1a33;
-}
-
-/* EM BREVE */
-.em-breve {
-  margin: 3rem auto 0;
-  text-align: center;
-  font-size: 1.2rem;
-  color: #555;
-  background: #fffbe5;
-  padding: 2rem;
-  border-radius: 8px;
-  max-width: 400px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-}
-
-/* RESPONSIVIDADE */
-
-/* Tablets / telas <1200px */
-@media (max-width: 1200px) {
-  #content {
-    max-width: 800px;
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-/* Mobile / telas <900px */
+/* =============================================
+   Responsividade (Mobile)
+   ============================================= */
 @media (max-width: 900px) {
-  /* Sidebar e labels */
+  /* Sidebar colapsada */
   .sidebar {
     width: var(--sidebar-collapsed-width);
   }
   .sidebar .label {
     display: none !important;
   }
-  /* Ocultar botão da sidebar */
+  /* Esconder botão collapse no mobile */
   #collapseBtn {
     display: none !important;
   }
-  /* Header e barra fixa */
+  /* Topbar */
   .topbar {
-    padding-left: calc(var(--sidebar-collapsed-width) + 1rem);
+    padding-left: calc(var(--sidebar-collapsed-width) + 1rem) !important;
   }
+  /* Search-tabs */
   .search-tabs {
     top: var(--header-height);
     left: var(--sidebar-collapsed-width);
     width: calc(100vw - var(--sidebar-collapsed-width));
     padding: 12px 8px 8px;
   }
+  /* Main */
   .wrapper {
     margin-top: calc(var(--header-height) + var(--fixed-bar-height));
   }
@@ -424,17 +376,4 @@ body.sugestoes-active #content form {
     color: #000 !important;
     font-weight: bold !important;
   }
-}
-
-/* Scrollbars */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-::-webkit-scrollbar-thumb {
-  background: #bbb;
-  border-radius: 4px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #999;
 }
