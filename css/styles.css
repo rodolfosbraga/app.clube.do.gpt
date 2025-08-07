@@ -1,47 +1,42 @@
-/* =============================================
-   css/styles.css
-   Versão completa com todos os ajustes
-   ============================================= */
-
-/* ---------------------------------------------
-   1. Variáveis Globais
-   --------------------------------------------- */
+/* ===========================================================
+   Variáveis Globais
+   =========================================================== */
 :root {
-  --header-height: 100px;           /* altura total do header */
-  --fixed-bar-height: 80px;         /* ajuste conforme a altura real de #searchTabs */
-  --sidebar-width: 220px;           /* largura da sidebar aberta */
-  --sidebar-collapsed-width: 60px;  /* largura da sidebar colapsada */
+  --header-height: 100px;          /* altura total do header */
+  --search-tabs-height: 80px;      /* altura da barra fixa (ajuste conforme medido) */
+  --sidebar-width: 220px;          /* largura padrão da sidebar */
+  --sidebar-collapsed-width: 60px; /* largura da sidebar colapsada */
 }
 
-/* ---------------------------------------------
-   2. Reset e Box-Sizing
-   --------------------------------------------- */
+/* ===========================================================
+   Reset + Box-Sizing
+   =========================================================== */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-/* ---------------------------------------------
-   3. BODY
-   --------------------------------------------- */
+/* ===========================================================
+   Body
+   =========================================================== */
 body {
   font-family: sans-serif;
   background: #f2f2f2;
 }
 
-/* ---------------------------------------------
-   4. WRAPPER PRINCIPAL
-   --------------------------------------------- */
+/* ===========================================================
+   Wrapper (empurra tudo abaixo do header)
+   =========================================================== */
 .wrapper {
   display: flex;
   min-height: 100vh;
-  margin-top: var(--header-height); /* empurra abaixo do header */
+  margin-top: var(--header-height); /* antes: margin-top: 68px :contentReference[oaicite:0]{index=0} */
 }
 
-/* ---------------------------------------------
-   5. SIDEBAR
-   --------------------------------------------- */
+/* ===========================================================
+   Sidebar
+   =========================================================== */
 .sidebar {
   position: fixed;
   top: 0; left: 0;
@@ -80,7 +75,8 @@ body {
   margin-left: 0.5rem;
   transition: opacity 0.3s;
 }
-/* sidebar colapsada */
+
+/* Sidebar colapsada */
 .sidebar.collapsed {
   width: var(--sidebar-collapsed-width);
 }
@@ -89,11 +85,12 @@ body {
   pointer-events: none;
 }
 
-/* ---------------------------------------------
-   6. BOTÃO DE COLAPSO (collapse-btn)
-   --------------------------------------------- */
+/* ===========================================================
+   Botão de Colapso
+   =========================================================== */
 .collapse-btn {
-  position: fixed !important;                     /* fixa na viewport */
+  position: fixed !important; 
+  /* antes: position:absolute + right:-18px :contentReference[oaicite:1]{index=1} */
   left: calc(var(--sidebar-width) - 18px) !important;
   top: 50%;
   transform: translateY(-50%);
@@ -108,29 +105,35 @@ body {
   z-index: 250;
   transition: left 0.3s, top 0.3s;
 }
-/* redeclara ao colapsar */
 .sidebar.collapsed ~ .collapse-btn {
   left: calc(var(--sidebar-collapsed-width) - 18px) !important;
 }
 
-/* ---------------------------------------------
-   7. TOPBAR (HEADER FIXO)
-   --------------------------------------------- */
+/* ===========================================================
+   Topbar (Header Fixo)
+   =========================================================== */
 .topbar {
   position: fixed;
-  top: 0; left: 0;
-  width: 100vw;
+  top: 0; 
+  left: var(--sidebar-width);
+  width: calc(100vw - var(--sidebar-width));
   height: var(--header-height);
   background: #16213e;
   color: #fff;
   display: flex;
   align-items: center;
   padding: 0 1rem;
-  padding-left: 1rem !important; /* cola conteúdo à esquerda */
   z-index: 300;
   box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  transition: left 0.3s;
 }
-/* logo + textos alinhados à esquerda */
+/* Ajusta no colapso */
+.sidebar.collapsed ~ .topbar {
+  left: var(--sidebar-collapsed-width);
+  width: calc(100vw - var(--sidebar-collapsed-width));
+}
+
+/* Logo + títulos alinhados à esquerda */
 .topbar .header-logo {
   height: 60px;
   margin-right: 1rem;
@@ -147,14 +150,15 @@ body {
   line-height: 1.2;
 }
 
-/* ---------------------------------------------
-   8. BARRA FIXA DE BUSCA + TABS
-   --------------------------------------------- */
+/* ===========================================================
+   Barra Fixa de Busca + Tabs
+   =========================================================== */
 .search-tabs {
   position: fixed;
   top: var(--header-height);
   left: var(--sidebar-width);
   width: calc(100vw - var(--sidebar-width));
+  height: var(--search-tabs-height);
   background: #fff;
   z-index: 250;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
@@ -162,14 +166,15 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
+  transition: left 0.3s;
 }
-/* move junto com a sidebar colapsada */
-.sidebar.collapsed ~ .wrapper .search-tabs,
+/* Ajusta no colapso */
 .sidebar.collapsed ~ .search-tabs {
   left: var(--sidebar-collapsed-width);
   width: calc(100vw - var(--sidebar-collapsed-width));
 }
-/* inner para reordenar e limitar largura */
+
+/* Inner para reordenação */
 .search-tabs .inner {
   display: flex;
   flex-direction: column;
@@ -177,14 +182,14 @@ body {
   max-width: 1024px;
   margin: 0 auto;
 }
-/* reordena: 1) título, 2) busca, 3) abas */
+/* <h2> acima da busca */
 #sectionTitle { order: 1; margin: 0 0 0.5rem; }
 .search-bar     { order: 2; }
 .tabs           { order: 3; }
 
-/* ---------------------------------------------
-   9. SEARCH BAR
-   --------------------------------------------- */
+/* ===========================================================
+   Search Bar
+   =========================================================== */
 .search-bar {
   display: flex;
   align-items: center;
@@ -225,9 +230,9 @@ body {
   color: #222;
 }
 
-/* ---------------------------------------------
- 10. TABS (CATEGORIAS)
-   --------------------------------------------- */
+/* ===========================================================
+   Tabs (Categorias)
+   =========================================================== */
 .tabs {
   display: flex;
   overflow-x: auto;
@@ -250,31 +255,21 @@ body {
   background: #ffd166;
 }
 
-/* ---------------------------------------------
- 11. TÍTULO DE SEÇÃO
-   --------------------------------------------- */
-.section-title {
-  font-size: 2rem;
-  font-weight: bold;
-  text-align: center;
-  margin-bottom: 12px;
-  letter-spacing: 1px;
-}
-
-/* ---------------------------------------------
- 12. MAIN & GRID DE CARDS
-   --------------------------------------------- */
+/* ===========================================================
+   Main & Grid de Cards
+   =========================================================== */
 .main {
   flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
   margin-left: var(--sidebar-width); /* acompanha sidebar */
-  margin-top: calc(var(--header-height) + var(--fixed-bar-height)); /* abaixo da barra fixa */
+  margin-top: calc(var(--header-height) + var(--search-tabs-height));
+                                   /* antes: margin-top: 120px :contentReference[oaicite:2]{index=2} */
   padding-bottom: 32px;
-  transition: margin 0.3s;
+  transition: margin-left 0.3s, margin-top 0.3s;
 }
-/* quando colapsa */
+/* Ajusta no colapso */
 .sidebar.collapsed ~ .wrapper .main {
   margin-left: var(--sidebar-collapsed-width);
 }
@@ -327,42 +322,49 @@ body {
   cursor: pointer;
 }
 
-/* ---------------------------------------------
- 13. RESPONSIVIDADE (MOBILE)
-   --------------------------------------------- */
+/* ===========================================================
+   Manual, Sugestões, Em Breve etc.
+   (idem ao seu CSS anterior)
+   =========================================================== */
+/* … (mantenha as regras que você já tinha para .manual-content,
+       body.sugestoes-active, form, .em-breve etc.) … */
+
+/* ===========================================================
+   Responsividade
+   =========================================================== */
+/* Mobile (<900px) */
 @media (max-width: 900px) {
-  /* sidebar colapsada */
   .sidebar {
     width: var(--sidebar-collapsed-width);
   }
   .sidebar .label {
     display: none !important;
   }
-  /* esconde collapse no mobile */
+  /* Esconder botão de collapse */
   #collapseBtn {
     display: none !important;
   }
-  /* topbar */
+  /* Topbar e search-tabs acompanham */
   .topbar {
-    padding-left: calc(var(--sidebar-collapsed-width) + 1rem) !important;
-  }
-  /* search-tabs */
-  .search-tabs {
-    top: var(--header-height);
     left: var(--sidebar-collapsed-width);
     width: calc(100vw - var(--sidebar-collapsed-width));
+  }
+  .search-tabs {
+    left: var(--sidebar-collapsed-width);
+    width: calc(100vw - var(--sidebar-collapsed-width));
+    top: var(--header-height);
     padding: 12px 8px 8px;
   }
-  /* wrapper/main */
+  /* Main */
   .wrapper {
-    margin-top: calc(var(--header-height) + var(--fixed-bar-height));
+    margin-top: calc(var(--header-height) + var(--search-tabs-height));
   }
   .main {
     margin-left: var(--sidebar-collapsed-width);
-    margin-top: calc(var(--header-height) + var(--fixed-bar-height));
+    margin-top: calc(var(--header-height) + var(--search-tabs-height));
     padding-bottom: 24px;
   }
-  /* grade 1 coluna */
+  /* Grid 1 coluna */
   #content {
     grid-template-columns: 1fr;
     max-width: 95vw;
@@ -372,9 +374,23 @@ body {
   .card {
     max-width: 98vw;
   }
-  /* tabs mobile: preto/negrito */
+  /* Tabs mobile negrito/preto */
   .tabs button {
     color: #000 !important;
     font-weight: bold !important;
   }
+}
+
+/* ===========================================================
+   Custom Scrollbars (opcional)
+   =========================================================== */
+::-webkit-scrollbar {
+  width: 8px; height: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background: #bbb;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #999;
 }
