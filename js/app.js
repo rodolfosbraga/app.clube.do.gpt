@@ -1,6 +1,6 @@
 // js/app.js
 
-// DOM ELEMENTS
+// DOM Elements
 const sidebar       = document.getElementById("sidebar");
 const collapseBtn   = document.getElementById("collapseBtn");
 const tabsContainer = document.getElementById("categoryTabs");
@@ -11,31 +11,33 @@ const favBtn        = document.getElementById("favoritesBtn");
 const searchTabs    = document.getElementById("searchTabs");
 const sectionTitle  = document.getElementById("sectionTitle");
 
-// Dados
+// Data
 let categories = [];
 let gpts       = [];
 let suggestionsFormHTML = "";
 let manualContentHTML   = "";
 
-// CENTRALIZA BOTÃO DA SIDEBAR VERTICALMENTE
+// Utility: lê variável CSS (retorna inteiro)
+function getCssVar(varName) {
+  return parseInt(
+    getComputedStyle(document.documentElement).getPropertyValue(varName)
+  ) || 0;
+}
+
+// Centraliza verticalmente o botão de colapso da sidebar
 function updateCollapseBtnPosition() {
-  const headerHeight  = 60;
+  const headerHeight  = getCssVar('--header-height');
   const sidebarHeight = sidebar.offsetHeight;
-  const btnHeight     = 38;
+  const btnHeight     = collapseBtn.offsetHeight;
   let newTop = headerHeight + (sidebarHeight / 2) - (btnHeight / 2);
 
-  // Mobile: centralizar melhor
   if (window.innerWidth < 700) {
-    // Altura da janela - header, centralizado (ajustável)
     newTop = headerHeight + ((window.innerHeight - headerHeight) / 2) - (btnHeight / 2);
   }
   collapseBtn.style.top = `${newTop}px`;
 }
-window.addEventListener('resize', updateCollapseBtnPosition);
-window.addEventListener('DOMContentLoaded', updateCollapseBtnPosition);
-sidebar.addEventListener('transitionend', updateCollapseBtnPosition);
 
-// CARREGAR/EXTRAIR CATALOG (substitua o caminho se necessário)
+// Carrega e parseia o catálogo (data/catalog.html)
 async function loadCatalog() {
   const resp = await fetch("data/catalog.html");
   const text = await resp.text();
@@ -64,10 +66,10 @@ async function loadCatalog() {
     if (!categories.includes(catTitle)) categories.push(catTitle);
 
     Array.from(block.querySelectorAll("details")).forEach(detail => {
-      const title = detail.querySelector("summary").textContent.trim();
+      const title   = detail.querySelector("summary").textContent.trim();
       const content = detail.querySelector(".content");
-      const linkEl = content.querySelector("a");
-      const link   = linkEl ? linkEl.href : "#";
+      const linkEl  = content.querySelector("a");
+      const link    = linkEl ? linkEl.href : "#";
 
       let desc = "", tools = "", prompt = "";
       content.querySelectorAll("p").forEach(p => {
@@ -91,67 +93,85 @@ async function loadCatalog() {
     });
   });
 
-  // Adiciona aba de Favoritos
+  // Aba de Favoritos
   categories.push("Favoritos");
 
-  // Inicializa interface
+  // Inicia a interface
   initUI();
 }
 
-// INICIALIZA A INTERFACE
+// Configurações de UI e event handlers
 function initUI() {
-  // Sidebar retrátil
+  // Data-attributes para botões principais
+  collapseBtn.dataset.action = "toggleSidebar";
+  collapseBtn.dataset.label  = collapseBtn.textContent;
+
+  searchBtn.dataset.action = "search";
+  searchBtn.dataset.label  = searchBtn.textContent;
+
+  favBtn.dataset.action = "viewFavorites";
+  favBtn.dataset.label  = favBtn.textContent;
+
+  // Toggle da sidebar
   collapseBtn.addEventListener("click", () => {
     sidebar.classList.toggle("collapsed");
-    collapseBtn.textContent = sidebar.classList.contains("collapsed") ? "›" : "‹";
-    searchTabs.classList.toggle('sidebar-collapsed', sidebar.classList.contains('collapsed'));
+    const isCollapsed = sidebar.classList.contains("collapsed");
+    collapseBtn.textContent = isCollapsed ? "›" : "‹";
+    collapseBtn.dataset.label = collapseBtn.textContent;
+    searchTabs.classList.toggle("sidebar-collapsed", isCollapsed);
     updateCollapseBtnPosition();
   });
 
-  // Fecha sidebar em mobile ao clicar fora
-  document.addEventListener('click', function(e) {
+  // Fecha sidebar no mobile ao clicar fora
+  document.addEventListener("click", e => {
     if (window.innerWidth < 700) {
       if (
         !sidebar.contains(e.target) &&
         !collapseBtn.contains(e.target) &&
-        !e.target.classList.contains('menu') &&
-        !e.target.classList.contains('icon') &&
-        sidebar.classList.contains('collapsed') === false
+        !e.target.classList.contains("menu") &&
+        !e.target.classList.contains("icon") &&
+        !sidebar.classList.contains("collapsed")
       ) {
-        sidebar.classList.add('collapsed');
+        sidebar.classList.add("collapsed");
         collapseBtn.textContent = "›";
-        searchTabs.classList.add('sidebar-collapsed');
+        collapseBtn.dataset.label = collapseBtn.textContent;
+        searchTabs.classList.add("sidebar-collapsed");
         updateCollapseBtnPosition();
       }
     }
   });
 
-  // Abas de categoria
+  // Monta abas de categoria e delega clique
   tabsContainer.innerHTML = "";
   categories.forEach(cat => {
     const btn = document.createElement("button");
-    btn.textContent = cat;
-    btn.dataset.cat = cat;
-    btn.addEventListener("click", () => selectCategory(cat, btn));
+    btn.className           = "tabs__btn";
+    btn.textContent         = cat;
+    btn.dataset.cat         = cat;
+    btn.dataset.action      = "selectCategory";
+    btn.dataset.label       = cat;
     tabsContainer.appendChild(btn);
   });
+  tabsContainer.addEventListener("click", e => {
+    const btn = e.target.closest("button[data-action='selectCategory']");
+    if (!btn) return;
+    selectCategory(btn.dataset.cat, btn);
+  });
 
-  // Menu lateral - navegação das seções
+  // Navegação lateral por seção
   sidebar.querySelectorAll(".menu li").forEach(li => {
     li.addEventListener("click", async () => {
       const sec = li.dataset.section;
       sidebar.querySelectorAll("li").forEach(x => x.classList.remove("active"));
       li.classList.add("active");
 
-      // Limpa classes de seção no body
       document.body.classList.remove("gpts-active", "favoritos-active", "sugestoes-active");
 
-      // Oculta barra fixa em todas seções exceto GPTs e Favoritos
       if (sec === "gpts" || sec === "favoritos") {
-        searchTabs.style.display = "block";
+        searchTabs.style.display   = "block";
         sectionTitle.style.display = "block";
       } else {
-        searchTabs.style.display = "none";
+        searchTabs.style.display   = "none";
         sectionTitle.style.display = "none";
       }
 
@@ -159,33 +179,34 @@ function initUI() {
         contentEl.innerHTML = manualContentHTML;
       } else if (sec === "gpts") {
         document.body.classList.add("gpts-active");
-        tabsContainer.querySelector("button:not([data-cat='Favoritos'])").click();
+        const firstBtn = tabsContainer.querySelector("button:not([data-cat='Favoritos'])");
+        firstBtn && firstBtn.click();
       } else if (sec === "favoritos") {
         document.body.classList.add("gpts-active", "favoritos-active");
-        tabsContainer.querySelector("button[data-cat='Favoritos']").click();
+        const favTabBtn = tabsContainer.querySelector("button[data-cat='Favoritos']");
+        favTabBtn && favTabBtn.click();
       } else if (sec === "sugestoes") {
         document.body.classList.add("sugestoes-active");
         contentEl.innerHTML = suggestionsFormHTML;
       } else if (sec === "cadastro") {
         contentEl.innerHTML = "<div class='em-breve'>Em breve!</div>";
+      } else if (sec === "sair") {
+        try {
+          if (typeof supabase !== 'undefined' && supabase.auth) {
+            await supabase.auth.signOut();
+          }
+        } catch (err) {
+          console.warn("Erro ao fazer logoff:", err);
+        }
+        localStorage.clear();
+        sessionStorage.clear();
+        window.location.href = "index.html";
+        return;
       }
-      if (sec === "sair") {
-       try {
-      if (typeof supabase !== 'undefined' && supabase.auth) {
-      await supabase.auth.signOut();
-      }
-  } catch (err) {
-    console.warn("Erro ao fazer logoff:", err);
-  }
-  localStorage.clear();
-  sessionStorage.clear();
-  window.location.href = "index.html"; // ou outro caminho do seu login
-  return; // importante para não rodar nada abaixo!
-  }
-   });
+    });
   });
 
-  // Busca
+  // Função de busca
   function doSearch() {
     const term = searchInput.value.trim().toLowerCase();
     renderCards(
@@ -197,6 +218,8 @@ function initUI() {
       )
     );
   }
+  searchInput.dataset.action = "searchInput";
+  searchInput.dataset.label  = searchInput.placeholder || "";
   searchInput.addEventListener("input", doSearch);
   searchBtn.addEventListener("click", doSearch);
 
@@ -205,19 +228,19 @@ function initUI() {
     document.body.classList.add("gpts-active", "favoritos-active");
     searchTabs.style.display = "block";
     sectionTitle.style.display = "block";
-    tabsContainer.querySelector("button[data-cat='Favoritos']").click();
+    const favTabBtn = tabsContainer.querySelector("button[data-cat='Favoritos']");
+    favTabBtn && favTabBtn.click();
   });
 
   // Seção inicial: GPTs
   sidebar.querySelector("li[data-section='gpts']").click();
 }
 
-// SELECIONA CATEGORIA
+// Seleciona categoria e renderiza
 function selectCategory(cat, btn) {
-  document.querySelectorAll(".tabs button").forEach(b => b.classList.remove("active"));
+  document.querySelectorAll(".tabs__btn").forEach(b => b.classList.remove("active"));
   btn.classList.add("active");
-  // Rolagem para o topo ao trocar de categoria
-  if (contentEl) contentEl.scrollTop = 0;
+  contentEl.scrollTop = 0;
 
   if (cat === "Favoritos") {
     const favs    = JSON.parse(localStorage.getItem("favorites") || "[]");
@@ -228,21 +251,16 @@ function selectCategory(cat, btn) {
   }
 }
 
-// ADICIONAR/REMOVER FAVORITO
+// Alterna favorito e re-renderiza
 function toggleFavorite(title) {
   let favs = JSON.parse(localStorage.getItem("favorites") || "[]");
-  if (favs.includes(title)) {
-    favs = favs.filter(t => t !== title);
-  } else {
-    favs.push(title);
-  }
+  favs = favs.includes(title) ? favs.filter(t => t !== title) : [...favs, title];
   localStorage.setItem("favorites", JSON.stringify(favs));
-  // Re-renderiza aba ativa
-  const active = document.querySelector(".tabs button.active");
-  active && active.click();
+  const activeBtn = document.querySelector("button[data-action='selectCategory'].active");
+  activeBtn && activeBtn.click();
 }
 
-// RENDERIZA CARDS DE GPTs
+// Renderiza os cards de GPTs
 function renderCards(list) {
   contentEl.innerHTML = "";
   if (!list.length) {
@@ -258,19 +276,28 @@ function renderCards(list) {
       <p><strong>Ferramentas:</strong> ${gpt.tools.join(", ")}</p>
       <p><strong>Prompt Ideal:</strong> ${gpt.prompt}</p>
       <div class="card-actions">
-        <a class="btn-open" href="${gpt.link}" target="_blank">Abrir GPT</a>
-        <button class="fav-card-btn" title="Favoritar">${
-          JSON.parse(localStorage.getItem("favorites") || "[]").includes(gpt.title) ? "★" : "☆"
-        }</button>
-      </div>
-    `;
-    card.querySelector(".fav-card-btn")
-        .addEventListener("click", () => toggleFavorite(gpt.title));
+        <a class="btn-open"
+           href="${gpt.link}" target="_blank"
+           data-action="openGPT" data-label="Abrir GPT">
+          Abrir GPT
+        </a>
+        <button class="fav-card-btn"
+                title="Favoritar"
+                data-action="toggleFavorite"
+                data-label="Favoritar">
+          ${
+            JSON.parse(localStorage.getItem("favorites") || "[]").includes(gpt.title)
+            ? "★" : "☆"
+          }
+        </button>
+      </div>`;
+    const favButton = card.querySelector(".fav-card-btn");
+    favButton.addEventListener("click", () => toggleFavorite(gpt.title));
     contentEl.appendChild(card);
   });
 }
 
-// INICIALIZAÇÃO
+// Inicia toda a engrenagem
 document.addEventListener("DOMContentLoaded", () => {
   loadCatalog();
   updateCollapseBtnPosition();
