@@ -17,40 +17,57 @@
 
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    (async () => {
-      // 1. Checa se o usuário está autenticado
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
-        window.location.href = 'index.html';
-        return;
-      }
+  window.supabaseClient ??= window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_ANON_KEY,
+    { auth: { storageKey: 'clube-gpts-auth' } } // chave própria
+  );
 
-      // 2. Checa se é membro ativo
-      const email = session.user.email.trim().toLowerCase();
-      const { data: member } = await supabase
+  (async () => {
+    const sb = window.supabaseClient;
+
+    // 1) Sessão
+    const { data: { session }, error } = await sb.auth.getSession();
+    if (error || !session) {
+      window.location.replace('index.html');
+      return;
+    }
+    // expõe user_id para o app.js
+    document.documentElement.dataset.userId = session.user.id;
+
+    // 2) Valida se é membro ativo (se você realmente quer esse gate aqui)
+    try {
+      const email = (session.user.email || '').trim().toLowerCase();
+      const { data: member, error: mErr } = await sb
         .from('members')
         .select('plan_status')
         .ilike('email', email)
         .maybeSingle();
 
-      if (member?.plan_status !== 'ativo') {
-        await supabase.auth.signOut();
+      if (mErr) console.warn('members check:', mErr);
+
+      if (!member || member.plan_status !== 'ativo') {
+        await sb.auth.signOut();
         alert('Acesso restrito a membros ativos.');
-        window.location.href = 'index.html';
+        window.location.replace('index.html');
         return;
       }
-     
-  // Cliente global para o app.js enxergar:
-  window.supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    } catch (e) {
+      console.warn('Membership check failed:', e);
+      // em caso de erro de tabela/política, escolha: liberar ou bloquear
+      // window.location.replace('index.html'); return;
+    }
+  })();
 
-  // Garante user_id no <html> e protege a rota:
-  window.supabaseClient.auth.getSession().then(({ data: { session } }) => {
-    if (!session) return (window.location.href = 'index.html');
-    document.documentElement.dataset.userId = session.user.id;
-  }).catch(() => (window.location.href = 'index.html'));
-      // Se passou, pode exibir a página normalmente //
-    })();
-  </script>
+  // 3) Função de logout global (app.js pode chamar)
+  window.appLogout = async function () {
+    try { await window.supabaseClient.auth.signOut(); }
+    catch (e) { console.warn('logout:', e); }
+    localStorage.clear();
+    sessionStorage.clear();
+    window.location.replace('index.html'); 
+</script>
+  
 </head>
 <body>
   <!-- SIDEBAR -->
