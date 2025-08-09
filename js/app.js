@@ -665,13 +665,23 @@ function wireSidebarNav() {
         return;
       }
 async function doLogout() {
-  try { await getSB()?.auth?.signOut(); } catch (e) { console.warn('Erro ao sair:', e); }
+  // Se o HTML declarou window.appLogout, delega para ela
+  if (typeof window.appLogout === 'function') {
+    return window.appLogout();
+  }
+
+  // Fallback local (sem optional chaining para evitar incompatibilidade)
+  try {
+    const client = window.supabaseClient;
+    if (client && client.auth && typeof client.auth.signOut === 'function') {
+      await client.auth.signOut();
+    }
+  } catch (_) { /* silencia erros de rede */ }
+
+  // Limpa caches locais e volta para o login
   localStorage.clear();
   sessionStorage.clear();
   window.location.replace('index.html');
-}
-    });
-  });
 }
 
 // ===============================
