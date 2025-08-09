@@ -666,4 +666,34 @@ body {
 @media (max-width:480px){
   .toast{ right:12px; left:12px; max-width:96vw; }
 }
+/* ================== DARK MODE GLOBAL ================== */
+:root.dark body {
+  background: #0b1224;
+  color: #e8eefc;
+}
+:root.dark .topbar {
+  background: #0d1b34;
+  color: #e8eefc;
+}
+:root.dark .sidebar {
+  background: #0d1526;
+  color: #e8eefc;
+}
+:root.dark .search-tabs {
+  background: #0f1a33;
+  box-shadow: 0 2px 4px rgba(0,0,0,.4);
+}
+:root.dark .tabs {
+  background: rgba(255,255,255,0.06) !important;
+}
+:root.dark .card {
+  background: #101a30;
+  color: #e8eefc;
+  box-shadow: 0 2px 6px rgba(0,0,0,.5);
+}
+:root.dark .card a { color: #9ec2ff; }
+:root.dark .btn-open { color: #e8eefc; }
+
+.use-cinzel,
+.use-cinzel * { font-family: "Cinzel", serif !important; }
 
