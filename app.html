@@ -39,8 +39,16 @@
         window.location.href = 'index.html';
         return;
       }
+      <script>
+  // Cliente global para o app.js enxergar:
+  window.supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-      // Se passou, pode exibir a página normalmente
+  // Garante user_id no <html> e protege a rota:
+  window.supabaseClient.auth.getSession().then(({ data: { session } }) => {
+    if (!session) return (window.location.href = 'index.html');
+    document.documentElement.dataset.userId = session.user.id;
+  }).catch(() => (window.location.href = 'index.html'));
+      // Se passou, pode exibir a página normalmente //
     })();
   </script>
 </head>
