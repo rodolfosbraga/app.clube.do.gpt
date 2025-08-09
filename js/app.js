@@ -661,15 +661,15 @@ function wireSidebarNav() {
         hideAllSections();
         return;
       }
-     async function doLogout() {
+async function doLogout() {
   try {
-    if (sb?.auth) await sb.auth.signOut();
+    await window.supabaseClient?.auth?.signOut();
   } catch (e) {
     console.warn('Erro ao sair:', e);
   }
   localStorage.clear();
   sessionStorage.clear();
-  window.location.href = 'index.html'; // aqui estava index.html
+  window.location.replace('index.html');
 }
     });
   });
