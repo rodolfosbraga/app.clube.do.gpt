@@ -706,11 +706,13 @@ function wireSidebarCollapse() {
 // ===============================
 // Init
 async function init() {
-   sb = window.supabaseClient;
-   loadLocalState();
+  sb = getSB();                                // <- pega o client vivo
+  if (!sb) { console.warn('Supabase ainda não carregado'); return; }
 
-  const session = await sbGetSession();
-  USER_ID = session?.user?.id || USER_ID || "";
+  loadLocalState();
+
+  const { data: { session } = {} } = await sb.auth.getSession();
+  USER_ID = session?.user?.id || document.documentElement.dataset.userId || USER_ID || "";
 
   await loadUserDataFromSupabase();
   await loadCatalog();
