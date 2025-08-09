@@ -213,115 +213,139 @@
 
   <div id="toast-gpt"></div>
 
-  <!-- Supabase JS -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-  <script>
-    // 1) Cria client Supabase
-    const SUPABASE_URL     = 'https://fouqnyydrhxgadnxjtds.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZvdXFueXlkcmh4Z2FkbnhqdGRzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI0NjQyNDUsImV4cCI6MjA2ODA0MDI0NX0.JH2SFA-6itPBy_Vdnqm9wCmIw7m3BPHRlZkfcgaP-is';
-  window.supabaseClient ??= window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth:{storageKey:'clube-gpts-auth'} });
-const supabase = window.supabaseClient; 
-    window.supabaseClient.auth.getSession().then(({data:{session}})=>{
-    if (session) window.location.replace('app.html'); // já logado
-  });
-    // 2) Magic-link redirect
-    const redirectTo = `${window.location.origin}${window.location.pathname}`;
+<!-- Supabase JS (mantém assim) -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 
-   /* --- TOAST --------------------------------------------------- */
+<script>
+  /* ===================== 1) CLIENTE SUPABASE ===================== */
+  const SUPABASE_URL       = 'https://fouqnyydrhxgadnxjtds.supabase.co';
+  const SUPABASE_ANON_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZvdXFueXlkcmh4Z2FkbnhqdGRzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI0NjQyNDUsImV4cCI6MjA2ODA0MDI0NX0.JH2SFA-6itPBy_Vdnqm9wCmIw7m3BPHRlZkfcgaP-is';
+
+  // cria UMA vez e reaproveita
+  window.supabaseClient ??= window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_ANON_KEY,
+    { auth: { storageKey: 'clube-gpts-auth' } }
+  );
+  // alias para o resto do script (seu código usa `supabase`)
+  const supabase = window.supabaseClient;
+
+  /* ===================== 2) REDIRECT DE LOGIN ===================== */
+  // volta para ESTE index.html (precisa estar na allowlist do Supabase)
+  const redirectTo = `${window.location.origin}${window.location.pathname}`;
+
+  // se já tem sessão E NÃO estamos no callback do OAuth, manda pro app
+  const hasOAuthParams = /[?#].*(code=|access_token=)/.test(location.href);
+  supabase.auth.getSession().then(({ data: { session } }) => {
+    if (session && !hasOAuthParams) window.location.replace('app.html');
+  });
+
+  /* ===================== 3) TOAST ===================== */
   function showToast(text, ms = 3000) {
     const t = document.getElementById('toast-gpt');
+    if (!t) return alert(text);
     t.textContent = text;
     t.classList.add('show');
     setTimeout(() => t.classList.remove('show'), ms);
   }
 
-  /* --- MEMBRO ATIVO? ------------------------------------------ */
-async function handleSession(session) {
-  if (!session) return;
-  // Mostra o e-mail retornado pelo Google
-  console.log('E-mail da sessão:', session.user.email);
+  /* ===================== 4) MEMBRO ATIVO? ===================== */
+  async function handleSession(session) {
+    if (!session) return;
+    try {
+      const email = (session.user.email || '').trim().toLowerCase();
 
-  const email = session.user.email.trim().toLowerCase();
-  console.log('E-mail usado na busca:', email);
+      const { data: member, error } = await supabase
+        .from('members')
+        .select('plan_status, email')
+        .ilike('email', email)
+        .maybeSingle();
 
-  const { data: member, error } = await supabase
-    .from('members')
-    .select('plan_status, email')
-    .ilike('email', email)
-    .maybeSingle();
+      if (error) console.warn('members error:', error);
 
-  console.log('Resultado da busca:', member, 'Erro:', error);
-
-  if (member?.plan_status === 'ativo') {
-    window.location.href = 'app.html';
-  } else {
-    await supabase.auth.signOut();
-    showToast('Seu e-mail não é membro ativo. Cadastre-se para acessar.');
-    setTimeout(() => window.location.href = 'index.html', 2500);
-  }
-}
-
-/* --- 1) CAPTURA CALLBACK OAUTH (GOOGLE) ---------------------- */
-(async () => {
-  // Analisa search (?…)
-  const qs   = new URLSearchParams(window.location.search);
-  // Analisa hash (#…)
-  const hash = new URLSearchParams(window.location.hash.replace(/^#/, ''));
-
-  const hasCode         = qs.has('code');
-  const hasAccessToken  = qs.has('access_token') || hash.has('access_token');
-
-  let oauthSession = null;
-
-  if (hasCode || hasAccessToken) {
-    // Tenta trocar code → sessão
-    const { data, error } = await supabase.auth.exchangeCodeForSession();
-    if (error) {
-      console.warn('OAuth callback error:', error);
-      showToast('Realizando verificações…');          // opcional
+      if (member?.plan_status === 'ativo') {
+        window.location.href = 'app.html';
+      } else {
+        await supabase.auth.signOut();
+        showToast('Seu e-mail não é membro ativo. Cadastre-se para acessar.');
+        setTimeout(() => window.location.href = 'index.html', 2500);
+      }
+    } catch (e) {
+      console.warn('handleSession:', e);
+      showToast('Erro ao validar plano.');
     }
-    oauthSession = data?.session;
-  } else if (qs.has('error')) {
-    // Veio da Google mas com erro na querystring
-    console.warn('OAuth provider devolveu erro:', qs.get('error_description'));
-    showToast('Erro de autenticação Google');
   }
 
-  if (oauthSession) {
-    showToast('🔄 Realizando verificações…');
-    return handleSession(oauthSession);
-  }
+  /* ===================== 5) CALLBACK OAUTH (GOOGLE) ===================== */
+  (async () => {
+    const qs   = new URLSearchParams(window.location.search);
+    const hash = new URLSearchParams(window.location.hash.replace(/^#/, ''));
 
-  // fluxo normal (navegação sem OAuth)
-  const { data: { session } } = await supabase.auth.getSession();
-  if (session) handleSession(session);
-})();
+    const hasCode        = qs.has('code');
+    const hasAccessToken = qs.has('access_token') || hash.has('access_token');
 
-  /* --- 3) LOGIN COM E-MAIL+SENHA ------------------------------ */
-  document.getElementById('loginForm').addEventListener('submit', async e => {
+    let oauthSession = null;
+
+    if (hasCode || hasAccessToken) {
+      const { data, error } = await supabase.auth.exchangeCodeForSession();
+      if (error) {
+        console.warn('OAuth callback error:', error);
+        showToast('Realizando verificações…');
+      }
+      oauthSession = data?.session;
+    } else if (qs.has('error')) {
+      console.warn('OAuth provider erro:', qs.get('error_description') || qs.get('error'));
+      showToast('Erro de autenticação Google');
+    }
+
+    if (oauthSession) {
+      showToast('🔄 Realizando verificações…');
+      return handleSession(oauthSession);
+    }
+
+    // navegação normal (sem OAuth)
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session) handleSession(session);
+  })();
+
+  /* ===================== 6) LOGIN COM E-MAIL+SENHA ===================== */
+  const loginForm = document.getElementById('loginForm');
+  loginForm?.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const email = e.target.querySelector('input[type="email"]').value.trim();
-    const pass  = e.target.querySelector('input[type="password"]').value;
+    const email = e.target.querySelector('input[type="email"]')?.value?.trim();
+    const pass  = e.target.querySelector('input[type="password"]')?.value;
     if (!email || !pass) return showToast('Preencha e-mail e senha.');
     const { error } = await supabase.auth.signInWithPassword({ email, password: pass });
     if (error) showToast('E-mail ou senha inválidos.');
+    else window.location.replace('app.html');
   });
 
-  /* --- 4) ESQUECEU A SENHA & PRIMEIRO ACESSO ------------------ */
+  /* ===================== 7) ESQUECEU A SENHA / PRIMEIRO ACESSO ===================== */
   async function sendMagic(email) {
-    const { error } = await supabase.auth.signInWithOtp({ email, options:{ redirectTo }});
+    if (!email) return;
+    const { error } = await supabase.auth.signInWithOtp({ email, options: { redirectTo } });
     showToast(error ? 'Falha ao enviar link.' : 'Link enviado para seu e-mail.');
   }
-  document.getElementById('forgotPwdLink').onclick   = () => { const e=prompt('E-mail:'); if(e) sendMagic(e); };
-  document.getElementById('firstAccessBtn').onclick  = () => { const e=prompt('E-mail da compra:'); if(e) sendMagic(e); };
+  document.getElementById('forgotPwdLink')?.addEventListener('click', () => {
+    const e = prompt('E-mail:'); if (e) sendMagic(e.trim());
+  });
+  document.getElementById('firstAccessBtn')?.addEventListener('click', () => {
+    const e = prompt('E-mail da compra:'); if (e) sendMagic(e.trim());
+  });
 
-  /* --- 5) QUERO SER MEMBRO ------------------------------------ */
-  document.getElementById('signupBtn').onclick = () =>
-    window.open('https://rodolfosbraga.github.io/clube-do-gpt/','_blank');
+  /* ===================== 8) QUERO SER MEMBRO ===================== */
+  document.getElementById('signupBtn')?.addEventListener('click', () => {
+    window.open('https://rodolfosbraga.github.io/clube-do-gpt/', '_blank');
+  });
 
-  /* --- 6) ENTRAR COM GOOGLE ----------------------------------- */
-  document.getElementById('googleLoginBtn').onclick = () =>
-    supabase.auth.signInWithOAuth({ provider:'google', options:{ redirectTo } });
+  /* ===================== 9) ENTRAR COM GOOGLE ===================== */
+  document.getElementById('googleLoginBtn')?.addEventListener('click', (e) => {
+    e.preventDefault();
+    supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: { redirectTo }
+    });
+  });
 </script>
 </body>
 </html>
