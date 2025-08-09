@@ -1,13 +1,15 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Clube dos GPTs</title>
-  <link rel="stylesheet" href="css/styles.css">
 
-  <!-- ==== Proteção de Acesso via Supabase ==== -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <!-- Estilos -->
+  <link rel="stylesheet" href="css/styles.css" />
+
+  <!-- Supabase -->
+   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
   <script>
     const SUPABASE_URL      = 'https://fouqnyydrhxgadnxjtds.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZvdXFueXlkcmh4Z2FkbnhqdGRzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI0NjQyNDUsImV4cCI6MjA2ODA0MDI0NX0.JH2SFA-6itPBy_Vdnqm9wCmIw7m3BPHRlZkfcgaP-is'; // a mesma key que usa no index
@@ -40,7 +42,6 @@
       // Se passou, pode exibir a página normalmente
     })();
   </script>
-  <!-- ========================================== -->
 </head>
 <body>
   <!-- SIDEBAR -->
@@ -58,13 +59,21 @@
         <span class="icon">✉️</span>
         <span class="label">Sugestões</span>
       </li>
-      <li data-section="manual">
-        <span class="icon">📖</span>
-        <span class="label">Manual</span>
+      <li data-section="config">
+        <span class="icon">⚙️</span>
+        <span class="label">Configurações</span>
       </li>
-      <li data-section="cadastro">
-        <span class="icon">📝</span>
-        <span class="label">Cadastro</span>
+      <li data-section="perfil">
+        <span class="icon">👤</span>
+        <span class="label">Perfil</span>
+      </li>
+      <li data-section="suporte">
+        <span class="icon">💬</span>
+        <span class="label">Suporte</span>
+      </li>
+      <li data-section="clube">
+        <span class="icon">👥</span>
+        <span class="label">CLUBE</span>
       </li>
       <li data-section="sair">
         <span class="icon">🚪</span>
@@ -78,36 +87,198 @@
 
   <!-- HEADER FIXO -->
   <header class="topbar">
-    <img src="logo-placeholder.png" alt="Logo do Clube" class="header-logo">
+    <img src="logo-google.svg" alt="Logo do Clube" class="header-logo" />
     <div class="titles">
       <h1 class="logo">Clube dos GPTs</h1>
-      <p class="tagline">Sua coleção premium de assistentes de IA</p>
+      <p class="tagline">Explore e aproveite!</p>
     </div>
   </header>
 
   <!-- BARRA DE BUSCA + TABS FIXA -->
   <div id="searchTabs" class="search-tabs">
     <div class="inner">
+      <h2 id="sectionTitle" class="section-title">Categoria</h2>
+
       <div class="search-bar">
         <div class="input-wrapper">
-          <input id="searchInput" type="text" placeholder="Pesquise um GPT...">
-          <button id="searchBtn" class="search-icon" aria-label="Buscar">🔍</button>
+          <input id="searchInput" type="text" placeholder="Pesquise um GPT..." />
+          <button id="searchBtn" class="search-icon" aria-label="Buscar" data-action="search">🔍</button>
         </div>
-        <button id="favoritesBtn">Favoritos</button>
+        <button id="favoritesBtn" data-action="viewFavorites">Favoritos</button>
+        <button id="importBtn" data-action="openImport">Importar GPT</button>
       </div>
+
       <div id="categoryTabs" class="tabs"></div>
-      <h2 id="sectionTitle" class="section-title">Categorias</h2>
     </div>
   </div>
 
   <!-- CONTEÚDO PRINCIPAL -->
   <div class="wrapper">
     <main class="main">
+      <!-- Área dinâmica padrão (cards GPTs / Favoritos) -->
       <div id="content"></div>
+
+      <!-- SUGESTÕES (novo form com variáveis p/ Supabase) -->
+      <section id="suggestionsSection" hidden>
+        <div class="inner">
+          <h3>Enviar Sugestões</h3>
+          <form id="suggestionForm"
+                data-table="suggestions"
+                data-success-toast="Obrigado pela sugestão! 🙌"
+                data-success-timeout="5000">
+            <input type="hidden" name="user_id" value="" data-col="user_id" />
+
+            <div class="form-group">
+              <label for="sugType">Tipo</label>
+              <select id="sugType" name="type" data-col="type" required>
+                <option value="gpt">Novo GPT</option>
+                <option value="melhoria">Melhoria</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="sugTitle">Título</label>
+              <input id="sugTitle" name="title" data-col="title" type="text" placeholder="Título da sugestão" required />
+            </div>
+
+            <div class="form-group">
+              <label for="sugLink">Link (opcional)</label>
+              <input id="sugLink" name="link" data-col="link" type="url" placeholder="https://..." />
+            </div>
+
+            <div class="form-group">
+              <label for="sugCategory">Categoria (opcional)</label>
+              <input id="sugCategory" name="category" data-col="category" type="text" placeholder="Ex.: Marketing, Código..." />
+            </div>
+
+            <div class="form-group">
+              <label for="sugDesc">Descrição</label>
+              <textarea id="sugDesc" name="description" data-col="description" rows="4" placeholder="Conte sua ideia..." required></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="sugFiles">Arquivos (opcional)</label>
+              <input id="sugFiles" name="files" type="file" multiple />
+            </div>
+
+            <button type="submit" data-action="submitSuggestion">Enviar sugestão</button>
+          </form>
+        </div>
+      </section>
+
+      <!-- CONFIGURAÇÕES -->
+      <section id="configSection" hidden>
+        <div class="inner">
+          <h3>Configurações</h3>
+          <div class="form-group">
+            <label for="darkModeToggle">Tema escuro</label>
+            <input type="checkbox" id="darkModeToggle" name="darkmode" data-col="darkmode" />
+          </div>
+          <div class="form-group">
+            <label for="prefCategories">Preferências de categorias</label>
+            <input id="prefCategories" name="pref_categories" data-col="pref_categories" type="text" placeholder="Ex.: IA, Marketing, Vendas" />
+          </div>
+          <div class="form-group">
+            <label>Seu plano</label>
+            <div id="planInfo" data-col="plan">Plano: Starter • Renova em: —</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PERFIL (antes “Cadastro”) -->
+      <section id="profileSection" hidden>
+        <div class="inner">
+          <h3>Perfil</h3>
+          <form id="profileForm" data-table="profiles">
+            <input type="hidden" name="user_id" value="" data-col="user_id" />
+
+            <div class="form-group">
+              <label for="profileName">Nome</label>
+              <input id="profileName" name="name" data-col="name" type="text" placeholder="Seu nome" />
+            </div>
+            <div class="form-group">
+              <label for="profileUsername">Usuário</label>
+              <input id="profileUsername" name="username" data-col="username" type="text" placeholder="@usuario" />
+            </div>
+            <div class="form-group">
+              <label for="profileEmail">E-mail</label>
+              <input id="profileEmail" name="email" data-col="email" type="email" placeholder="voce@exemplo.com" readonly />
+            </div>
+            <div class="form-group">
+              <label for="profileBio">Apresentação</label>
+              <textarea id="profileBio" name="bio" data-col="bio" rows="3" placeholder="Conte um pouco sobre você"></textarea>
+            </div>
+            <div class="form-group">
+              <label for="profilePrefs">Preferências</label>
+              <input id="profilePrefs" name="preferences" data-col="preferences" type="text" placeholder="Ex.: IA, SEO, Finanças" />
+            </div>
+
+            <button type="submit" data-action="saveProfile">Salvar perfil</button>
+          </form>
+        </div>
+      </section>
+
+      <!-- SUPORTE (Typebot) -->
+      <section id="supportSection" hidden>
+        <div class="inner">
+          <h3>Suporte (em desenvolvimento)</h3>
+          <p>Em breve: chat ao vivo via Typebot.</p>
+          <div class="typebot-embed" style="height: 420px; background:#fff; border-radius:8px; display:flex; align-items:center; justify-content:center;">
+            <span>Typebot aqui</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- CLUBE -->
+      <section id="clubSection" hidden>
+        <div class="inner">
+          <h3>CLUBE</h3>
+          <p>Conecte-se com a comunidade e troque experiências. (em breve)</p>
+        </div>
+      </section>
     </main>
   </div>
 
-  <!-- SCRIPTS -->
+  <!-- MODAL: Importar GPT -->
+  <dialog id="importModal">
+    <form id="importForm" method="dialog"
+          class="import-form"
+          data-table="user_gpts">
+      <h3>Importar GPT</h3>
+
+      <input type="hidden" name="user_id" value="" data-col="user_id" />
+
+      <label>
+        Link do GPT
+        <input type="url" id="importLink" name="link" data-col="link" placeholder="https://chatgpt.com/g/..." required />
+      </label>
+
+      <label>
+        Nome do GPT
+        <input type="text" id="importName" name="name" data-col="name" placeholder="Meu GPT" required />
+      </label>
+
+      <label>
+        Ferramentas (separe por vírgula)
+        <input type="text" id="importTools" name="tools" data-col="tools" placeholder="Browser, DALL·E" />
+      </label>
+
+      <label>
+        Prompt curto ideal
+        <input type="text" id="importPrompt" name="prompt" data-col="prompt" placeholder="Descreva em 1 frase" />
+      </label>
+
+      <menu>
+        <button id="importCloseBtn" value="cancel"  data-action="closeImport">Cancelar</button>
+        <button id="importSaveBtn"  value="default" data-action="saveImport">Salvar</button>
+      </menu>
+    </form>
+  </dialog>
+
+  <!-- TOAST -->
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+
+  <!-- LÓGICA -->
   <script src="js/app.js" defer></script>
 </body>
 </html>
