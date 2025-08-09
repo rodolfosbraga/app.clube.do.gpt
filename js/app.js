@@ -12,8 +12,8 @@
 const $  = (sel, ctx = document) => ctx.querySelector(sel);
 const $$ = (sel, ctx = document) => Array.from(ctx.querySelectorAll(sel));
 
-let sb = null;  
-let USER_ID = document.documentElement.dataset.userId || "";
+let sb = null;                                    // client mutável
+const getSB = () => window.supabaseClient || sb; 
 
 // ===============================
 // DOM Elements (existentes)
@@ -705,7 +705,7 @@ function wireSidebarCollapse() {
 // ===============================
 // Init
 async function init() {
-  sb = getSB();                                // <- pega o client vivo
+  sb = getSB();                                   // pega o client vivo criado no HTML
   if (!sb) { console.warn('Supabase ainda não carregado'); return; }
 
   loadLocalState();
@@ -713,7 +713,7 @@ async function init() {
   const { data: { session } = {} } = await sb.auth.getSession();
   USER_ID = session?.user?.id || document.documentElement.dataset.userId || USER_ID || "";
 
-  await loadUserDataFromSupabase();
+  await loadUserDataFromSupabase();  // dentro desta use getSB() também
   await loadCatalog();
 
   buildTabs();
