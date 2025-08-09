@@ -644,7 +644,7 @@ function wireSidebarNav() {
             <p>Escolha uma das opções abaixo:</p>
             <div style="display:flex; gap:.75rem; flex-wrap:wrap; margin-top:.5rem;">
               <a href="mailto:lead.aizy.solutions@gmail.com" class="btn" style="background:#16213e;color:#fff;padding:.6rem 1rem;border-radius:6px;text-decoration:none;">Email</a>
-              <a href="https://whatsapp.me/5511969206719" target="_blank" rel="noopener" class="btn" style="background:#25d366;color:#fff;padding:.6rem 1rem;border-radius:6px;text-decoration:none;">WhatsApp</a>
+              <a href="https://wa.me/5511969206719" target="_blank" rel="noopener" class="btn" style="background:#25d366;color:#fff;padding:.6rem 1rem;border-radius:6px;text-decoration:none;">WhatsApp</a>
             </div>
           </div>
         `;
