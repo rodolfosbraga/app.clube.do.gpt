@@ -417,7 +417,7 @@ function wireProfileForm() {
 
     try {
       if (sb && USER_ID) {
-        const { data: existing } = await sb.from("profiles").select("id").limit(1);
+       const { data: existing } = await sb.from("profiles") .select("id") .eq("user_id", USER_ID) .limit(1);
         if (existing && existing.length) {
           await sb.from("profiles").update(payload).eq("user_id", USER_ID);
         } else {
@@ -442,7 +442,8 @@ function wireConfig() {
 }
 
 async function renderConfigScreen() {
-  if (!configSection) return;
+  const { data: existing } = await sb.from("profiles") .select("id") .eq("user_id", USER_ID) .limit(1);
+   if (!configSection) return;
   configSection.innerHTML = `
     <div class="inner use-cinzel">
       <h3>Configurações</h3>
@@ -588,14 +589,15 @@ function showOnlySection(el) {
 }
 
 function wireSidebarNav() {
+  const norm = s => (s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+
   $$("#sidebar .menu li").forEach(li => {
     li.addEventListener("click", async () => {
-      const sec = (li.dataset.section || "").toLowerCase();
-      const label = li.textContent.trim().toLowerCase();
+      const sec   = norm(li.dataset.section || "");
+      const label = norm(li.textContent || "");
 
       document.body.classList.remove("gpts-active","favoritos-active","sugestoes-active");
 
-      // GPTs
       if (sec === "gpts") {
         searchTabs.style.display = "block"; sectionTitle.style.display = "block";
         document.body.classList.add("gpts-active");
@@ -603,8 +605,6 @@ function wireSidebarNav() {
         (firstCatBtn || $(".tabs__btn"))?.click();
         return;
       }
-
-      // Favoritos
       if (sec === "favoritos") {
         searchTabs.style.display = "block"; sectionTitle.style.display = "block";
         document.body.classList.add("gpts-active","favoritos-active");
@@ -612,30 +612,22 @@ function wireSidebarNav() {
         favTabBtn?.click();
         return;
       }
-
-      // Sugestões (com Cinzel)
       if (sec === "sugestoes") {
         searchTabs.style.display = "none"; sectionTitle.style.display = "none";
         showOnlySection(suggestionsSection);
         return;
       }
-
-      // Configurações (somente aqui; inclui Cancelamento)
       if (sec === "config") {
         searchTabs.style.display = "none"; sectionTitle.style.display = "none";
         showOnlySection(configSection);
         await renderConfigScreen();
         return;
       }
-
-      // Perfil (com Cinzel)
       if (sec === "perfil") {
         searchTabs.style.display = "none"; sectionTitle.style.display = "none";
         showOnlySection(profileSection);
         return;
       }
-
-      // Suporte (e-mail e WhatsApp)
       if (sec === "suporte") {
         searchTabs.style.display = "none"; sectionTitle.style.display = "none";
         supportSection.innerHTML = `
@@ -643,42 +635,42 @@ function wireSidebarNav() {
             <h3>Suporte</h3>
             <p>Escolha uma das opções abaixo:</p>
             <div style="display:flex; gap:.75rem; flex-wrap:wrap; margin-top:.5rem;">
-              <a href="mailto:lead.aizy.solutions@gmail.com" class="btn" style="background:#16213e;color:#fff;padding:.6rem 1rem;border-radius:6px;text-decoration:none;">Email</a>
-              <a href="https://wa.me/5511969206719" target="_blank" rel="noopener" class="btn" style="background:#25d366;color:#fff;padding:.6rem 1rem;border-radius:6px;text-decoration:none;">WhatsApp</a>
+              <a href="mailto:lead.aizy.solutions@gmail.com" class="btn btn--email">Email</a>
+              <a href="https://wa.me/5511969206719" target="_blank" rel="noopener" class="btn btn--whatsapp">WhatsApp</a>
             </div>
-          </div>
-        `;
+          </div>`;
         showOnlySection(supportSection);
         return;
       }
-
-      // CLUBE (placeholder)
       if (sec === "clube") {
         searchTabs.style.display = "none"; sectionTitle.style.display = "none";
-        clubSection.innerHTML = `
-          <div class="inner use-cinzel">
-            <h3>CLUBE</h3>
-            <p>Conecte-se com a comunidade e troque experiências. (em breve)</p>
-          </div>
-        `;
+        clubSection.innerHTML = `<div class="inner use-cinzel"><h3>CLUBE</h3><p>Conecte-se com a comunidade e troque experiências. (em breve)</p></div>`;
         showOnlySection(clubSection);
         return;
       }
 
-      // "Adicione o seu GPT" (label no menu) → Import inline
-      if (label.includes("adicione o seu gpt") || sec === "adicionegpt" || sec === "addgpt" || sec === "adicionar") {
+      // "Adicione o seu GPT" (com/sem acentos)
+      if (sec === "adicionegpt" || sec === "addgpt" || sec === "adicionar" || label.includes("adicione o seu gpt")) {
         renderImportInline();
         return;
       }
 
-      // Cadastro (em breve) ou sair
       if (sec === "cadastro") {
         searchTabs.style.display = "none"; sectionTitle.style.display = "none";
         contentEl.innerHTML = `<div class="em-breve">Em breve!</div>`;
         hideAllSections();
         return;
       }
-      if (sec === "sair") { doLogout(); return; }
+     async function doLogout() {
+  try {
+    if (sb?.auth) await sb.auth.signOut();
+  } catch (e) {
+    console.warn('Erro ao sair:', e);
+  }
+  localStorage.clear();
+  sessionStorage.clear();
+  window.location.href = 'index.html'; // aqui estava index.html
+}
     });
   });
 }
