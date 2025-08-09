@@ -219,8 +219,10 @@
     // 1) Cria client Supabase
     const SUPABASE_URL     = 'https://fouqnyydrhxgadnxjtds.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZvdXFueXlkcmh4Z2FkbnhqdGRzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI0NjQyNDUsImV4cCI6MjA2ODA0MDI0NX0.JH2SFA-6itPBy_Vdnqm9wCmIw7m3BPHRlZkfcgaP-is';
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
+  window.supabaseClient ??= window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth:{storageKey:'clube-gpts-auth'} });
+  window.supabaseClient.auth.getSession().then(({data:{session}})=>{
+    if (session) window.location.replace('app.html'); // já logado
+  });
     // 2) Magic-link redirect
     const redirectTo = `${window.location.origin}${window.location.pathname}`;
 
