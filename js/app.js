@@ -1,12 +1,22 @@
-// ===============================
-// Helpers DOM
-// ===============================
-const $ = (sel, ctx = document) => ctx.querySelector(sel);
-const $$ = (sel, ctx = document) => Array.from(ctx.querySelectorAll(sel));
+/* js/app.js – Atualizado
+   - Importar GPT inline no main (sem modal)
+   - Config só no menu Configurações + Cancelamento de plano
+   - Sugestões/Perfil prontos para estilizar (Cinzel)
+   - Suporte com e-mail e WhatsApp
+   - Mantém: catálogo estático, favoritos, ratings, toast
+*/
 
 // ===============================
-// DOM Elements (existentes no seu HTML)
+// Helpers
 // ===============================
+const $  = (sel, ctx = document) => ctx.querySelector(sel);
+const $$ = (sel, ctx = document) => Array.from(ctx.querySelectorAll(sel));
+
+const sb = window.supabaseClient || null;
+let USER_ID = document.documentElement.dataset.userId || "";
+
+// ===============================
+// DOM Elements (existentes)
 const sidebar       = $("#sidebar");
 const collapseBtn   = $("#collapseBtn");
 
@@ -18,46 +28,38 @@ const searchBtn     = $("#searchBtn");
 const favoritesBtn  = $("#favoritesBtn");
 const sectionTitle  = $("#sectionTitle");
 
-// Seções adicionais (render dinâmico)
+// Seções declaradas no HTML
 const suggestionsSection = $("#suggestionsSection");
 const configSection      = $("#configSection");
 const profileSection     = $("#profileSection");
 const supportSection     = $("#supportSection");
 const clubSection        = $("#clubSection");
 
-// Import Modal
-const importModal   = $("#importModal");
-const importForm    = $("#importForm");
-
 // Toast
 const toastEl       = $("#toast");
 
+// (não usamos mais o modal, mas manter não quebra)
+const importModal = $("#importModal");
+const importForm  = $("#importForm");
+
 // ===============================
-// Estado global
-// ===============================
+// Estado
 let categories = [];
-let gpts = [];            // catálogo estático (arquivo)
-let userGpts = [];        // importados do usuário (Supabase)
+let gpts = [];
+let userGpts = [];
 
-// user-state (favoritos/ratings)
-let favSet = new Set();   // títulos favoritos
-let ratingsMap = new Map();// title -> {stars, comment}
+let favSet = new Set();        // títulos
+let ratingsMap = new Map();    // title -> {stars, comment}
 
-// sessão
-let USER_ID = document.documentElement.dataset.userId || "";
-
-// acesso Supabase
-const sb = window.supabaseClient || null;
-
-// ===============================
-// CSS Vars helper (para posicionamento se precisar)
-// ===============================
-const getCssVar = (name) =>
-  parseInt(getComputedStyle(document.documentElement).getPropertyValue(name)) || 0;
+// LocalStorage Keys
+const LS = {
+  favorites: "favorites",
+  ratings:   "ratings",
+  user_gpts: "user_gpts"
+};
 
 // ===============================
-// Toast
-// ===============================
+// Utilidades
 function showToast(msg, timeout = 5000) {
   if (!toastEl) return;
   toastEl.textContent = msg;
@@ -70,85 +72,53 @@ function showToast(msg, timeout = 5000) {
   }, timeout);
 }
 
-// ===============================
-// Local Fallbacks (quando Supabase indisponível)
-// ===============================
-const LS_KEYS = {
-  favorites: "favorites",
-  ratings:   "ratings",   // {title:{stars,comment}}
-  user_gpts: "user_gpts"  // array de objetos
-};
+function getCssVar(name) {
+  return parseInt(getComputedStyle(document.documentElement).getPropertyValue(name)) || 0;
+}
 
+// ===============================
+// Local state fallbacks
 function loadLocalState() {
+  try { favSet = new Set(JSON.parse(localStorage.getItem(LS.favorites) || "[]")); } catch {}
   try {
-    const favs = JSON.parse(localStorage.getItem(LS_KEYS.favorites) || "[]");
-    favSet = new Set(favs);
-  } catch {}
-  try {
-    const r = JSON.parse(localStorage.getItem(LS_KEYS.ratings) || "{}");
+    const r = JSON.parse(localStorage.getItem(LS.ratings) || "{}");
     ratingsMap = new Map(Object.entries(r));
   } catch {}
-  try {
-    userGpts = JSON.parse(localStorage.getItem(LS_KEYS.user_gpts) || "[]");
-  } catch {}
+  try { userGpts = JSON.parse(localStorage.getItem(LS.user_gpts) || "[]"); } catch {}
 }
-
-function saveLocalFavorites() {
-  localStorage.setItem(LS_KEYS.favorites, JSON.stringify([...favSet]));
-}
-function saveLocalRatings() {
-  const obj = {};
-  ratingsMap.forEach((v, k) => (obj[k] = v));
-  localStorage.setItem(LS_KEYS.ratings, JSON.stringify(obj));
-}
-function saveLocalUserGpts() {
-  localStorage.setItem(LS_KEYS.user_gpts, JSON.stringify(userGpts));
-}
+function saveLocalFavorites(){ localStorage.setItem(LS.favorites, JSON.stringify([...favSet])); }
+function saveLocalRatings(){ const o={}; ratingsMap.forEach((v,k)=>o[k]=v); localStorage.setItem(LS.ratings, JSON.stringify(o)); }
+function saveLocalUserGpts(){ localStorage.setItem(LS.user_gpts, JSON.stringify(userGpts)); }
 
 // ===============================
-// Supabase sync (opcional/robusto)
-// ===============================
+// Supabase helpers
 async function sbGetSession() {
   if (!sb) return null;
   try {
-    const { data: { session }, error } = await sb.auth.getSession();
-    if (error) throw error;
+    const { data: { session } } = await sb.auth.getSession();
     return session || null;
-  } catch (e) {
-    console.warn("Supabase session error:", e);
-    return null;
-  }
+  } catch { return null; }
 }
 
 async function loadUserDataFromSupabase() {
   if (!sb || !USER_ID) return;
-
   try {
     // favorites
-    const { data: favs, error: eFav } = await sb.from("favorites")
-      .select("title, link, category")
-      .order("created_at", { ascending: false });
-    if (!eFav && Array.isArray(favs)) {
-      favSet = new Set(favs.map(f => f.title));
-    }
+    const { data: favs } = await sb.from("favorites").select("title, link, category");
+    if (Array.isArray(favs)) favSet = new Set(favs.map(f => f.title));
 
     // ratings
-    const { data: rates, error: eRat } = await sb.from("ratings")
-      .select("title, stars, comment");
-    if (!eRat && Array.isArray(rates)) {
-      ratingsMap = new Map(rates.map(r => [r.title, { stars: r.stars, comment: r.comment || "" }]));
-    }
+    const { data: rates } = await sb.from("ratings").select("title, stars, comment");
+    if (Array.isArray(rates)) ratingsMap = new Map(rates.map(r => [r.title, {stars:r.stars, comment:r.comment||""}]));
 
     // user_gpts
-    const { data: ug, error: eUG } = await sb.from("user_gpts")
-      .select("name, link, tools, prompt, category")
-      .order("created_at", { ascending: false });
-    if (!eUG && Array.isArray(ug)) {
+    const { data: ug } = await sb.from("user_gpts").select("name, link, tools, prompt, category").order("created_at", {ascending:false});
+    if (Array.isArray(ug)) {
       userGpts = ug.map(x => ({
         title: x.name,
         category: x.category || "Favoritos",
         desc: x.prompt || "",
-        tools: Array.isArray(x.tools) ? x.tools : String(x.tools || "").split(",").map(s => s.trim()).filter(Boolean),
+        tools: Array.isArray(x.tools) ? x.tools : String(x.tools||"").split(",").map(s=>s.trim()).filter(Boolean),
         prompt: x.prompt || "",
         link: x.link || "#",
         _imported: true
@@ -156,9 +126,7 @@ async function loadUserDataFromSupabase() {
     }
 
     // salva fallback local também
-    saveLocalFavorites();
-    saveLocalRatings();
-    saveLocalUserGpts();
+    saveLocalFavorites(); saveLocalRatings(); saveLocalUserGpts();
   } catch (e) {
     console.warn("Supabase load error:", e);
   }
@@ -166,17 +134,14 @@ async function loadUserDataFromSupabase() {
 
 // ===============================
 // Catálogo estático
-// ===============================
 async function loadCatalog() {
   try {
     const resp = await fetch("data/catalog.html");
     const text = await resp.text();
     const doc  = new DOMParser().parseFromString(text, "text/html");
 
-    // Captura categorias e GPTs
     const blocks = Array.from(doc.querySelectorAll(".category-block"));
-    categories = [];
-    gpts = [];
+    categories = []; gpts = [];
 
     blocks.forEach(block => {
       const catTitle = block.querySelector(".category-title")?.textContent?.trim();
@@ -203,24 +168,19 @@ async function loadCatalog() {
           title,
           category: catTitle || "Outros",
           desc,
-          tools: tools ? tools.split(/,| e /).map(s => s.trim()).filter(Boolean) : [],
+          tools: tools ? tools.split(/,| e /).map(s=>s.trim()).filter(Boolean) : [],
           prompt,
           link
         });
       });
     });
 
-    // Tabs padrão + Favoritos
     if (!categories.includes("Favoritos")) categories.push("Favoritos");
-
-  } catch (e) {
-    console.error("Erro ao carregar catálogo:", e);
-  }
+  } catch (e) { console.error("Erro catálogo:", e); }
 }
 
 // ===============================
-// UI setup
-// ===============================
+// UI: Tabs/Cards
 function buildTabs() {
   tabsContainer.innerHTML = "";
   categories.forEach(cat => {
@@ -233,18 +193,15 @@ function buildTabs() {
     tabsContainer.appendChild(btn);
   });
 }
-
 function markActiveTab(cat) {
   $$(".tabs__btn").forEach(b => b.classList.toggle("active", b.dataset.cat === cat));
 }
-
 function renderCards(list) {
   contentEl.innerHTML = "";
-  if (!list || !list.length) {
+  if (!list?.length) {
     contentEl.innerHTML = `<p style="text-align:center;color:#888;">Nenhum GPT encontrado.</p>`;
     return;
   }
-
   list.forEach(gpt => {
     const favActive = favSet.has(gpt.title);
     const currentRating = ratingsMap.get(gpt.title)?.stars || 0;
@@ -257,7 +214,7 @@ function renderCards(list) {
       ${gpt.tools?.length ? `<p><strong>Ferramentas:</strong> ${gpt.tools.join(", ")}</p>` : ""}
       ${gpt.prompt ? `<p><strong>Prompt Ideal:</strong> ${gpt.prompt}</p>` : ""}
       <div class="card-actions">
-        <a class="btn-open" href="${gpt.link || "#"}" target="_blank" rel="noopener" data-action="openGPT">Abrir GPT</a>
+        <a class="btn-open" href="${gpt.link||'#'}" target="_blank" rel="noopener">Abrir GPT</a>
         <div class="right-actions" style="display:flex;align-items:center;gap:.5rem;">
           <div class="rating" data-title="${gpt.title}">
             ${[1,2,3,4,5].map(n => `
@@ -272,17 +229,15 @@ function renderCards(list) {
         </div>
       </div>
     `;
-    // Handlers do card
+    // handlers
     const favBtn = card.querySelector(".fav-card-btn");
     favBtn.addEventListener("click", () => toggleFavorite(
       favBtn.dataset.title, favBtn.dataset.link, favBtn.dataset.category
     ));
-
     card.querySelectorAll(".rating .star").forEach(starBtn => {
       starBtn.addEventListener("click", () => {
         const stars = parseInt(starBtn.dataset.star, 10);
         setRating(gpt.title, stars).then(() => {
-          // Atualiza UI das estrelas
           card.querySelectorAll(".rating .star").forEach(btn => {
             const n = parseInt(btn.dataset.star, 10);
             btn.textContent = n <= stars ? "★" : "☆";
@@ -290,124 +245,104 @@ function renderCards(list) {
         });
       });
     });
-
     contentEl.appendChild(card);
   });
 }
 
 // ===============================
-// Ações: Favoritos / Ratings
-// ===============================
+// Ações: favoritos/ratings
 async function toggleFavorite(title, link = "#", category = "") {
   if (favSet.has(title)) {
     favSet.delete(title);
-    // Supabase
     if (sb && USER_ID) {
-      try {
-        await sb.from("favorites").delete().match({ title });
-      } catch (e) {
-        console.warn("SB remove favorite:", e);
-      }
+      try { await sb.from("favorites").delete().match({ title }); } catch(e){ console.warn(e); }
     }
   } else {
     favSet.add(title);
     if (sb && USER_ID) {
-      try {
-        await sb.from("favorites").insert({ title, link, category });
-      } catch (e) {
-        console.warn("SB add favorite:", e);
-      }
+      try { await sb.from("favorites").insert({ title, link, category }); } catch(e){ console.warn(e); }
     }
   }
   saveLocalFavorites();
-  // Re-render categoria atual
   const active = $(".tabs__btn.active");
   if (active) selectCategory(active.dataset.cat, active);
 }
-
 async function setRating(title, stars, comment = "") {
   ratingsMap.set(title, { stars, comment });
   saveLocalRatings();
-
   if (sb && USER_ID) {
     try {
-      // upsert por (user_id,title) — como não temos unique por user_id no SQL,
-      // fazemos delete+insert simples:
       await sb.from("ratings").delete().match({ title });
       await sb.from("ratings").insert({ title, stars, comment });
-    } catch (e) {
-      console.warn("SB rating:", e);
-    }
+    } catch(e){ console.warn(e); }
   }
 }
 
 // ===============================
-// Importar GPT (modal)
+// Importar GPT (inline no main)
 // ===============================
-function openImportModal() {
-  if (typeof importModal?.showModal === "function") importModal.showModal();
-  else importModal?.setAttribute("open", "");
-}
-function closeImportModal() {
-  if (typeof importModal?.close === "function") importModal.close();
-  else importModal?.removeAttribute("open");
-}
-
-function wireImportModal() {
-  if (!importForm) return;
-  // abrir via menu "Adicione o seu GPT"
-  // (considera data-section "adicionar" OU label com texto semelhante)
-  $$(".menu li").forEach(li => {
-    const sec = (li.dataset.section || "").toLowerCase();
-    const label = li.textContent.trim().toLowerCase();
-    if (sec === "adicionegpt" || sec === "addgpt" || sec === "adicionar" || label.includes("adicione o seu gpt")) {
-      li.addEventListener("click", (e) => {
-        e.preventDefault();
-        openImportModal();
-      });
-    }
+function renderImportInline() {
+  // esconde barra de busca/tabs e mostra apenas o formulário no main
+  searchTabs.style.display = "none";
+  sectionTitle.style.display = "none";
+  hideAllSections();
+  contentEl.innerHTML = `
+    <section id="importSection">
+      <div class="inner">
+        <h3 class="use-cinzel">Importar GPT</h3>
+        <form id="importInlineForm" data-table="user_gpts" class="import-form">
+          <input type="hidden" name="user_id" value="${USER_ID}">
+          <div class="form-group">
+            <label>Link do GPT
+              <input type="url" name="link" placeholder="https://chatgpt.com/g/..." required>
+            </label>
+          </div>
+          <div class="form-group">
+            <label>Nome do GPT
+              <input type="text" name="name" placeholder="Meu GPT" required>
+            </label>
+          </div>
+          <div class="form-group">
+            <label>Ferramentas (separe por vírgula)
+              <input type="text" name="tools" placeholder="Browser, DALL·E">
+            </label>
+          </div>
+          <div class="form-group">
+            <label>Prompt curto ideal
+              <input type="text" name="prompt" placeholder="Descreva em 1 frase">
+            </label>
+          </div>
+          <div style="display:flex; gap:.5rem; justify-content:flex-end; margin-top:.5rem;">
+            <button type="button" id="importCancelBtn">Cancelar</button>
+            <button type="submit" id="importSubmitBtn">Salvar</button>
+          </div>
+        </form>
+      </div>
+    </section>
+  `;
+  // handlers
+  $("#importCancelBtn")?.addEventListener("click", () => {
+    // volta para GPTs
+    const firstCatBtn = $$(".tabs__btn").find(b => b.dataset.cat !== "Favoritos");
+    searchTabs.style.display = "block"; sectionTitle.style.display = "block";
+    (firstCatBtn || $(".tabs__btn"))?.click();
   });
 
-  // Fechar
-  $("#importCloseBtn")?.addEventListener("click", (e) => {
+  $("#importInlineForm")?.addEventListener("submit", async (e) => {
     e.preventDefault();
-    closeImportModal();
-  });
-
-  // Salvar
-  $("#importSaveBtn")?.addEventListener("click", async (e) => {
-    e.preventDefault();
-    const formData = new FormData(importForm);
+    const fd = new FormData(e.currentTarget);
     const payload = {
       user_id: USER_ID || undefined,
-      link:   (formData.get("link")  || "").toString().trim(),
-      name:   (formData.get("name")  || "").toString().trim(),
-      tools:  (formData.get("tools") || "").toString().split(",").map(s => s.trim()).filter(Boolean),
-      prompt: (formData.get("prompt")|| "").toString().trim(),
+      link:   (fd.get("link")  || "").toString().trim(),
+      name:   (fd.get("name")  || "").toString().trim(),
+      tools:  (fd.get("tools") || "").toString().split(",").map(s=>s.trim()).filter(Boolean),
+      prompt: (fd.get("prompt")|| "").toString().trim()
     };
-
-    if (!payload.link || !payload.name) {
-      showToast("Preencha link e nome do GPT.", 4000);
-      return;
-    }
+    if (!payload.link || !payload.name) { showToast("Preencha link e nome do GPT.", 4000); return; }
 
     try {
-      if (sb && USER_ID) {
-        await sb.from("user_gpts").insert(payload);
-      } else {
-        // fallback local
-        userGpts.unshift({
-          title: payload.name,
-          category: "Favoritos",
-          desc: payload.prompt,
-          tools: payload.tools,
-          prompt: payload.prompt,
-          link: payload.link,
-          _imported: true
-        });
-        saveLocalUserGpts();
-      }
-      // Atualiza memória (mesmo com SB, adiciona para render imediato)
+      if (sb && USER_ID) await sb.from("user_gpts").insert(payload);
+      // atualiza lista local para render imediato
       userGpts.unshift({
         title: payload.name,
         category: "Favoritos",
@@ -417,14 +352,13 @@ function wireImportModal() {
         link: payload.link,
         _imported: true
       });
+      saveLocalUserGpts();
       showToast("GPT importado com sucesso! ✅", 4000);
-      closeImportModal();
 
-      // se estiver em Favoritos, re-render
-      const active = $(".tabs__btn.active");
-      if (active?.dataset.cat === "Favoritos") {
-        selectCategory("Favoritos", active);
-      }
+      // vai para Favoritos
+      searchTabs.style.display = "block"; sectionTitle.style.display = "block";
+      const favTab = $$(".tabs__btn").find(b => b.dataset.cat === "Favoritos");
+      favTab?.click();
     } catch (err) {
       console.error("Erro ao importar GPT:", err);
       showToast("Erro ao importar GPT.", 4000);
@@ -433,51 +367,12 @@ function wireImportModal() {
 }
 
 // ===============================
-// Sugestões (form)
-// ===============================
+// Sugestões (com Cinzel)
 function wireSuggestionForm() {
   const form = $("#suggestionForm");
   if (!form) return;
-
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const formData = new FormData(form);
-
-    // monta payload a partir de data-col
-    const payload = {};
-    form.querySelectorAll("[data-col]").forEach(el => {
-      const col = el.dataset.col;
-      let val = formData.get(el.name);
-      if (el.type === "file") {
-        // TODO: implement storage depois; por ora, ignoramos arquivo
-        val = null;
-      }
-      payload[col] = val;
-    });
-    if (USER_ID) payload.user_id = USER_ID;
-
-    try {
-      if (sb && USER_ID) {
-        await sb.from("suggestions").insert(payload);
-      }
-      // toast
-      const msg = form.dataset.successToast || "Obrigado pela sugestão!";
-      const t   = parseInt(form.dataset.successTimeout || "5000", 10);
-      showToast(msg, t);
-      form.reset();
-    } catch (err) {
-      console.error("Erro ao enviar sugestão:", err);
-      showToast("Erro ao enviar sugestão.", 4000);
-    }
-  });
-}
-
-// ===============================
-// Perfil + Config (darkmode, prefs)
-// ===============================
-function wireProfileForm() {
-  const form = $("#profileForm");
-  if (!form) return;
+  // marca a seção para futura fonte Cinzel via CSS
+  suggestionsSection?.classList.add("use-cinzel");
 
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -486,18 +381,42 @@ function wireProfileForm() {
     form.querySelectorAll("[data-col]").forEach(el => {
       const col = el.dataset.col;
       let val = fd.get(el.name);
-      if (col === "preferences") {
-        // pode ser CSV; guarda como texto mesmo (ou JSON se quiser evoluir)
-        payload[col] = (val || "").toString();
-      } else {
-        payload[col] = val;
-      }
+      if (el.type === "file") val = null; // storage depois
+      payload[col] = val;
+    });
+    if (USER_ID) payload.user_id = USER_ID;
+
+    try {
+      if (sb && USER_ID) await sb.from("suggestions").insert(payload);
+      showToast(form.dataset.successToast || "Obrigado pela sugestão! 🙌", parseInt(form.dataset.successTimeout||"5000",10));
+      form.reset();
+    } catch (err) {
+      console.error("Sugestão:", err);
+      showToast("Erro ao enviar sugestão.", 4000);
+    }
+  });
+}
+
+// ===============================
+// Perfil (com Cinzel) + Config (cancelamento)
+function wireProfileForm() {
+  const form = $("#profileForm");
+  if (!form) return;
+  profileSection?.classList.add("use-cinzel");
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const fd = new FormData(form);
+    const payload = {};
+    form.querySelectorAll("[data-col]").forEach(el => {
+      const col = el.dataset.col;
+      let val = fd.get(el.name);
+      payload[col] = val;
     });
     if (USER_ID) payload.user_id = USER_ID;
 
     try {
       if (sb && USER_ID) {
-        // verifica se já existe profile
         const { data: existing } = await sb.from("profiles").select("id").limit(1);
         if (existing && existing.length) {
           await sb.from("profiles").update(payload).eq("user_id", USER_ID);
@@ -506,115 +425,150 @@ function wireProfileForm() {
         }
         showToast("Perfil salvo com sucesso! ✅", 3000);
       } else {
-        showToast("Sem sessão: perfil não foi salvo no servidor.", 4000);
+        showToast("Sem sessão: perfil não salvo no servidor.", 4000);
       }
     } catch (err) {
-      console.error("Salvar perfil:", err);
+      console.error("Perfil:", err);
       showToast("Erro ao salvar perfil.", 4000);
     }
   });
 }
 
 function wireConfig() {
+  if (!configSection) return;
+
+  // Garante que só aparece em "Configurações"
+  // (Não renderiza nada aqui; apenas adiciona o bloco de cancelamento quando abrir)
+}
+
+async function renderConfigScreen() {
+  if (!configSection) return;
+  configSection.innerHTML = `
+    <div class="inner use-cinzel">
+      <h3>Configurações</h3>
+
+      <div class="form-group">
+        <label for="darkModeToggle">Tema escuro</label>
+        <input type="checkbox" id="darkModeToggle" name="darkmode">
+      </div>
+
+      <div class="form-group">
+        <label for="prefCategories">Preferências de categorias</label>
+        <input id="prefCategories" name="pref_categories" type="text" placeholder="Ex.: IA, Marketing, Vendas" />
+      </div>
+
+      <div class="form-group">
+        <label>Seu plano</label>
+        <div id="planInfo">Plano: Starter • Renova em: —</div>
+      </div>
+
+      <hr style="margin: 16px 0; opacity:.35;">
+
+      <div class="form-group">
+        <label for="cancelReason"><strong>Solicitar cancelamento do plano</strong></label>
+        <textarea id="cancelReason" rows="3" placeholder="Conte o motivo do cancelamento (opcional)"></textarea>
+        <div style="display:flex;gap:.5rem;justify-content:flex-end;margin-top:.5rem;">
+          <button id="cancelPlanBtn">Enviar pedido de cancelamento</button>
+        </div>
+      </div>
+    </div>
+  `;
+
+  // Wire dark mode + prefs (mesmo comportamento anterior)
   const darkToggle = $("#darkModeToggle");
   const prefCats   = $("#prefCategories");
-
-  // estado inicial (localStorage primeiro; depois tenta carregar do server)
   const LS_THEME = "pref_darkmode";
   const LS_PREFS = "pref_categories";
   const savedDark = localStorage.getItem(LS_THEME);
   const savedCats = localStorage.getItem(LS_PREFS);
+
   if (savedDark !== null) {
     const v = savedDark === "true";
-    darkToggle && (darkToggle.checked = v);
+    darkToggle.checked = v;
     document.documentElement.classList.toggle("dark", v);
   }
   if (savedCats !== null && prefCats) prefCats.value = savedCats;
 
-  darkToggle?.addEventListener("change", async () => {
+  darkToggle.addEventListener("change", async () => {
     const enabled = !!darkToggle.checked;
     document.documentElement.classList.toggle("dark", enabled);
     localStorage.setItem(LS_THEME, String(enabled));
-    // salva no profiles.darkmode
     try {
       if (sb && USER_ID) {
         const { data: existing } = await sb.from("profiles").select("id").limit(1);
-        if (existing && existing.length) {
-          await sb.from("profiles").update({ darkmode: enabled }).eq("user_id", USER_ID);
-        } else {
-          await sb.from("profiles").insert({ user_id: USER_ID, darkmode: enabled });
-        }
+        if (existing && existing.length) await sb.from("profiles").update({ darkmode: enabled }).eq("user_id", USER_ID);
+        else await sb.from("profiles").insert({ user_id: USER_ID, darkmode: enabled });
       }
-    } catch (e) {
-      console.warn("darkmode save:", e);
-    }
+    } catch (e) { console.warn("darkmode save:", e); }
   });
 
-  prefCats?.addEventListener("change", async () => {
+  prefCats.addEventListener("change", async () => {
     const val = prefCats.value.trim();
     localStorage.setItem(LS_PREFS, val);
     try {
       if (sb && USER_ID) {
         const { data: existing } = await sb.from("profiles").select("id").limit(1);
-        if (existing && existing.length) {
-          await sb.from("profiles").update({ preferences: { categories: val } }).eq("user_id", USER_ID);
-        } else {
-          await sb.from("profiles").insert({ user_id: USER_ID, preferences: { categories: val } });
-        }
+        if (existing && existing.length) await sb.from("profiles").update({ preferences: { categories: val } }).eq("user_id", USER_ID);
+        else await sb.from("profiles").insert({ user_id: USER_ID, preferences: { categories: val } });
+      }
+    } catch (e) { console.warn("prefs save:", e); }
+  });
+
+  // Cancelamento (usa tabela suggestions com type="cancelamento")
+  $("#cancelPlanBtn")?.addEventListener("click", async () => {
+    const reason = ($("#cancelReason")?.value || "").trim();
+    try {
+      if (sb && USER_ID) {
+        await sb.from("suggestions").insert({
+          user_id: USER_ID,
+          type: "cancelamento",
+          title: "Pedido de cancelamento",
+          description: reason || "(sem motivo informado)"
+        });
+        showToast("Pedido de cancelamento enviado. ✅", 4000);
+      } else {
+        showToast("Sem sessão: não foi possível enviar.", 4000);
       }
     } catch (e) {
-      console.warn("prefs save:", e);
+      console.error("cancelamento:", e);
+      showToast("Erro ao enviar pedido de cancelamento.", 4000);
     }
   });
 }
 
 // ===============================
 // Busca
-// ===============================
 function doSearch() {
   const term = (searchInput.value || "").trim().toLowerCase();
   const activeTab = $(".tabs__btn.active")?.dataset.cat;
-  const pool = activeTab === "Favoritos"
-    ? getFavoritesList()
-    : gpts;
+  const pool = activeTab === "Favoritos" ? getFavoritesList() : gpts;
   const list = pool.filter(g =>
     g.title.toLowerCase().includes(term) ||
-    (g.desc || "").toLowerCase().includes(term) ||
-    (g.tools || []).join(" ").toLowerCase().includes(term) ||
-    (g.prompt || "").toLowerCase().includes(term)
+    (g.desc||"").toLowerCase().includes(term) ||
+    (g.tools||[]).join(" ").toLowerCase().includes(term) ||
+    (g.prompt||"").toLowerCase().includes(term)
   );
   renderCards(list);
 }
 
 // ===============================
 // Listas por categoria
-// ===============================
 function getFavoritesList() {
-  // Favoritos são: itens do catálogo cujo title está no favSet
   const favFromCatalog = gpts.filter(g => favSet.has(g.title));
-  // + importados do usuário
-  const imports = userGpts.slice(); // já em "Favoritos"
-  // Unir evitando duplicatas pelo título
-  const titles = new Set();
-  const merged = [];
+  const imports = userGpts.slice();
+  const titles = new Set(); const merged = [];
   [...imports, ...favFromCatalog].forEach(item => {
-    if (!titles.has(item.title)) {
-      titles.add(item.title);
-      merged.push(item);
-    }
+    if (!titles.has(item.title)) { titles.add(item.title); merged.push(item); }
   });
   return merged;
 }
-
 function selectCategory(cat, btn) {
   markActiveTab(cat);
   sectionTitle.textContent = cat;
+  searchTabs.style.display = "block";
+  sectionTitle.style.display = "block";
+  hideAllSections();
 
-  // exibe/oculta a barra superior
-  searchTabs.style.display   = (cat === "Favoritos" || categories.includes(cat)) ? "block" : "none";
-  sectionTitle.style.display = (cat === "Favoritos" || categories.includes(cat)) ? "block" : "none";
-
-  // decide lista
   const list = (cat === "Favoritos")
     ? getFavoritesList()
     : gpts.filter(g => g.category === cat);
@@ -624,98 +578,121 @@ function selectCategory(cat, btn) {
 
 // ===============================
 // Navegação lateral
-// ===============================
-function wireSidebarNav() {
-  $$("#sidebar .menu li").forEach(li => {
-    li.addEventListener("click", (e) => {
-      const sec = (li.dataset.section || "").toLowerCase();
-
-      // reset estados de página
-      document.body.classList.remove("gpts-active","favoritos-active","sugestoes-active");
-
-      // rotas principais
-      if (sec === "gpts") {
-        searchTabs.style.display = "block";
-        sectionTitle.style.display = "block";
-        document.body.classList.add("gpts-active");
-        // selecionar primeira categoria (não favorit.)
-        const firstCatBtn = $$(".tabs__btn").find(b => b.dataset.cat !== "Favoritos");
-        (firstCatBtn || $(".tabs__btn"))?.click();
-      }
-      else if (sec === "favoritos") {
-        searchTabs.style.display = "block";
-        sectionTitle.style.display = "block";
-        document.body.classList.add("gpts-active", "favoritos-active");
-        const favBtn = $$(".tabs__btn").find(b => b.dataset.cat === "Favoritos");
-        favBtn?.click();
-      }
-      else if (sec === "sugestoes") {
-        searchTabs.style.display = "none";
-        sectionTitle.style.display = "none";
-        // mostra a seção de sugestões
-        showOnlySection(suggestionsSection);
-      }
-      else if (sec === "config") {
-        searchTabs.style.display = "none";
-        sectionTitle.style.display = "none";
-        showOnlySection(configSection);
-      }
-      else if (sec === "perfil") {
-        searchTabs.style.display = "none";
-        sectionTitle.style.display = "none";
-        showOnlySection(profileSection);
-      }
-      else if (sec === "suporte") {
-        searchTabs.style.display = "none";
-        sectionTitle.style.display = "none";
-        showOnlySection(supportSection);
-      }
-      else if (sec === "clube") {
-        searchTabs.style.display = "none";
-        sectionTitle.style.display = "none";
-        showOnlySection(clubSection);
-      }
-      else if (sec === "cadastro") {
-        // mantém "em breve"
-        searchTabs.style.display = "none";
-        sectionTitle.style.display = "none";
-        contentEl.innerHTML = `<div class="em-breve">Em breve!</div>`;
-        hideAllSections();
-      }
-      else if (sec === "sair") {
-        doLogout();
-      }
-    });
-  });
-}
-
 function hideAllSections() {
   [suggestionsSection, configSection, profileSection, supportSection, clubSection]
     .forEach(sec => sec && (sec.hidden = true));
 }
-function showOnlySection(sectionEl) {
+function showOnlySection(el) {
   hideAllSections();
-  if (sectionEl) {
-    sectionEl.hidden = false;
-    contentEl.innerHTML = ""; // esvazia cards
-  }
+  if (el) { el.hidden = false; contentEl.innerHTML = ""; }
+}
+
+function wireSidebarNav() {
+  $$("#sidebar .menu li").forEach(li => {
+    li.addEventListener("click", async () => {
+      const sec = (li.dataset.section || "").toLowerCase();
+      const label = li.textContent.trim().toLowerCase();
+
+      document.body.classList.remove("gpts-active","favoritos-active","sugestoes-active");
+
+      // GPTs
+      if (sec === "gpts") {
+        searchTabs.style.display = "block"; sectionTitle.style.display = "block";
+        document.body.classList.add("gpts-active");
+        const firstCatBtn = $$(".tabs__btn").find(b => b.dataset.cat !== "Favoritos");
+        (firstCatBtn || $(".tabs__btn"))?.click();
+        return;
+      }
+
+      // Favoritos
+      if (sec === "favoritos") {
+        searchTabs.style.display = "block"; sectionTitle.style.display = "block";
+        document.body.classList.add("gpts-active","favoritos-active");
+        const favTabBtn = $$(".tabs__btn").find(b => b.dataset.cat === "Favoritos");
+        favTabBtn?.click();
+        return;
+      }
+
+      // Sugestões (com Cinzel)
+      if (sec === "sugestoes") {
+        searchTabs.style.display = "none"; sectionTitle.style.display = "none";
+        showOnlySection(suggestionsSection);
+        return;
+      }
+
+      // Configurações (somente aqui; inclui Cancelamento)
+      if (sec === "config") {
+        searchTabs.style.display = "none"; sectionTitle.style.display = "none";
+        showOnlySection(configSection);
+        await renderConfigScreen();
+        return;
+      }
+
+      // Perfil (com Cinzel)
+      if (sec === "perfil") {
+        searchTabs.style.display = "none"; sectionTitle.style.display = "none";
+        showOnlySection(profileSection);
+        return;
+      }
+
+      // Suporte (e-mail e WhatsApp)
+      if (sec === "suporte") {
+        searchTabs.style.display = "none"; sectionTitle.style.display = "none";
+        supportSection.innerHTML = `
+          <div class="inner use-cinzel">
+            <h3>Suporte</h3>
+            <p>Escolha uma das opções abaixo:</p>
+            <div style="display:flex; gap:.75rem; flex-wrap:wrap; margin-top:.5rem;">
+              <a href="mailto:lead.aizy.solutions@gmail.com" class="btn" style="background:#16213e;color:#fff;padding:.6rem 1rem;border-radius:6px;text-decoration:none;">Email</a>
+              <a href="https://whatsapp.me/5511969206719" target="_blank" rel="noopener" class="btn" style="background:#25d366;color:#fff;padding:.6rem 1rem;border-radius:6px;text-decoration:none;">WhatsApp</a>
+            </div>
+          </div>
+        `;
+        showOnlySection(supportSection);
+        return;
+      }
+
+      // CLUBE (placeholder)
+      if (sec === "clube") {
+        searchTabs.style.display = "none"; sectionTitle.style.display = "none";
+        clubSection.innerHTML = `
+          <div class="inner use-cinzel">
+            <h3>CLUBE</h3>
+            <p>Conecte-se com a comunidade e troque experiências. (em breve)</p>
+          </div>
+        `;
+        showOnlySection(clubSection);
+        return;
+      }
+
+      // "Adicione o seu GPT" (label no menu) → Import inline
+      if (label.includes("adicione o seu gpt") || sec === "adicionegpt" || sec === "addgpt" || sec === "adicionar") {
+        renderImportInline();
+        return;
+      }
+
+      // Cadastro (em breve) ou sair
+      if (sec === "cadastro") {
+        searchTabs.style.display = "none"; sectionTitle.style.display = "none";
+        contentEl.innerHTML = `<div class="em-breve">Em breve!</div>`;
+        hideAllSections();
+        return;
+      }
+      if (sec === "sair") { doLogout(); return; }
+    });
+  });
 }
 
 // ===============================
 // Sidebar collapse
-// ===============================
 function updateCollapseBtnPosition() {
   const headerHeight  = getCssVar('--header-height');
   const sidebarHeight = sidebar.offsetHeight;
   const btnHeight     = collapseBtn.offsetHeight;
   let newTop = headerHeight + (sidebarHeight / 2) - (btnHeight / 2);
-
-  if (window.innerWidth < 700) {
-    newTop = headerHeight + ((window.innerHeight - headerHeight) / 2) - (btnHeight / 2);
-  }
+  if (window.innerWidth < 700) newTop = headerHeight + ((window.innerHeight - headerHeight) / 2) - (btnHeight / 2);
   collapseBtn.style.top = `${newTop}px`;
 }
-
 function wireSidebarCollapse() {
   collapseBtn?.addEventListener("click", () => {
     sidebar.classList.toggle("collapsed");
@@ -723,8 +700,6 @@ function wireSidebarCollapse() {
     collapseBtn.textContent = isCollapsed ? "›" : "‹";
     updateCollapseBtnPosition();
   });
-
-  // fecha no mobile ao clicar fora
   document.addEventListener("click", (e) => {
     if (window.innerWidth < 700) {
       if (!sidebar.contains(e.target) && !collapseBtn.contains(e.target) && !sidebar.classList.contains("collapsed")) {
@@ -737,46 +712,26 @@ function wireSidebarCollapse() {
 }
 
 // ===============================
-// Logout
-// ===============================
-async function doLogout() {
-  try {
-    if (sb?.auth) await sb.auth.signOut();
-  } catch(e) {
-    console.warn("Erro ao sair:", e);
-  }
-  localStorage.clear();
-  sessionStorage.clear();
-  window.location.href = "index.html";
-}
-
-// ===============================
 // Init
-// ===============================
 async function init() {
-  // Carrega fallback local
   loadLocalState();
 
-  // Sessão Supabase
   const session = await sbGetSession();
   USER_ID = session?.user?.id || USER_ID || "";
 
-  // Carrega dados do usuário do Supabase (favoritos, ratings, imports)
   await loadUserDataFromSupabase();
-
-  // Carrega catálogo estático
   await loadCatalog();
 
-  // Monta UI inicial
   buildTabs();
   wireSidebarNav();
   wireSidebarCollapse();
-  wireImportModal();
+
+  // forms extras
   wireSuggestionForm();
   wireProfileForm();
-  wireConfig();
+  wireConfig(); // apenas garante escopo; tela é renderizada on-demand
 
-  // Busca
+  // busca
   searchBtn?.addEventListener("click", doSearch);
   searchInput?.addEventListener("input", doSearch);
   favoritesBtn?.addEventListener("click", () => {
@@ -784,11 +739,10 @@ async function init() {
     favTab?.click();
   });
 
-  // Abre GPTs por padrão
+  // padrão: GPTs
   const firstCatBtn = $$(".tabs__btn").find(b => b.dataset.cat !== "Favoritos");
   (firstCatBtn || $(".tabs__btn"))?.click();
 
-  // Posiciona collapse-btn
   updateCollapseBtnPosition();
   window.addEventListener("resize", updateCollapseBtnPosition);
 }
