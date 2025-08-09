@@ -442,7 +442,10 @@ function wireConfig() {
 }
 
 async function renderConfigScreen() {
-  const { data: existing } = await sb.from("profiles") .select("id") .eq("user_id", USER_ID) .limit(1);
+  const { data: existing } = await getSB().from("profiles")
+  .select("id")
+  .eq("user_id", USER_ID)
+  .limit(1);
    if (!configSection) return;
   configSection.innerHTML = `
     <div class="inner use-cinzel">
@@ -662,11 +665,7 @@ function wireSidebarNav() {
         return;
       }
 async function doLogout() {
-  try {
-    await window.supabaseClient?.auth?.signOut();
-  } catch (e) {
-    console.warn('Erro ao sair:', e);
-  }
+  try { await getSB()?.auth?.signOut(); } catch (e) { console.warn('Erro ao sair:', e); }
   localStorage.clear();
   sessionStorage.clear();
   window.location.replace('index.html');
