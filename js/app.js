@@ -728,6 +728,20 @@ async function init() {
 
   buildTabs();
   wireSidebarNav();
+   // === Bind explícito do botão/label "Sair" (sem mudar o HTML) ===
+(() => {
+  const candidates = document.querySelectorAll('#sidebar .menu li, #sidebar .menu a, #sidebar [role="menuitem"]');
+  const isLogout = el => /(^|\s)sair(\s|$)/i.test((el.textContent || '').trim());
+
+  const el = Array.from(candidates).find(isLogout);
+  if (!el) return;
+
+  el.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopPropagation();             // evita que outro handler sobreponha
+    doLogout();                      // chama a função que você já tem
+  }, { capture: true });             // garante prioridade
+})();
   wireSidebarCollapse();
 
   // forms extras
