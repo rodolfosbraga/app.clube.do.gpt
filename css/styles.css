@@ -565,4 +565,105 @@ body {
 :root.dark .import-form input[type="url"] {
   background: #1a1a1a; border-color: #333; color: #f5f5f5;
 }
+/* ===========================================================
+   PATCH DE PALETA — Clube
+   (cole no FINAL do styles.css)
+   =========================================================== */
+:root{
+  --club-primary:   #023E73;  /* botões fortes, toast, email */
+  --club-accent:    #4973F2;  /* CTAs secundárias (ex.: cancelar plano) */
+  --club-whatsapp:  #25d366;  /* WhatsApp */
+  --club-surface:   #ffffff;  /* fundo de inputs/forms novos */
+  --club-text:      #222222;  /* texto em superfícies claras */
+  --club-border:    #91B7D9;  /* bordas de inputs */
+  --club-star:      #f4b400;  /* estrelas (mantemos amarelo) */
+  --tabs-bg:        #D8E3F2;  /* fundo das tabs */
+
+  /* extras para hovers/sombras */
+  --club-primary-strong: #0420BF;
+}
+
+:root.dark{
+  --club-surface:#121212;
+  --club-text:#eaeaea;
+  --club-border:#333333;
+}
+
+/* Tabs com fundo azul claro da paleta */
+.tabs{ background-color: var(--tabs-bg) !important; }
+
+/* Estrelas */
+.rating .star{ color: var(--club-star) !important; }
+
+/* Toast */
+.toast{
+  background: var(--club-primary) !important;
+  color:#fff !important;
+}
+
+/* Inputs/Selects/Textareas (Importar, Sugestões, Perfil, Config) */
+#suggestionsSection .form-group input,
+#suggestionsSection .form-group select,
+#suggestionsSection .form-group textarea,
+#profileSection .form-group input,
+#profileSection .form-group select,
+#profileSection .form-group textarea,
+#configSection .form-group input,
+#configSection .form-group select,
+#configSection .form-group textarea,
+#importSection .form-group input,
+#importSection .form-group select,
+#importSection .form-group textarea{
+  background: var(--club-surface) !important;
+  color: var(--club-text) !important;
+  border-color: var(--club-border) !important;
+}
+#suggestionsSection .form-group input:focus,
+#suggestionsSection .form-group select:focus,
+#suggestionsSection .form-group textarea:focus,
+#profileSection .form-group input:focus,
+#profileSection .form-group select:focus,
+#profileSection .form-group textarea:focus,
+#configSection .form-group input:focus,
+#configSection .form-group select:focus,
+#configSection .form-group textarea:focus,
+#importSection .form-group input:focus,
+#importSection .form-group select:focus,
+#importSection .form-group textarea:focus{
+  outline:2px solid var(--club-primary);
+  outline-offset:1px;
+  background:#fff;
+}
+
+/* Botões utilitários (Suporte, etc.) */
+.btn--solid, .btn--email{
+  background: var(--club-primary) !important;
+  color:#fff !important;
+}
+.btn--solid:hover, .btn--email:hover{
+  background: var(--club-primary-strong) !important;
+}
+.btn--muted{ background:#eceff1 !important; color:#333 !important; }
+.btn--whatsapp{ background: var(--club-whatsapp) !important; color:#fff !important; }
+
+/* Importar GPT inline */
+#importSubmitBtn{ background: var(--club-primary) !important; color:#fff !important; }
+#importSubmitBtn:hover{ background: var(--club-primary-strong) !important; }
+#importCancelBtn{ background:#eceff1 !important; color:#333 !important; }
+
+/* Cancelamento de plano (Config) */
+#cancelPlanBtn{
+  background: var(--club-accent) !important;
+  color:#fff !important;
+}
+#cancelPlanBtn:hover{ filter:brightness(.95); }
+
+/* Dark refinements */
+:root.dark .toast{ background:#0f1a33 !important; }
+:root.dark .btn--muted{ background:#2a2a2a !important; color:#ddd !important; }
+
+/* Mobile finos (opcional) */
+@media (max-width:480px){
+  .toast{ right:12px; left:12px; max-width:96vw; }
+}
 
