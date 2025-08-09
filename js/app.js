@@ -12,7 +12,7 @@
 const $  = (sel, ctx = document) => ctx.querySelector(sel);
 const $$ = (sel, ctx = document) => Array.from(ctx.querySelectorAll(sel));
 
-const sb = window.supabaseClient || null;
+let sb = null;  
 let USER_ID = document.documentElement.dataset.userId || "";
 
 // ===============================
@@ -706,7 +706,8 @@ function wireSidebarCollapse() {
 // ===============================
 // Init
 async function init() {
-  loadLocalState();
+   sb = window.supabaseClient;
+   loadLocalState();
 
   const session = await sbGetSession();
   USER_ID = session?.user?.id || USER_ID || "";
