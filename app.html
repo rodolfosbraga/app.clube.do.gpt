@@ -16,24 +16,40 @@
 <script>
   const SUPABASE_URL      = 'https://fouqnyydrhxgadnxjtds.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZvdXFueXlkcmh4Z2FkbnhqdGRzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI0NjQyNDUsImV4cCI6MjA2ODA0MDI0NX0.JH2SFA-6itPBy_Vdnqm9wCmIw7m3BPHRlZkfcgaP-is'; // a mesma key que usa no index
+  // URLs usadas nos redirecionamentos
+  const LOGIN_URL = 'index.html';  // sua página de login
+  const APP_URL   = 'app.html';    // esta página
+  const HERE      = location.pathname.split('/').pop().toLowerCase();
 
-  // ✅ Cria UMA vez (evita "Multiple GoTrueClient...")
+  // cria UMA vez (evita "Multiple GoTrueClient...")
   window.supabaseClient ??= window.supabase.createClient(
     SUPABASE_URL,
     SUPABASE_ANON_KEY,
-    { auth: { storageKey: 'clube-gpts-auth' } } // chave própria p/ não conflitar
+    { auth: { storageKey: 'clube-gpts-auth' } }
   );
+
+  // evita redirecionamentos em cascata
+  function safeReplace(url) {
+    if (sessionStorage.getItem('redir-lock') === '1') return;
+    sessionStorage.setItem('redir-lock', '1');
+    window.location.replace(url);
+  }
 
   (async function initAuth(){
     try {
-      // 1) Sessão
       const { data: { session } } = await window.supabaseClient.auth.getSession();
-      if (!session) { window.location.replace('index.html'); return; }
 
-      // expõe user_id p/ o app.js
+      // sem sessão: só redireciona se NÃO estiver no login
+      if (!session) {
+        if (HERE !== LOGIN_URL) safeReplace(LOGIN_URL);
+        return;
+      }
+
+      // com sessão: expõe user_id para o app.js
       document.documentElement.dataset.userId = session.user.id;
+      sessionStorage.removeItem('redir-lock');
 
-      // 2) (Opcional) Validar "membro ativo"
+      // (opcional) validar se membro está ativo (comente se não usar)
       try {
         const email = (session.user.email || '').trim().toLowerCase();
         const { data: member } = await window.supabaseClient
@@ -45,25 +61,25 @@
         if (!member || member.plan_status !== 'ativo') {
           await window.supabaseClient.auth.signOut();
           alert('Acesso restrito a membros ativos.');
-          window.location.replace('index.html');
+          safeReplace(LOGIN_URL);
           return;
         }
       } catch (e) {
         console.warn('Membership check:', e);
-        // se der erro aqui e você quiser bloquear, descomente:
-        // window.location.replace('index.html'); return;
+        // se quiser bloquear quando falha:
+        // safeReplace(LOGIN_URL); return;
       }
     } catch (err) {
       console.error('Auth bootstrap failed:', err);
-      window.location.replace('index.html');
+      safeReplace(LOGIN_URL);
     }
   })();
 
-  // Logout global (opcional, se quiser chamar direto do HTML)
+  // logout global (opcional)
   window.appLogout = async function () {
-    try { await window.supabaseClient.auth.signOut(); } catch(e){}
+    try { await window.supabaseClient.auth.signOut(); } catch (_) {}
     localStorage.clear(); sessionStorage.clear();
-    window.location.replace('index.html');
+    safeReplace(LOGIN_URL);
   };
 </script>
     
