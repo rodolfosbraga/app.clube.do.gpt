@@ -11,24 +11,27 @@
   
 </head>
 <body>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
-  <!-- Supabase -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<!-- Supabase -->
 <script>
-  const SUPABASE_URL      = 'https://fouqnyydrhxgadnxjtds.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZvdXFueXlkcmh4Z2FkbnhqdGRzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI0NjQyNDUsImV4cCI6MjA2ODA0MDI0NX0.JH2SFA-6itPBy_Vdnqm9wCmIw7m3BPHRlZkfcgaP-is'; // a mesma key que usa no index
+  const SUPABASE_URL       = 'https://fouqnyydrhxgadnxjtds.supabase.co';
+  const SUPABASE_ANON_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZvdXFueXlkcmh4Z2FkbnhqdGRzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI0NjQyNDUsImV4cCI6MjA2ODA0MDI0NX0.JH2SFA-6itPBy_Vdnqm9wCmIw7m3BPHRlZkfcgaP-is'; // mesma do index
+
   // URLs usadas nos redirecionamentos
-  const LOGIN_URL = 'index.html';  // sua página de login
+  const LOGIN_URL = 'index.html';  // página de login
   const APP_URL   = 'app.html';    // esta página
   const HERE      = location.pathname.split('/').pop().toLowerCase();
 
-  // cria UMA vez (evita "Multiple GoTrueClient...")
+  // Cria UMA vez (evita "Multiple GoTrueClient...")
   window.supabaseClient ??= window.supabase.createClient(
     SUPABASE_URL,
     SUPABASE_ANON_KEY,
     { auth: { storageKey: 'clube-gpts-auth' } }
   );
+  // ✅ Alias para qualquer trecho que usa `supabase`
+  const supabase = window.supabaseClient;
 
-  // evita redirecionamentos em cascata
+  // Evita redirecionamentos em cascata
   function safeReplace(url) {
     if (sessionStorage.getItem('redir-lock') === '1') return;
     sessionStorage.setItem('redir-lock', '1');
@@ -37,36 +40,36 @@
 
   (async function initAuth(){
     try {
-      const { data: { session } } = await window.supabaseClient.auth.getSession();
+      const { data: { session } } = await supabase.auth.getSession();
 
-      // sem sessão: só redireciona se NÃO estiver no login
+      // Sem sessão: só redireciona se NÃO estiver no login
       if (!session) {
         if (HERE !== LOGIN_URL) safeReplace(LOGIN_URL);
         return;
       }
 
-      // com sessão: expõe user_id para o app.js
+      // Com sessão: expõe user_id para o app.js
       document.documentElement.dataset.userId = session.user.id;
       sessionStorage.removeItem('redir-lock');
 
-      // (opcional) validar se membro está ativo (comente se não usar)
+      // (Opcional) validar se é membro ativo (comente se não usar)
       try {
         const email = (session.user.email || '').trim().toLowerCase();
-        const { data: member } = await window.supabaseClient
+        const { data: member } = await supabase
           .from('members')
           .select('plan_status')
           .ilike('email', email)
           .maybeSingle();
 
         if (!member || member.plan_status !== 'ativo') {
-          await window.supabaseClient.auth.signOut();
+          await supabase.auth.signOut();
           alert('Acesso restrito a membros ativos.');
           safeReplace(LOGIN_URL);
           return;
         }
       } catch (e) {
         console.warn('Membership check:', e);
-        // se quiser bloquear quando falha:
+        // Se quiser bloquear quando falhar:
         // safeReplace(LOGIN_URL); return;
       }
     } catch (err) {
@@ -75,9 +78,9 @@
     }
   })();
 
-  // logout global (opcional)
+  // 🔓 Logout global (chamado pelo app.js)
   window.appLogout = async function () {
-    try { await window.supabaseClient.auth.signOut(); } catch (_) {}
+    try { await supabase.auth.signOut(); } catch (_) {}
     localStorage.clear(); sessionStorage.clear();
     safeReplace(LOGIN_URL);
   };
