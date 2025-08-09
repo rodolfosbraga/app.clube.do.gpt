@@ -1,10 +1,3 @@
-/* js/app.js – Atualizado
-   - Importar GPT inline no main (sem modal)
-   - Config só no menu Configurações + Cancelamento de plano
-   - Sugestões/Perfil prontos para estilizar (Cinzel)
-   - Suporte com e-mail e WhatsApp
-   - Mantém: catálogo estático, favoritos, ratings, toast
-*/
 
 // ===============================
 // Helpers
@@ -13,7 +6,9 @@ const $  = (sel, ctx = document) => ctx.querySelector(sel);
 const $$ = (sel, ctx = document) => Array.from(ctx.querySelectorAll(sel));
 
 let sb = null;                                    // client mutável
-const getSB = () => window.supabaseClient || sb; 
+const getSB = () => window.supabaseClient || sb;
+
+let USER_ID = "";                                  // setado no init()
 
 // ===============================
 // DOM Elements (existentes)
@@ -93,26 +88,28 @@ function saveLocalUserGpts(){ localStorage.setItem(LS.user_gpts, JSON.stringify(
 // ===============================
 // Supabase helpers
 async function sbGetSession() {
-  if (!sb) return null;
+  const c = getSB();
+  if (!c) return null;
   try {
-    const { data: { session } } = await sb.auth.getSession();
+    const { data: { session } } = await c.auth.getSession();
     return session || null;
   } catch { return null; }
 }
 
 async function loadUserDataFromSupabase() {
-  if (!sb || !USER_ID) return;
+  const c = getSB();
+  if (!c || !USER_ID) return;
   try {
     // favorites
-    const { data: favs } = await sb.from("favorites").select("title, link, category");
+    const { data: favs } = await c.from("favorites").select("title, link, category");
     if (Array.isArray(favs)) favSet = new Set(favs.map(f => f.title));
 
     // ratings
-    const { data: rates } = await sb.from("ratings").select("title, stars, comment");
+    const { data: rates } = await c.from("ratings").select("title, stars, comment");
     if (Array.isArray(rates)) ratingsMap = new Map(rates.map(r => [r.title, {stars:r.stars, comment:r.comment||""}]));
 
     // user_gpts
-    const { data: ug } = await sb.from("user_gpts").select("name, link, tools, prompt, category").order("created_at", {ascending:false});
+    const { data: ug } = await c.from("user_gpts").select("name, link, tools, prompt, category").order("created_at", {ascending:false});
     if (Array.isArray(ug)) {
       userGpts = ug.map(x => ({
         title: x.name,
@@ -252,15 +249,16 @@ function renderCards(list) {
 // ===============================
 // Ações: favoritos/ratings
 async function toggleFavorite(title, link = "#", category = "") {
+  const c = getSB();
   if (favSet.has(title)) {
     favSet.delete(title);
-    if (sb && USER_ID) {
-      try { await sb.from("favorites").delete().match({ title }); } catch(e){ console.warn(e); }
+    if (c && USER_ID) {
+      try { await c.from("favorites").delete().match({ title }); } catch(e){ console.warn(e); }
     }
   } else {
     favSet.add(title);
-    if (sb && USER_ID) {
-      try { await sb.from("favorites").insert({ title, link, category }); } catch(e){ console.warn(e); }
+    if (c && USER_ID) {
+      try { await c.from("favorites").insert({ title, link, category }); } catch(e){ console.warn(e); }
     }
   }
   saveLocalFavorites();
@@ -268,12 +266,13 @@ async function toggleFavorite(title, link = "#", category = "") {
   if (active) selectCategory(active.dataset.cat, active);
 }
 async function setRating(title, stars, comment = "") {
+  const c = getSB();
   ratingsMap.set(title, { stars, comment });
   saveLocalRatings();
-  if (sb && USER_ID) {
+  if (c && USER_ID) {
     try {
-      await sb.from("ratings").delete().match({ title });
-      await sb.from("ratings").insert({ title, stars, comment });
+      await c.from("ratings").delete().match({ title });
+      await c.from("ratings").insert({ title, stars, comment });
     } catch(e){ console.warn(e); }
   }
 }
@@ -330,6 +329,7 @@ function renderImportInline() {
 
   $("#importInlineForm")?.addEventListener("submit", async (e) => {
     e.preventDefault();
+    const c = getSB();
     const fd = new FormData(e.currentTarget);
     const payload = {
       user_id: USER_ID || undefined,
@@ -341,7 +341,7 @@ function renderImportInline() {
     if (!payload.link || !payload.name) { showToast("Preencha link e nome do GPT.", 4000); return; }
 
     try {
-      if (sb && USER_ID) await sb.from("user_gpts").insert(payload);
+      if (c && USER_ID) await c.from("user_gpts").insert(payload);
       // atualiza lista local para render imediato
       userGpts.unshift({
         title: payload.name,
@@ -376,6 +376,7 @@ function wireSuggestionForm() {
 
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
+    const c = getSB();
     const fd = new FormData(form);
     const payload = {};
     form.querySelectorAll("[data-col]").forEach(el => {
@@ -387,7 +388,7 @@ function wireSuggestionForm() {
     if (USER_ID) payload.user_id = USER_ID;
 
     try {
-      if (sb && USER_ID) await sb.from("suggestions").insert(payload);
+      if (c && USER_ID) await c.from("suggestions").insert(payload);
       showToast(form.dataset.successToast || "Obrigado pela sugestão! 🙌", parseInt(form.dataset.successTimeout||"5000",10));
       form.reset();
     } catch (err) {
@@ -406,6 +407,7 @@ function wireProfileForm() {
 
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
+    const c = getSB();
     const fd = new FormData(form);
     const payload = {};
     form.querySelectorAll("[data-col]").forEach(el => {
@@ -416,12 +418,12 @@ function wireProfileForm() {
     if (USER_ID) payload.user_id = USER_ID;
 
     try {
-      if (sb && USER_ID) {
-       const { data: existing } = await sb.from("profiles") .select("id") .eq("user_id", USER_ID) .limit(1);
+      if (c && USER_ID) {
+        const { data: existing } = await c.from("profiles").select("id").eq("user_id", USER_ID).limit(1);
         if (existing && existing.length) {
-          await sb.from("profiles").update(payload).eq("user_id", USER_ID);
+          await c.from("profiles").update(payload).eq("user_id", USER_ID);
         } else {
-          await sb.from("profiles").insert(payload);
+          await c.from("profiles").insert(payload);
         }
         showToast("Perfil salvo com sucesso! ✅", 3000);
       } else {
@@ -436,17 +438,13 @@ function wireProfileForm() {
 
 function wireConfig() {
   if (!configSection) return;
-
-  // Garante que só aparece em "Configurações"
-  // (Não renderiza nada aqui; apenas adiciona o bloco de cancelamento quando abrir)
+  // render sob demanda em renderConfigScreen()
 }
 
 async function renderConfigScreen() {
-  const { data: existing } = await getSB().from("profiles")
-  .select("id")
-  .eq("user_id", USER_ID)
-  .limit(1);
-   if (!configSection) return;
+  const c = getSB();
+  if (!configSection) return;
+
   configSection.innerHTML = `
     <div class="inner use-cinzel">
       <h3>Configurações</h3>
@@ -478,7 +476,7 @@ async function renderConfigScreen() {
     </div>
   `;
 
-  // Wire dark mode + prefs (mesmo comportamento anterior)
+  // Wire dark mode + prefs
   const darkToggle = $("#darkModeToggle");
   const prefCats   = $("#prefCategories");
   const LS_THEME = "pref_darkmode";
@@ -498,10 +496,10 @@ async function renderConfigScreen() {
     document.documentElement.classList.toggle("dark", enabled);
     localStorage.setItem(LS_THEME, String(enabled));
     try {
-      if (sb && USER_ID) {
-        const { data: existing } = await sb.from("profiles").select("id").limit(1);
-        if (existing && existing.length) await sb.from("profiles").update({ darkmode: enabled }).eq("user_id", USER_ID);
-        else await sb.from("profiles").insert({ user_id: USER_ID, darkmode: enabled });
+      if (c && USER_ID) {
+        const { data: existing } = await c.from("profiles").select("id").eq("user_id", USER_ID).limit(1);
+        if (existing && existing.length) await c.from("profiles").update({ darkmode: enabled }).eq("user_id", USER_ID);
+        else await c.from("profiles").insert({ user_id: USER_ID, darkmode: enabled });
       }
     } catch (e) { console.warn("darkmode save:", e); }
   });
@@ -510,10 +508,10 @@ async function renderConfigScreen() {
     const val = prefCats.value.trim();
     localStorage.setItem(LS_PREFS, val);
     try {
-      if (sb && USER_ID) {
-        const { data: existing } = await sb.from("profiles").select("id").limit(1);
-        if (existing && existing.length) await sb.from("profiles").update({ preferences: { categories: val } }).eq("user_id", USER_ID);
-        else await sb.from("profiles").insert({ user_id: USER_ID, preferences: { categories: val } });
+      if (c && USER_ID) {
+        const { data: existing } = await c.from("profiles").select("id").eq("user_id", USER_ID).limit(1);
+        if (existing && existing.length) await c.from("profiles").update({ preferences: { categories: val } }).eq("user_id", USER_ID);
+        else await c.from("profiles").insert({ user_id: USER_ID, preferences: { categories: val } });
       }
     } catch (e) { console.warn("prefs save:", e); }
   });
@@ -522,8 +520,8 @@ async function renderConfigScreen() {
   $("#cancelPlanBtn")?.addEventListener("click", async () => {
     const reason = ($("#cancelReason")?.value || "").trim();
     try {
-      if (sb && USER_ID) {
-        await sb.from("suggestions").insert({
+      if (c && USER_ID) {
+        await c.from("suggestions").insert({
           user_id: USER_ID,
           type: "cancelamento",
           title: "Pedido de cancelamento",
@@ -595,9 +593,17 @@ function wireSidebarNav() {
   const norm = s => (s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 
   $$("#sidebar .menu li").forEach(li => {
-    li.addEventListener("click", async () => {
+    li.addEventListener("click", async (e) => {
       const sec   = norm(li.dataset.section || "");
       const label = norm(li.textContent || "");
+
+      // 🔐 SAIR — prioridade
+      if (sec === "sair" || label.includes("sair")) {
+        e.preventDefault();
+        e.stopPropagation();
+        await doLogout();
+        return;
+      }
 
       document.body.classList.remove("gpts-active","favoritos-active","sugestoes-active");
 
@@ -652,7 +658,7 @@ function wireSidebarNav() {
         return;
       }
 
-      // "Adicione o seu GPT" (com/sem acentos)
+      // "Adicione o seu GPT"
       if (sec === "adicionegpt" || sec === "addgpt" || sec === "adicionar" || label.includes("adicione o seu gpt")) {
         renderImportInline();
         return;
@@ -664,13 +670,19 @@ function wireSidebarNav() {
         hideAllSections();
         return;
       }
+    });
+  });
+}
+
+// ===============================
+// Logout (global)
 async function doLogout() {
   // Se o HTML declarou window.appLogout, delega para ela
   if (typeof window.appLogout === 'function') {
     return window.appLogout();
   }
 
-  // Fallback local (sem optional chaining para evitar incompatibilidade)
+  // Fallback local
   try {
     const client = window.supabaseClient;
     if (client && client.auth && typeof client.auth.signOut === 'function') {
@@ -678,7 +690,6 @@ async function doLogout() {
     }
   } catch (_) { /* silencia erros de rede */ }
 
-  // Limpa caches locais e volta para o login
   localStorage.clear();
   sessionStorage.clear();
   window.location.replace('index.html');
@@ -688,11 +699,11 @@ async function doLogout() {
 // Sidebar collapse
 function updateCollapseBtnPosition() {
   const headerHeight  = getCssVar('--header-height');
-  const sidebarHeight = sidebar.offsetHeight;
-  const btnHeight     = collapseBtn.offsetHeight;
+  const sidebarHeight = sidebar?.offsetHeight || 0;
+  const btnHeight     = collapseBtn?.offsetHeight || 0;
   let newTop = headerHeight + (sidebarHeight / 2) - (btnHeight / 2);
   if (window.innerWidth < 700) newTop = headerHeight + ((window.innerHeight - headerHeight) / 2) - (btnHeight / 2);
-  collapseBtn.style.top = `${newTop}px`;
+  if (collapseBtn) collapseBtn.style.top = `${newTop}px`;
 }
 function wireSidebarCollapse() {
   collapseBtn?.addEventListener("click", () => {
@@ -723,31 +734,17 @@ async function init() {
   const { data: { session } = {} } = await sb.auth.getSession();
   USER_ID = session?.user?.id || document.documentElement.dataset.userId || USER_ID || "";
 
-  await loadUserDataFromSupabase();  // dentro desta use getSB() também
+  await loadUserDataFromSupabase();
   await loadCatalog();
 
   buildTabs();
   wireSidebarNav();
-   // === Bind explícito do botão/label "Sair" (sem mudar o HTML) ===
-(() => {
-  const candidates = document.querySelectorAll('#sidebar .menu li, #sidebar .menu a, #sidebar [role="menuitem"]');
-  const isLogout = el => /(^|\s)sair(\s|$)/i.test((el.textContent || '').trim());
-
-  const el = Array.from(candidates).find(isLogout);
-  if (!el) return;
-
-  el.addEventListener('click', (e) => {
-    e.preventDefault();
-    e.stopPropagation();             // evita que outro handler sobreponha
-    doLogout();                      // chama a função que você já tem
-  }, { capture: true });             // garante prioridade
-})();
   wireSidebarCollapse();
 
   // forms extras
   wireSuggestionForm();
   wireProfileForm();
-  wireConfig(); // apenas garante escopo; tela é renderizada on-demand
+  wireConfig(); // tela é renderizada on-demand
 
   // busca
   searchBtn?.addEventListener("click", doSearch);
