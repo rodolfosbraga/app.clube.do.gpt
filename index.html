@@ -321,17 +321,23 @@
   });
 
   /* ===================== 7) ESQUECEU A SENHA / PRIMEIRO ACESSO ===================== */
-  async function sendMagic(email) {
-    if (!email) return;
-    const { error } = await supabase.auth.signInWithOtp({ email, options: { redirectTo } });
-    showToast(error ? 'Falha ao enviar link.' : 'Link enviado para seu e-mail.');
-  }
-  document.getElementById('forgotPwdLink')?.addEventListener('click', () => {
-    const e = prompt('E-mail:'); if (e) sendMagic(e.trim());
-  });
-  document.getElementById('firstAccessBtn')?.addEventListener('click', () => {
-    const e = prompt('E-mail da compra:'); if (e) sendMagic(e.trim());
-  });
+  async function sendRecovery(email) {
+  const base = location.origin + location.pathname.replace(/index\.html?$/, '');
+  const redirectToReset = base + 'reset-password.html';
+  const { error } = await supabase.auth.resetPasswordForEmail(
+    email.trim().toLowerCase(),
+    { redirectTo: redirectToReset }
+  );
+  showToast(error ? 'Falha ao enviar link.' : 'Enviamos um e-mail para você definir a senha.');
+}
+
+document.getElementById('forgotPwdLink')?.addEventListener('click', () => {
+  const e = prompt('E-mail:'); if (e) sendRecovery(e);
+});
+
+document.getElementById('firstAccessBtn')?.addEventListener('click', () => {
+  const e = prompt('E-mail da compra:'); if (e) sendRecovery(e);
+});
 
   /* ===================== 8) QUERO SER MEMBRO ===================== */
   document.getElementById('signupBtn')?.addEventListener('click', () => {
