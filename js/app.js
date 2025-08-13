@@ -1,9 +1,9 @@
-
 // ===============================
 // Helpers
 // ===============================
 const $  = (sel, ctx = document) => ctx.querySelector(sel);
 const $$ = (sel, ctx = document) => Array.from(ctx.querySelectorAll(sel));
+const setCssVar = (name, value) => document.documentElement.style.setProperty(name, String(value));
 
 let sb = null;                                    // client mutável
 const getSB = () => window.supabaseClient || sb;
@@ -68,7 +68,28 @@ function showToast(msg, timeout = 5000) {
 }
 
 function getCssVar(name) {
-  return parseInt(getComputedStyle(document.documentElement).getPropertyValue(name)) || 0;
+  // Lê var CSS numérica (ex.: "--header-height: 100px") e devolve Number
+  const raw = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  if (!raw) return 0;
+  const n = parseFloat(raw);
+  return Number.isFinite(n) ? n : 0;
+}
+
+// Medir alturas reais e sincronizar as variáveis CSS usadas no layout
+function syncLayoutVars() {
+  const topbarEl = $(".topbar");
+  const hh = topbarEl ? topbarEl.offsetHeight : 0;
+  if (hh) setCssVar("--header-height", `${hh}px`);
+
+  // mede altura da barra fixa apenas quando visível (GPTs/Favoritos)
+  if (searchTabs && searchTabs.style.display !== "none") {
+    // garante uma medição confiável mesmo com transições
+    const prevVis = searchTabs.style.visibility;
+    searchTabs.style.visibility = "hidden";
+    const stHeight = searchTabs.offsetHeight || getCssVar("--search-tabs-height") || 80;
+    searchTabs.style.visibility = prevVis || "";
+    setCssVar("--search-tabs-height", `${stHeight}px`);
+  }
 }
 
 // ===============================
@@ -279,7 +300,6 @@ async function setRating(title, stars, comment = "") {
 
 // ===============================
 // Importar GPT (inline no main)
-// ===============================
 function renderImportInline() {
   // esconde barra de busca/tabs e mostra apenas o formulário no main
   searchTabs.style.display = "none";
@@ -371,7 +391,6 @@ function renderImportInline() {
 function wireSuggestionForm() {
   const form = $("#suggestionForm");
   if (!form) return;
-  // marca a seção para futura fonte Cinzel via CSS
   suggestionsSection?.classList.add("use-cinzel");
 
   form.addEventListener("submit", async (e) => {
@@ -423,7 +442,7 @@ function wireProfileForm() {
         if (existing && existing.length) {
           await c.from("profiles").update(payload).eq("user_id", USER_ID);
         } else {
-          await c.from("profiles").insert(payload);
+          await c.from("profiles").insert({ user_id: USER_ID, ...payload });
         }
         showToast("Perfil salvo com sucesso! ✅", 3000);
       } else {
@@ -551,6 +570,8 @@ function doSearch() {
     (g.prompt||"").toLowerCase().includes(term)
   );
   renderCards(list);
+  // re-sincroniza altura da barra (pode mudar wrap das tabs/inputs)
+  syncLayoutVars();
 }
 
 // ===============================
@@ -576,6 +597,9 @@ function selectCategory(cat, btn) {
     : gpts.filter(g => g.category === cat);
 
   renderCards(list);
+
+  // mede e aplica altura real da barra fixa após render
+  requestAnimationFrame(syncLayoutVars);
 }
 
 // ===============================
@@ -624,17 +648,21 @@ function wireSidebarNav() {
       if (sec === "sugestoes") {
         searchTabs.style.display = "none"; sectionTitle.style.display = "none";
         showOnlySection(suggestionsSection);
+        // após esconder a barra, atualiza var para o main subir corretamente
+        requestAnimationFrame(syncLayoutVars);
         return;
       }
       if (sec === "config") {
         searchTabs.style.display = "none"; sectionTitle.style.display = "none";
         showOnlySection(configSection);
         await renderConfigScreen();
+        requestAnimationFrame(syncLayoutVars);
         return;
       }
       if (sec === "perfil") {
         searchTabs.style.display = "none"; sectionTitle.style.display = "none";
         showOnlySection(profileSection);
+        requestAnimationFrame(syncLayoutVars);
         return;
       }
       if (sec === "suporte") {
@@ -649,18 +677,21 @@ function wireSidebarNav() {
             </div>
           </div>`;
         showOnlySection(supportSection);
+        requestAnimationFrame(syncLayoutVars);
         return;
       }
       if (sec === "clube") {
         searchTabs.style.display = "none"; sectionTitle.style.display = "none";
         clubSection.innerHTML = `<div class="inner use-cinzel"><h3>CLUBE</h3><p>Conecte-se com a comunidade e troque experiências. (em breve)</p></div>`;
         showOnlySection(clubSection);
+        requestAnimationFrame(syncLayoutVars);
         return;
       }
 
       // "Adicione o seu GPT"
       if (sec === "adicionegpt" || sec === "addgpt" || sec === "adicionar" || label.includes("adicione o seu gpt")) {
         renderImportInline();
+        requestAnimationFrame(syncLayoutVars);
         return;
       }
 
@@ -668,6 +699,7 @@ function wireSidebarNav() {
         searchTabs.style.display = "none"; sectionTitle.style.display = "none";
         contentEl.innerHTML = `<div class="em-breve">Em breve!</div>`;
         hideAllSections();
+        requestAnimationFrame(syncLayoutVars);
         return;
       }
     });
@@ -705,18 +737,29 @@ function updateCollapseBtnPosition() {
   if (window.innerWidth < 700) newTop = headerHeight + ((window.innerHeight - headerHeight) / 2) - (btnHeight / 2);
   if (collapseBtn) collapseBtn.style.top = `${newTop}px`;
 }
+
 function wireSidebarCollapse() {
   collapseBtn?.addEventListener("click", () => {
     sidebar.classList.toggle("collapsed");
     const isCollapsed = sidebar.classList.contains("collapsed");
     collapseBtn.textContent = isCollapsed ? "›" : "‹";
+
+    // NOVO: flag global no <body> para CSS robusto (independe da ordem no DOM)
+    document.body.classList.toggle("sidebar-collapsed", isCollapsed);
+
+    // re-sincroniza alturas e posição do botão
+    syncLayoutVars();
     updateCollapseBtnPosition();
   });
+
+  // click fora fecha a sidebar no mobile
   document.addEventListener("click", (e) => {
     if (window.innerWidth < 700) {
       if (!sidebar.contains(e.target) && !collapseBtn.contains(e.target) && !sidebar.classList.contains("collapsed")) {
         sidebar.classList.add("collapsed");
+        document.body.classList.add("sidebar-collapsed");
         collapseBtn.textContent = "›";
+        syncLayoutVars();
         updateCollapseBtnPosition();
       }
     }
@@ -727,12 +770,14 @@ function wireSidebarCollapse() {
 // Init
 async function init() {
   sb = getSB();                                   // pega o client vivo criado no HTML
-  if (!sb) { console.warn('Supabase ainda não carregado'); return; }
+  if (!sb) { console.warn('Supabase ainda não carregado'); }
 
   loadLocalState();
 
-  const { data: { session } = {} } = await sb.auth.getSession();
-  USER_ID = session?.user?.id || document.documentElement.dataset.userId || USER_ID || "";
+  try {
+    const { data: { session } = {} } = await sb.auth.getSession();
+    USER_ID = session?.user?.id || document.documentElement.dataset.userId || USER_ID || "";
+  } catch (_) {}
 
   await loadUserDataFromSupabase();
   await loadCatalog();
@@ -758,8 +803,15 @@ async function init() {
   const firstCatBtn = $$(".tabs__btn").find(b => b.dataset.cat !== "Favoritos");
   (firstCatBtn || $(".tabs__btn"))?.click();
 
+  // primeira sincronização de alturas + posição do botão
+  syncLayoutVars();
   updateCollapseBtnPosition();
-  window.addEventListener("resize", updateCollapseBtnPosition);
+
+  // recalcula em resize (orientação, teclado mobile, etc.)
+  window.addEventListener("resize", () => {
+    syncLayoutVars();
+    updateCollapseBtnPosition();
+  });
 }
 
 document.addEventListener("DOMContentLoaded", init);
