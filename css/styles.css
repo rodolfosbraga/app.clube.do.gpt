@@ -313,22 +313,88 @@ body {
    =========================================================== */
 @media (min-width: 900px) {
   /* 1) Sugestões: centralizar form dentro de main */
-  body.sugestoes-active .main {
+/* Container principal */
+body.sugestoes-active .main {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: calc(100vh - var(--header-height) - var(--search-tabs-height));
-    padding-bottom: 0;
-  }
-  body.sugestoes-active #content {
+    min-height: calc(100vh - var(--header-height) - var(--search-tabs-height));
+    padding-bottom: 40px;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+}
+
+body.sugestoes-active #content {
     display: block;
     width: 100%;
-    max-width: 600px;
-  }
-  body.sugestoes-active #content .inner {
-    padding: 2rem;
-    text-align: justify;
-  }
+    max-width: 800px;
+    padding: 20px;
+}
+
+body.sugestoes-active #content .inner {
+    background: white;
+    border-radius: 20px;
+    padding: 50px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    animation: fadeInUp 0.6s ease-out;
+}
+
+/* Animação de entrada */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Título principal */
+body.sugestoes-active h1,
+body.sugestoes-active h2 {
+    font-size: 32px;
+    color: #2d3748;
+    margin-bottom: 10px;
+    text-align: center;
+    font-weight: 700;
+    position: relative;
+    padding-bottom: 20px;
+}
+
+body.sugestoes-active h1::after,
+body.sugestoes-active h2::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 3px;
+    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+    border-radius: 2px;
+}
+
+/* Subtítulo */
+body.sugestoes-active p.subtitle {
+    text-align: center;
+    color: #718096;
+    font-size: 16px;
+    margin-bottom: 40px;
+}
+
+/* Grupos de formulário */
+body.sugestoes-active .form-group {
+    margin-bottom: 25px;
+}
+
+/* Labels */
+body.sugestoes-active label {
+    display: block;
+    font-weight: 600;
+    color: #4a5568;
+    margin-bottom: 10px;
+    font-size: 0.9rem;
 
   /* 2) Manual: span único, centralizado */
   #content > .manual-content {
