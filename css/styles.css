@@ -3,8 +3,9 @@
    =========================================================== */
 :root {
   --header-height: 100px;
-  --search-tabs-height: 80px;       /* ajuste aqui se sua barra fixa tiver outra altura */
+  --search-tabs-height: 120px;       /* ajuste aqui se sua barra fixa tiver outra altura */
   --sidebar-width: 220px;
+  --topbar-height: 68px;
   --sidebar-collapsed-width: 60px;
 }
 
@@ -762,4 +763,9 @@ body.sugestoes-active label {
 
 .use-cinzel,
 .use-cinzel * { font-family: "Cinzel", serif !important; }
+
+body.sidebar-collapsed .topbar       { left: var(--sidebar-collapsed-width) !important; width: calc(100vw - var(--sidebar-collapsed-width)) !important; }
+body.sidebar-collapsed .search-tabs  { left: var(--sidebar-collapsed-width) !important; width: calc(100vw - var(--sidebar-collapsed-width)) !important; }
+body.sidebar-collapsed .wrapper .main{ margin-left: var(--sidebar-collapsed-width) !important; }
+
 
