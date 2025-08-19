@@ -1,771 +1,299 @@
-/* ===========================================================
-   Variáveis Globais
-   =========================================================== */
-:root {
-  --header-height: 100px;
-  --search-tabs-height: 120px;       /* ajuste aqui se sua barra fixa tiver outra altura */
-  --sidebar-width: 220px;
-  --topbar-height: 68px;
-  --sidebar-collapsed-width: 60px;
+/* =========================================================
+   VARIÁVEIS GLOBAIS
+   ========================================================= */
+:root{
+  /* Estrutura */
+  --sidebar-width:             220px;  /* desktop expandida */
+  --sidebar-collapsed-width:    60px;  /* mobile e desktop colapsada */
+  --topbar-height:              68px;  /* altura do header */
+  --search-tabs-height:        120px;  /* altura da barra fixa (medida via JS se quiser) */
+  --main-gap:                   16px;  /* gap extra entre barra fixa e cards */
+
+  /* Padrão visual (apenas para: Adicione GPT / Sugestões / Config / Perfil) */
+  --standard-left:              90px;
+  --standard-top:              120px;
+
+  /* Cores */
+  --header-bg:        #16213e;
+  --sidebar-bg:       #1a1a2e;
+  --fixedbar-bg:      #ffffff;
+  --content-bg:       #f7f8fb;
+  --primary:          #ffd166;
+  --text-dark:        #232445;
+  --tab-bg:           #eee;
+  --tab-active-bg:    #ffd166;
+
+  /* Cartões */
+  --card-max-width:   350px;
+  --card-gap:         1.25rem;
+
+  /* Botão colapso */
+  --collapse-btn-size: 40px;
 }
 
-/* ===========================================================
-   Reset + Box-Sizing
-   =========================================================== */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+/* =========================================================
+   RESET
+   ========================================================= */
+*,
+*::before,
+*::after{ margin:0; padding:0; box-sizing:border-box; }
+body{
+  font-family:sans-serif;
+  background:#f2f2f2;
+  color:var(--text-dark);
+  overflow-x:hidden;
 }
 
-/* ===========================================================
-   Body
-   =========================================================== */
-body {
-  font-family: sans-serif;
-  background: #f2f2f2;
+/* =========================================================
+   HEADER (TOPBAR) – FIXO
+   ========================================================= */
+.topbar{
+  position:fixed; inset:0 auto auto 0;
+  height:var(--topbar-height); width:100vw;
+  background:var(--header-bg); color:#fff;
+  z-index:1000; display:flex; align-items:center;
+  box-shadow:0 2px 8px rgba(0,0,0,.1);
 }
+.topbar .inner{
+  width:100%; max-width:1200px; margin:0 auto;
+  display:flex; align-items:center; gap:.75rem; padding:0 1rem;
+}
+.header-logo{ width:44px; height:auto; }
+.titles{ display:flex; flex-direction:column; }
+.logo{ font-size:1.5rem; font-weight:700; }
+.tagline{ font-size:.9rem; color:#e3e3e3; margin-top:.2rem; }
 
-/* ===========================================================
-   Wrapper (abaixo do header)
-   =========================================================== */
-.wrapper {
-  display: flex;
-  min-height: 100vh;
-  margin-top: var(--header-height);
+/* =========================================================
+   SIDEBAR – MOBILE FIRST (colapsada por padrão)
+   ========================================================= */
+.sidebar{
+  position:fixed;
+  top:var(--topbar-height); left:0;
+  width:var(--sidebar-collapsed-width);
+  height:calc(100vh - var(--topbar-height));
+  background:var(--sidebar-bg); color:#fff;
+  z-index:1001; display:flex; flex-direction:column;
+  transition:width .3s;
 }
-
-/* ===========================================================
-   Sidebar
-   =========================================================== */
-.sidebar {
-  position: fixed;
-  top: 0; left: 0;
-  width: var(--sidebar-width);
-  height: 100vh;
-  background: #1a1a2e;
-  color: #fff;
-  display: flex;
-  flex-direction: column;
-  transition: width 0.3s;
-  z-index: 200;
-}
-.sidebar .menu {
-  list-style: none;
-  margin-top: var(--header-height);
-  flex: 1;
-}
-.sidebar .menu li {
-  display: flex;
-  align-items: center;
-  padding: 0.8rem 1rem;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: background 0.2s;
+.sidebar .menu{ list-style:none; margin-top:1rem; flex:1; }
+.sidebar .menu li{
+  display:flex; align-items:center; gap:.5rem;
+  padding:.8rem 1rem; white-space:nowrap;
+  cursor:pointer; transition:background .2s;
 }
 .sidebar .menu li:hover,
-.sidebar .menu li.active {
-  background: rgba(255,255,255,0.1);
-}
-.sidebar .icon {
-  width: 30px;
-  text-align: center;
-  font-size: 1.4rem;
-}
-.sidebar .label {
-  margin-left: 0.5rem;
-  transition: opacity 0.3s;
-}
-.sidebar.collapsed {
-  width: var(--sidebar-collapsed-width);
-}
-.sidebar.collapsed .label {
-  opacity: 0;
-  pointer-events: none;
+.sidebar .menu li.active{ background:rgba(255,255,255,.1); }
+.sidebar .icon{ width:30px; text-align:center; font-size:1.4rem; flex-shrink:0; }
+.sidebar .label{ opacity:0; width:0; overflow:hidden; transition:opacity .2s,width .2s; }
+
+/* Botão de colapso (mobile: dentro do fluxo da sidebar) */
+#collapseBtn{
+  position:relative; margin:.5rem auto 1rem; display:block;
+  width:var(--collapse-btn-size); height:var(--collapse-btn-size);
+  border-radius:50%;
+  background:var(--primary); color:var(--text-dark);
+  border:2px solid var(--header-bg);
+  font-size:1.2rem; cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
 }
 
-/* ===========================================================
-   Botão de Colapso
-   =========================================================== */
-.collapse-btn {
-  position: fixed !important;
-  left: calc(var(--sidebar-width) - 18px) !important;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 36px; height: 36px;
-  border-radius: 50%;
-  background: #ffd166;
-  color: #333;
-  border: none;
-  font-size: 1.3rem;
-  cursor: pointer;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-  z-index: 250;
-  transition: left 0.3s, top 0.3s;
+/* =========================================================
+   BARRA FIXA (SEARCH + TABS) – MOBILE FIRST
+   (encaixa à direita do sidebar colapsado)
+   ========================================================= */
+.search-tabs{
+  position:fixed;
+  top:var(--topbar-height);
+  left:var(--sidebar-collapsed-width);
+  width:calc(100vw - var(--sidebar-collapsed-width));
+  background:var(--fixedbar-bg);
+  z-index:999;
+  box-shadow:0 2px 6px rgba(0,0,0,.08);
+  display:none;             /* JS liga/desliga via .show */
+  flex-direction:column;
+  padding:8px 12px 10px;
 }
-.sidebar.collapsed ~ .collapse-btn {
-  left: calc(var(--sidebar-collapsed-width) - 18px) !important;
+.search-tabs.show{ display:flex !important; }
+
+/* Conteúdo da barra fixa */
+.search-tabs .inner{ width:100%; margin:0; padding:0 8px; }
+.section-title{
+  text-align:left; font-weight:700; margin:.5rem 0 .6rem; font-size:1.4rem;
 }
 
-/* ===========================================================
-   Topbar (Header Fixo)
-   =========================================================== */
-.topbar {
-  position: fixed;
-  top: 0;
-  left: var(--sidebar-width);
-  width: calc(100vw - var(--sidebar-width));
-  height: var(--header-height);
-  background: #16213e;
-  color: #fff;
-  display: flex;
-  align-items: center;
-  padding: 0 1rem;
-  z-index: 300;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-  transition: left 0.3s;
+.search-bar{
+  display:flex; align-items:center; gap:.5rem; margin-bottom:.6rem; max-width:360px;
 }
-.sidebar.collapsed ~ .topbar {
-  left: var(--sidebar-collapsed-width);
-  width: calc(100vw - var(--sidebar-collapsed-width));
+.input-wrapper{ position:relative; flex:1; }
+.input-wrapper input{
+  width:100%;
+  padding:.6rem 2.4rem .6rem 1rem;
+  border:1px solid #ccc; border-radius:6px; background:#f6f6f6; font-size:1rem;
 }
-.topbar .header-logo {
-  height: 60px;
-  margin-right: 1rem;
-  flex-shrink: 0;
+.search-icon{
+  position:absolute; top:50%; right:.6rem; transform:translateY(-50%);
+  background:none; border:none; font-size:1.15rem; cursor:pointer;
 }
-.topbar .titles {
-  display: flex;
-  flex-direction: column;
-  margin-right: 1rem;
-}
-.topbar .logo,
-.topbar .tagline {
-  margin: 0;
-  line-height: 1.2;
+#favoritesBtn{
+  background:var(--primary); color:#111; border:none;
+  padding:.55rem .9rem; border-radius:6px; cursor:pointer; font-size:1rem;
 }
 
-/* ===========================================================
-   Barra Fixa de Busca + Tabs
-   =========================================================== */
-.search-tabs {
-  position: fixed;
-  top: var(--header-height);
-  left: var(--sidebar-width);
-  width: calc(100vw - var(--sidebar-width));
-  height: var(--search-tabs-height);
-  background: #fff;
-  z-index: 250;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  padding: 16px 24px 12px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  transition: left 0.3s;
+/* Tabs */
+.tabs{ display:flex; overflow-x:auto; gap:.4rem; padding-bottom:.3rem; }
+.tabs button{
+  flex-shrink:0; padding:.5rem 1rem; border:none; border-radius:6px;
+  background:var(--tab-bg); color:#222; cursor:pointer; font-size:.95rem;
+  transition:background .2s,color .2s;
 }
-.sidebar.collapsed ~ .search-tabs {
-  left: var(--sidebar-collapsed-width);
-  width: calc(100vw - var(--sidebar-collapsed-width));
-}
-.search-tabs .inner {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  max-width: 1024px;
-  margin: 0 auto;
-}
-#sectionTitle { 
-  order: 1;
-  margin: 0 0 0.5rem;
-  text-align: center;
-  width: 100%;
-}
-.search-bar { order: 2; }
-.tabs       { order: 3; }
+.tabs button.active, .tabs button:hover{ background:var(--tab-active-bg); color:#111; }
 
-/* ===========================================================
-   Search Bar
-   =========================================================== */
-.search-bar {
-  display: flex;
-  align-items: center;
-  width: 100%;
-  max-width: 400px;
-  margin: 0 auto 12px;
-  gap: 8px;
-}
-.input-wrapper {
-  position: relative;
-  flex: 1;
-}
-.input-wrapper input {
-  width: 100%;
-  padding: 0.6rem 2.5rem 0.6rem 1rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  background: #f9f9f9;
-  font-size: 1rem;
-}
-.search-icon {
-  position: absolute;
-  top: 50%;
-  right: 0.6rem;
-  transform: translateY(-50%);
-  background: none;
-  border: none;
-  font-size: 1.2rem;
-  cursor: pointer;
-}
-#favoritesBtn {
-  background: #ffd166;
-  border: none;
-  padding: 0.6rem 1rem;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 1.1rem;
-  color: #222;
+/* =========================================================
+   WRAPPER & MAIN – MOBILE FIRST
+   ========================================================= */
+.wrapper{ display:flex; min-height:100vh; }
+.main{
+  position:relative;
+  margin-top:calc(var(--topbar-height) + var(--search-tabs-height) + var(--main-gap));
+  margin-left:var(--sidebar-collapsed-width);
+  min-height:calc(100vh - var(--topbar-height) - var(--search-tabs-height));
+  background:var(--content-bg);
+  padding:16px 8px 32px;
+  transition:margin-left .3s, margin-top .2s;
 }
 
-/* fundo azul claro nas tabs */
-.tabs {
-  display: flex;
-  overflow-x: auto;
-  width: 100%;
-  gap: 8px;
-  padding: 0.5rem;
-  background-color: #e0f7fa;
-  border-radius: 4px;
+/* =========================================================
+   GRID DE CARDS – MOBILE (1 coluna)
+   ========================================================= */
+.cards-container,
+#content{
+  display:grid; grid-template-columns:1fr;
+  gap:var(--card-gap);
+  width:100%; margin:0 auto;
 }
-.tabs button {
-  padding: 0.6rem 1rem;
-  background: #eee;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  white-space: nowrap;
-  font-size: 1rem;
-  transition: background 0.2s;
+.card{
+  background:#fff; border-radius:8px; padding:1rem;
+  box-shadow:0 2px 6px rgba(0,0,0,.1);
+  display:flex; flex-direction:column;
+  max-width:var(--card-max-width); margin:0 auto;
 }
-.tabs button.active,
-.tabs button:hover {
-  background: #ffd166;
+.card h3{ font-size:1.08rem; margin-bottom:.45rem; font-weight:700; }
+.card p{ font-size:.95rem; color:#333; margin-bottom:.5rem; }
+.card-actions{ margin-top:auto; display:flex; gap:.5rem; }
+.card-actions .btn-open{
+  background:#fff; border:1px solid var(--text-dark); color:var(--text-dark);
+  text-decoration:none; font-weight:700; padding:.4rem .8rem; border-radius:6px;
+  transition:background .2s,color .2s;
+}
+.card-actions .btn-open:hover{ background:var(--text-dark); color:#fff; }
+.card-actions .fav-card-btn{ background:none; border:none; font-size:1.2rem; cursor:pointer; }
+
+/* =========================================================
+   PADRÃO VISUAL – SOMENTE para:
+   Adicione o seu GPT / Sugestões / Configurações / Perfil
+   (sem afetar as demais telas)
+   ========================================================= */
+section[data-section="adicionar"],
+section[data-section="sugestoes"],
+section[data-section="configuracoes"],
+section[data-section="perfil"],
+/* suportando seções por id usadas no app */
+#suggestionsSection,
+#configSection,
+#profileSection,
+#importSection{
+  padding-left:var(--standard-left);
+  padding-top:var(--standard-top);
+  display:flex; flex-direction:column; align-items:flex-start;
 }
 
-/* ===========================================================
-   Main & Grid de Cards
-   =========================================================== */
-.main {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-left: var(--sidebar-width);
-  margin-top: calc(var(--header-height) + var(--search-tabs-height) + 1rem);
-  padding-bottom: 32px;
-  transition: margin-left 0.3s, margin-top 0.3s;
-}
-.sidebar.collapsed ~ .wrapper .main {
-  margin-left: var(--sidebar-collapsed-width);
-}
-/* Grid padrão de cards (GPTs e Favoritos) */
-#content {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
-  width: 100%;
-  max-width: 960px;
-  margin: 0 auto;
-  padding-top: 12px;
-}
-/* Cards */
-.card {
-  background: #fff;
-  border-radius: 6px;
-  padding: 1rem;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  max-width: 320px;
-  margin: 0 auto;
-}
-.card h3 { font-size: 1.1rem; margin-bottom: 0.6rem; font-weight: bold; }
-.card p { font-size: 0.95rem; color: #333; margin-bottom: 0.5rem; }
-.card-actions {
-  margin-top: auto;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.card-actions a {
-  color: #16213e;
-  text-decoration: none;
-  font-weight: bold;
-}
-.card-actions .fav-card-btn {
-  background: none;
-  border: none;
-  font-size: 1.2rem;
-  cursor: pointer;
+/* Seções com .inner (mantém o padrão se existir um wrapper interno) */
+#suggestionsSection .inner,
+#configSection .inner,
+#profileSection .inner,
+#importSection .inner{
+  width:100%; max-width:1100px;
 }
 
-/* ===========================================================
-   Sugestões • Manual • Cadastro (Desktop)
-   =========================================================== */
-@media (min-width: 900px) {
-  /* 1) Sugestões: centralizar form dentro de main */
-/* Container principal */
-body.sugestoes-active .main {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: calc(100vh - var(--header-height) - var(--search-tabs-height));
-    padding-bottom: 40px;
-    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-}
+/* =========================================================
+   DESKTOP (>= 900px)
+   ========================================================= */
+@media (min-width:900px){
 
-body.sugestoes-active #content {
-    display: block;
-    width: 100%;
-    max-width: 800px;
-    padding: 20px;
-}
+  /* Sidebar expandida e labels visíveis */
+  .sidebar{ width:var(--sidebar-width); }
+  .sidebar .label{ opacity:1; width:auto; }
 
-body.sugestoes-active #content .inner {
-    background: white;
-    border-radius: 20px;
-    padding: 50px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-    animation: fadeInUp 0.6s ease-out;
-}
-
-/* Animação de entrada */
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* Título principal */
-body.sugestoes-active h1,
-body.sugestoes-active h2 {
-    font-size: 32px;
-    color: #2d3748;
-    margin-bottom: 10px;
-    text-align: center;
-    font-weight: 700;
-    position: relative;
-    padding-bottom: 20px;
-}
-
-body.sugestoes-active h1::after,
-body.sugestoes-active h2::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 80px;
-    height: 3px;
-    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-    border-radius: 2px;
-}
-
-/* Subtítulo */
-body.sugestoes-active p.subtitle {
-    text-align: center;
-    color: #718096;
-    font-size: 16px;
-    margin-bottom: 40px;
-}
-
-/* Grupos de formulário */
-body.sugestoes-active .form-group {
-    margin-bottom: 25px;
-}
-
-/* Labels */
-body.sugestoes-active label {
-    display: block;
-    font-weight: 600;
-    color: #4a5568;
-    margin-bottom: 10px;
-    font-size: 0.9rem;
-
-  /* 2) Manual: span único, centralizado */
-  #content > .manual-content {
-    grid-column: 1 / -1;
-  }
-  .manual-content.inner {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: calc(100vh - var(--header-height) - var(--search-tabs-height));
-    width: 100%;
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 2rem;
-    text-align: justify;
+  /* Botão de colapso “na borda” da sidebar */
+  #collapseBtn{
+    position:absolute;
+    left:100%; bottom:32px; top:auto; transform:translateX(-50%);
+    margin:0;
+    width:var(--collapse-btn-size); height:var(--collapse-btn-size);
+    border:3px solid var(--header-bg);
+    font-size:1.6rem;
   }
 
-  /* 3) Cadastro (“Em breve”): centralizado */
-  #content > .em-breve {
-    grid-column: 1 / -1;
+  /* Barra fixa alinha ao lado da sidebar */
+  .search-tabs{
+    left:var(--sidebar-width);
+    width:calc(100vw - var(--sidebar-width));
+    padding:12px 16px 12px;
   }
-  .em-breve {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: calc(100vh - var(--header-height) - var(--search-tabs-height));
-    width: 100%;
-    max-width: 400px;
-    margin: 0 auto;
-    padding: 2rem;
-    text-align: center;
+  /* Quando a sidebar está colapsada no desktop, barra acompanha */
+  .sidebar.collapsed ~ .search-tabs{
+    left:var(--sidebar-collapsed-width);
+    width:calc(100vw - var(--sidebar-collapsed-width));
   }
 
-  /* 4) GPTs & Favoritos: remove padding-bottom e empurra main mais para baixo */
-  body.gpts-active .main,
-  body.favoritos-active .main {
-    padding-bottom: 0 !important;
-    margin-top: calc(var(--header-height) + var(--search-tabs-height) + 1.5rem);
+  /* Main encosta no sidebar e fica abaixo da barra fixa */
+  .main{
+    margin-left:var(--sidebar-width);
+    margin-top:calc(var(--topbar-height) + var(--search-tabs-height) + var(--main-gap));
+    min-height:calc(100vh - var(--topbar-height) - var(--search-tabs-height));
+    padding:24px 0 36px;
+    display:flex; flex-direction:column; align-items:center;
+  }
+  /* Ao colapsar sidebar no desktop, main acompanha */
+  .sidebar.collapsed ~ .wrapper .main{
+    margin-left:var(--sidebar-collapsed-width);
+  }
+
+  /* Grid: 3 colunas centralizadas */
+  .cards-container,
+  #content{
+    grid-template-columns:repeat(3, 1fr);
+    max-width:1000px; gap:var(--card-gap);
   }
 }
 
-/* ===========================================================
-   Mobile (<900px)
-   =========================================================== */
-@media (max-width: 900px) {
-  /* sidebar colapsada */
-  .sidebar {
-    width: var(--sidebar-collapsed-width);
-  }
-  .sidebar .label {
-    display: none !important;
-  }
-  /* esconde botão collapse */
-  #collapseBtn { display: none !important; }
-  /* topbar e search-tabs acompanham */
-  .topbar {
-    left: var(--sidebar-collapsed-width);
-    width: calc(100vw - var(--sidebar-collapsed-width));
-  }
-  .search-tabs {
-    left: var(--sidebar-collapsed-width);
-    width: calc(100vw - var(--sidebar-collapsed-width));
-    padding: 12px 8px 8px;
-  }
-    .tabs button {
-    color: #000 !important;
-    font-weight: bold !important;
-  } 
-  /* main */
-  .wrapper {
-    margin-top: calc(var(--header-height) + var(--search-tabs-height));
-  }
-  .main {
-    margin-left: var(--sidebar-collapsed-width);
-    margin-top: calc(var(--header-height) + var(--search-tabs-height));
-    padding-bottom: 24px;
-  }
-  /* grid vira 1 coluna */
-  #content {
-    display: grid;
-    grid-template-columns: 1fr;
-    max-width: 95vw;
-    gap: 16px;
-    padding-top: 8px;
-  }
-  .card {
-    max-width: 98vw;
-  }
-  /* Tabs em preto e negrito já configurado acima */
-
-  /* 5) Ajuste do h1.logo no mobile */
-  .topbar .logo {
-    line-height: 0.9;
-    white-space: nowrap;
-    font-size: 0.9rem;
-  }
-  .topbar .tagline {
-    font-size: 0.75rem;
-  }
-
-  /* 6) SectionTitle no mobile */
-  #sectionTitle {
-    font-size: 1.25rem;
-    margin-bottom: 0.75rem;
-  }
+/* =========================================================
+   AJUSTES FINOS / UTILITÁRIOS
+   ========================================================= */
+@media (max-width:899px){
+  /* Header mobile – títulos menores */
+  .topbar .inner{ justify-content:flex-start; padding-left:1rem; }
+  .logo{ font-size:1.3rem; }
+  .tagline{ font-size:.8rem; }
 }
 
-/* ===========================================================
-   Scrollbars (opcional)
-   =========================================================== */
-::-webkit-scrollbar {
-  width: 8px; height: 8px;
-}
-::-webkit-scrollbar-thumb {
-  background: #bbb;
-  border-radius: 4px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #999;
-}
+/* Utilitários */
+.hidden{ display:none !important; }
 
-/* =09/08/2025=========================================================
-   PATCH: Rating Stars, Toast e Modal Importar
-   (ADICIONAR AO FINAL — NÃO SUBSTITUIR)
-   =========================================================== */
+/* Scrollbar estética */
+::-webkit-scrollbar{ width:8px; height:8px; }
+::-webkit-scrollbar-thumb{ background:#cfcfd4; border-radius:4px; }
+::-webkit-scrollbar-track{ background:#f2f2f2; }
 
-/* Rating (estrelas 1–5 no card) */
-.rating {
-  display: inline-flex;
-  gap: 2px;
-  user-select: none;
+/* =========================================================
+   PATCH DE ROBUSTEZ (opcional, recomendado)
+   Se o JS adicionar/remover .sidebar-collapsed no <body>,
+   estes ajustes garantem alinhamento mesmo se a ordem no DOM mudar.
+   ========================================================= */
+body.sidebar-collapsed .search-tabs{
+  left:var(--sidebar-collapsed-width) !important;
+  width:calc(100vw - var(--sidebar-collapsed-width)) !important;
 }
-.rating .star {
-  appearance: none;
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 1.1rem;           /* ajuste fino se quiser menor/maior */
-  line-height: 1;
-  color: #f4b400;               /* amarelinho google-ish */
-  padding: 0;
+body.sidebar-collapsed .wrapper .main{
+  margin-left:var(--sidebar-collapsed-width) !important;
 }
-.rating .star:hover,
-.rating .star:focus {
-  transform: scale(1.05);
-  outline: none;
-}
-
-/* Toast (mensagens temporárias) */
-.toast {
-  position: fixed;
-  right: 16px;
-  bottom: 16px;
-  max-width: 80vw;
-  background: #16213e;
-  color: #fff;
-  padding: 12px 14px;
-  border-radius: 8px;
-  box-shadow: 0 6px 20px rgba(0,0,0,.18);
-  opacity: 0;
-  transform: translateY(10px);
-  transition: opacity .25s ease, transform .25s ease;
-  z-index: 9999;
-}
-.toast.show {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* Modal Importar GPT */
-#importModal {
-  border: none;
-  padding: 0;
-  width: min(520px, 92vw);
-  border-radius: 10px;
-  box-shadow: 0 14px 40px rgba(0,0,0,.22);
-}
-#importModal::backdrop {
-  background: rgba(0,0,0,.35);
-  backdrop-filter: blur(2px);
-}
-.import-form {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  padding: 18px 16px;
-  background: #fff;
-  color: #222;
-}
-.import-form h3 {
-  margin: 0 0 6px;
-}
-.import-form label {
-  display: grid;
-  gap: 6px;
-  font-size: .95rem;
-}
-.import-form input[type="text"],
-.import-form input[type="url"] {
-  padding: .6rem .8rem;
-  border: 1px solid #cfd8dc;
-  border-radius: 6px;
-  background: #fafafa;
-}
-.import-form menu {
-  margin: 8px 0 0;
-  padding: 0;
-  display: flex;
-  justify-content: flex-end;
-  gap: 8px;
-}
-.import-form button {
-  border: none;
-  border-radius: 6px;
-  padding: .55rem .9rem;
-  font-weight: 600;
-  cursor: pointer;
-}
-#importCloseBtn {
-  background: #eceff1;
-  color: #333;
-}
-#importSaveBtn {
-  background: #16213e;
-  color: #fff;
-}
-
-/* Opcional: suporte ao dark mode, sem afetar seu tema atual */
-:root.dark .toast { background: #0f1a33; }
-:root.dark #importModal .import-form {
-  background: #121212; color: #eaeaea;
-}
-:root.dark .import-form input[type="text"],
-:root.dark .import-form input[type="url"] {
-  background: #1a1a1a; border-color: #333; color: #f5f5f5;
-}
-/* ===========================================================
-   PATCH DE PALETA — Clube
-   (cole no FINAL do styles.css)
-   =========================================================== */
-:root{
-  --club-primary:   #023E73;  /* botões fortes, toast, email */
-  --club-accent:    #4973F2;  /* CTAs secundárias (ex.: cancelar plano) */
-  --club-whatsapp:  #25d366;  /* WhatsApp */
-  --club-surface:   #ffffff;  /* fundo de inputs/forms novos */
-  --club-text:      #222222;  /* texto em superfícies claras */
-  --club-border:    #91B7D9;  /* bordas de inputs */
-  --club-star:      #f4b400;  /* estrelas (mantemos amarelo) */
-  --tabs-bg:        #D8E3F2;  /* fundo das tabs */
-
-  /* extras para hovers/sombras */
-  --club-primary-strong: #0420BF;
-}
-
-:root.dark{
-  --club-surface:#121212;
-  --club-text:#eaeaea;
-  --club-border:#333333;
-}
-
-/* Tabs com fundo azul claro da paleta */
-.tabs{ background-color: var(--tabs-bg) !important; }
-
-/* Estrelas */
-.rating .star{ color: var(--club-star) !important; }
-
-/* Toast */
-.toast{
-  background: var(--club-primary) !important;
-  color:#fff !important;
-}
-
-/* Inputs/Selects/Textareas (Importar, Sugestões, Perfil, Config) */
-#suggestionsSection .form-group input,
-#suggestionsSection .form-group select,
-#suggestionsSection .form-group textarea,
-#profileSection .form-group input,
-#profileSection .form-group select,
-#profileSection .form-group textarea,
-#configSection .form-group input,
-#configSection .form-group select,
-#configSection .form-group textarea,
-#importSection .form-group input,
-#importSection .form-group select,
-#importSection .form-group textarea{
-  background: var(--club-surface) !important;
-  color: var(--club-text) !important;
-  border-color: var(--club-border) !important;
-}
-#suggestionsSection .form-group input:focus,
-#suggestionsSection .form-group select:focus,
-#suggestionsSection .form-group textarea:focus,
-#profileSection .form-group input:focus,
-#profileSection .form-group select:focus,
-#profileSection .form-group textarea:focus,
-#configSection .form-group input:focus,
-#configSection .form-group select:focus,
-#configSection .form-group textarea:focus,
-#importSection .form-group input:focus,
-#importSection .form-group select:focus,
-#importSection .form-group textarea:focus{
-  outline:2px solid var(--club-primary);
-  outline-offset:1px;
-  background:#fff;
-}
-
-/* Botões utilitários (Suporte, etc.) */
-.btn--solid, .btn--email{
-  background: var(--club-primary) !important;
-  color:#fff !important;
-}
-.btn--solid:hover, .btn--email:hover{
-  background: var(--club-primary-strong) !important;
-}
-.btn--muted{ background:#eceff1 !important; color:#333 !important; }
-.btn--whatsapp{ background: var(--club-whatsapp) !important; color:#fff !important; }
-
-/* Importar GPT inline */
-#importSubmitBtn{ background: var(--club-primary) !important; color:#fff !important; }
-#importSubmitBtn:hover{ background: var(--club-primary-strong) !important; }
-#importCancelBtn{ background:#eceff1 !important; color:#333 !important; }
-
-/* Cancelamento de plano (Config) */
-#cancelPlanBtn{
-  background: var(--club-accent) !important;
-  color:#fff !important;
-}
-#cancelPlanBtn:hover{ filter:brightness(.95); }
-
-/* Dark refinements */
-:root.dark .toast{ background:#0f1a33 !important; }
-:root.dark .btn--muted{ background:#2a2a2a !important; color:#ddd !important; }
-
-/* Mobile finos (opcional) */
-@media (max-width:480px){
-  .toast{ right:12px; left:12px; max-width:96vw; }
-}
-/* ================== DARK MODE GLOBAL ================== */
-:root.dark body {
-  background: #0b1224;
-  color: #e8eefc;
-}
-:root.dark .topbar {
-  background: #0d1b34;
-  color: #e8eefc;
-}
-:root.dark .sidebar {
-  background: #0d1526;
-  color: #e8eefc;
-}
-:root.dark .search-tabs {
-  background: #0f1a33;
-  box-shadow: 0 2px 4px rgba(0,0,0,.4);
-}
-:root.dark .tabs {
-  background: rgba(255,255,255,0.06) !important;
-}
-:root.dark .card {
-  background: #101a30;
-  color: #e8eefc;
-  box-shadow: 0 2px 6px rgba(0,0,0,.5);
-}
-:root.dark .card a { color: #9ec2ff; }
-:root.dark .btn-open { color: #e8eefc; }
-
-.use-cinzel,
-.use-cinzel * { font-family: "Cinzel", serif !important; }
-
-body.sidebar-collapsed .topbar       { left: var(--sidebar-collapsed-width) !important; width: calc(100vw - var(--sidebar-collapsed-width)) !important; }
-body.sidebar-collapsed .search-tabs  { left: var(--sidebar-collapsed-width) !important; width: calc(100vw - var(--sidebar-collapsed-width)) !important; }
-body.sidebar-collapsed .wrapper .main{ margin-left: var(--sidebar-collapsed-width) !important; }
-
-
